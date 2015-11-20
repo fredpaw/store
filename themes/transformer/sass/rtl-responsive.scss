@@ -1,0 +1,130 @@
+@import "compass";
+@import "theme_variables";
+
+/********************************************************
+			Right to Left Styles
+********************************************************/
+
+@media only screen and (max-width: $screen-xs-max) {
+    #thumbs_list li {
+        float: right !important;
+    }
+    #footer .title_block {
+        padding: 10px 10px 20px 35px !important;
+    }
+    .product_list.list {
+        .pro_first_box {
+            float: none !important;
+        }
+        .pro_second_box {
+            margin-right: 0 !important;
+        }
+    }
+    .product_accordion .opener {
+        right: auto !important;
+        left: 10px !important;
+    }
+    table {
+        &#cart_summary td .mobile_table_title, &#order-list td .mobile_table_title {
+            float: right !important;
+        }
+    }
+    #shipping-detail-content table td .mobile_table_title, #order-detail-content table td .mobile_table_title {
+        float: right !important;
+    }
+    table {
+        &#pending_friends_list td .mobile_table_title, &#friends_i_sponsord_list td .mobile_table_title, &#sponsor_my_friends_list td .mobile_table_title, &#my_vouchers_list td .mobile_table_title {
+            float: right !important;
+        }
+        &#cart_summary td .mobile_table_content, &#order-list td .mobile_table_content {
+            margin-left: 0 !important;
+            text-align: right !important;
+            margin-right: 130px;
+        }
+    }
+    #shipping-detail-content table td .mobile_table_content, #order-detail-content table td .mobile_table_content {
+        margin-left: 0 !important;
+        text-align: right !important;
+        margin-right: 130px;
+    }
+    .resp_table td:before{
+        float: right!important;
+    }
+    #order-detail-content {
+        #cart_summary {
+            td {
+                &.cart_unit {
+                    .price {
+                        text-align: right!important;
+                    }
+                }
+            }
+        }
+    }
+    table {
+        &#pending_friends_list td .mobile_table_content, &#friends_i_sponsord_list td .mobile_table_content, &#sponsor_my_friends_list td .mobile_table_content, &#my_vouchers_list td .mobile_table_content {
+            margin-left: 0 !important;
+            text-align: right !important;
+            margin-right: 130px;
+        }
+    }
+    #new_comment_form .product {
+        .product_name, .product_desc {
+            margin-right: 0 !important;
+        }
+    }
+
+    ul.step li a, ul.step li span{border-left-width: 1px !important;}
+
+    body.is_rtl{
+        #account-creation_form .form-group > label, #account-creation_form .form-stru > label,
+        #opc_account_form .form-group > label, #opc_account_form .form-stru > label,
+        #new_account_form .form-group > label, #new_account_form .form-stru > label,
+        #address .form-group > label, #address .form-stru > label{
+            text-align: right !important;
+        }
+        #address,
+        #account-creation_form,
+        #new_account_form,
+        #opc_account_form{
+            #uniform-newsletter, #uniform-optin, #uniform-invoice_address, .submit, .submit2, span.form_info, p.inline-infos, span.inline-infos{
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                margin-right: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
+    }
+    body#authentication.is_rtl, body#identity.is_rtl{
+        .form-group > label, .form-stru > label{
+            text-align: right !important;
+        }
+    }
+    body#identity.is_rtl{
+        #uniform-newsletter, #uniform-optin, #uniform-invoice_address, .submit, .submit2, span.form_info, p.inline-infos, span.inline-infos{
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+            margin-right: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+    #header_right{text-align: center !important;}
+    ul.product_list.list{
+        .pro_second_box{
+          margin-right: 0!important;
+        }
+    } 
+    .resp_table{
+        thead tr {
+          top: 9999px;
+          left: 9999px;
+        }
+    }
+    .delivery_options{
+        table{
+            td{
+                text-align: right;
+            }
+        }
+    }
+}
