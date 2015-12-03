@@ -65,7 +65,7 @@
 	{/foreach}
 	<!-- /Block CMS module -->
 {else}
-	<!-- MODULE Block footer -->
+	<!-- Block CMS module footer -->
 	<section class="block footer-block col-xs-12 col-sm-3" id="block_various_links_footer">
 		<a href="javascript:;" class="opener visible-xs">&nbsp;</a>
 		<h4 class="title_block">{l s='Information' mod='blockcms'}</h4>
@@ -77,28 +77,28 @@
 					</a>
 				</li>
 			{/if}
-			{if $show_new_products}
+			{if isset($show_new_products) && $show_new_products}
 			<li class="item">
 				<a href="{$link->getPageLink('new-products')|escape:'html':'UTF-8'}" title="{l s='New products' mod='blockcms'}">
 					<span>&raquo;&nbsp;&nbsp;</span>{l s='New products' mod='blockcms'}
 				</a>
 			</li>
 			{/if}
-			{if $show_best_sales && !$PS_CATALOG_MODE}
+			{if isset($show_best_sales) && $show_best_sales && !$PS_CATALOG_MODE}
 				<li class="item">
 					<a href="{$link->getPageLink('best-sales')|escape:'html':'UTF-8'}" title="{l s='Top sellers' mod='blockcms'}">
 						<span>&raquo;&nbsp;&nbsp;</span>{l s='Top sellers' mod='blockcms'}
 					</a>
 				</li>
 			{/if}
-			{if $display_stores_footer}
+			{if isset($display_stores_footer) && $display_stores_footer}
 				<li class="item">
 					<a href="{$link->getPageLink('stores')|escape:'html':'UTF-8'}" title="{l s='Our stores' mod='blockcms'}">
 						<span>&raquo;&nbsp;&nbsp;</span>{l s='Our stores' mod='blockcms'}
 					</a>
 				</li>
 			{/if}
-			{if $show_contact}
+			{if isset($show_contact) && $show_contact}
 			<li class="item">
 				<a href="{$link->getPageLink($contact_url, true)|escape:'html':'UTF-8'}" title="{l s='Contact us' mod='blockcms'}">
 					<span>&raquo;&nbsp;&nbsp;</span>{l s='Contact us' mod='blockcms'}
@@ -114,7 +114,7 @@
 					</li>
 				{/if}
 			{/foreach}
-			{if $show_sitemap}
+			{if isset($show_sitemap) && $show_sitemap}
 			<li>
 				<a href="{$link->getPageLink('sitemap')|escape:'html':'UTF-8'}" title="{l s='Sitemap' mod='blockcms'}">
 					<span>&raquo;&nbsp;&nbsp;</span>{l s='Sitemap' mod='blockcms'}
@@ -124,5 +124,5 @@
 		</ul>
 		{$footer_text}
 	</section>
-	<!-- /MODULE Block footer -->
+	<!-- /Block CMS module footer -->
 {/if}

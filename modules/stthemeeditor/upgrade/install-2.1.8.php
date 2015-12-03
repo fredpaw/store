@@ -7,7 +7,7 @@ function upgrade_module_2_1_8($object)
 {
     $result = true;
     
-    $result &= Configuration::updateValue('STSN_DISCOUNT_PERCENTAGE', 0);
+    $result &= Configuration::updateGlobalValue('STSN_DISCOUNT_PERCENTAGE', 0);
     $result &= $object->registerHook('displayRightColumnProduct');
     
     $module_to_hook = array(

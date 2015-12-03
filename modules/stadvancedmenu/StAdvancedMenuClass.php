@@ -39,7 +39,8 @@ class StAdvancedMenuClass extends ObjectModel
 	public $new_window;
 	public $position;
 	public $active;
-	public $txt_color;
+    public $txt_color;
+	public $link_color;
 	public $txt_color_over;
 	public $bg_color;
 	public $bg_color_over;
@@ -88,10 +89,11 @@ class StAdvancedMenuClass extends ObjectModel
 			'position'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'active'          => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'auto_sub'        => array('type' => self::TYPE_INT, 'validate' => 'isBool'),
-			'hide_on_mobile'  => array('type' => self::TYPE_INT, 'validate' => 'isBool'),
+			'hide_on_mobile'  => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'alignment'       => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'nofollow'        => array('type' => self::TYPE_INT, 'validate' => 'isBool'),
-			'txt_color'       => array('type' => self::TYPE_STRING, 'size' => 7),
+            'txt_color'       => array('type' => self::TYPE_STRING, 'size' => 7),
+			'link_color'       => array('type' => self::TYPE_STRING, 'size' => 7),
 			'txt_color_over'  => array('type' => self::TYPE_STRING, 'size' => 7),
 			'bg_color'        => array('type' => self::TYPE_STRING, 'size' => 7),
             'bg_color_over'   => array('type' => self::TYPE_STRING, 'size' => 7),
@@ -287,9 +289,9 @@ class StAdvancedMenuClass extends ObjectModel
     public static function getCustomCss()
     {
         return Db::getInstance()->executeS('
-            SELECT `id_st_advanced_menu`,`item_t`,`txt_color`,`txt_color_over`,`bg_color`,`bg_color_over`,`tab_content_bg`, `bg_image`, `bg_repeat`, `bg_position`, `bg_margin_bottom`, `cate_label_color`, `cate_label_bg`
+            SELECT *
             FROM `'._DB_PREFIX_.'st_advanced_menu`
-            WHERE (`txt_color`!="" || `txt_color_over`!="" || `bg_color`!="" || `bg_color_over`!="" || `tab_content_bg`!="" || `bg_image`!="" || `bg_margin_bottom`!="" || `cate_label_color`!="" || `cate_label_bg`!="")
+            WHERE (`txt_color`!="" || `link_color`!="" || `txt_color_over`!="" || `bg_color`!="" || `bg_color_over`!="" || `tab_content_bg`!="" || `bg_image`!="" || `bg_margin_bottom`!="" || `cate_label_color`!="" || `cate_label_bg`!="")
             AND `active`=1');
     }
     public static function deleteByColumn($id_st_advanced_column=0)

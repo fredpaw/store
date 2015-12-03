@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:52
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:10
          compiled from "D:\xampp\htdocs\store\modules\strightbarcart\views\templates\hook\strightbarcart.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:19265564ebf0cea8a70-79887580%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:25541565e951ac46966-55913687%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'e09ce1ad4b1f957f03ba0af196f5dc6fdf22274d' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\strightbarcart\\views\\templates\\hook\\strightbarcart.tpl',
-      1 => 1447993232,
+      1 => 1449038242,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '19265564ebf0cea8a70-79887580',
+  'nocache_hash' => '25541565e951ac46966-55913687',
   'function' => 
   array (
   ),
@@ -23,9 +23,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0cec40f3_19653743',
+  'unifunc' => 'content_565e951ac6f0c9_98297516',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0cec40f3_19653743')) {function content_564ebf0cec40f3_19653743($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e951ac6f0c9_98297516')) {function content_565e951ac6f0c9_98297516($_smarty_tpl) {?>
 <!-- /MODULE Rightbar cart -->
 <div id="rightbar_cart" class="rightbar_wrap">
     <a id="rightbar-shopping_cart" href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['link']->value->getPageLink($_smarty_tpl->tpl_vars['order_process']->value,true), ENT_QUOTES, 'UTF-8', true);?>

@@ -30,12 +30,12 @@
 		</div>
 	{else}
 		{assign var='has_children' value=(isset($menu.children) && is_array($menu.children) && count($menu.children))}
-		<a id="st_advanced_ma_{$menus.id_st_advanced_menu}" href="{$menus.m_link|escape:'html':'UTF-8'}" title="{$menus.m_title|escape:'html':'UTF-8'}"{if $menus.nofollow} rel="nofollow"{/if} class="{if isset($ismobilemenu)}mo_advanced_sub_a mo_{/if}advanced_ma_level_{$m_level} advanced_ma_item {if $has_children} has_children {/if}">{if $menus.icon_class}<i class="{$menus.icon_class}"></i>{/if}{$menus.m_name|escape:'html':'UTF-8'}{if $has_children && !isset($ismobilemenu)}<span class="is_parent_icon"><b class="is_parent_icon_h"></b><b class="is_parent_icon_v"></b></span>{/if}{if $menus.cate_label}<span class="cate_label">{$menus.cate_label}</span>{/if}</a>
+		<a id="st_advanced_ma_{$menus.id_st_advanced_menu}" href="{$menus.m_link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$menus.m_title|escape:'html':'UTF-8'}"{/if}{if $menus.nofollow} rel="nofollow"{/if}{if $menus.new_window} target="_blank"{/if} class="{if isset($ismobilemenu)}mo_advanced_sub_a mo_{/if}advanced_ma_level_{$m_level} advanced_ma_item {if $has_children} has_children {/if}">{if $menus.icon_class}<i class="{$menus.icon_class}"></i>{/if}{$menus.m_name|escape:'html':'UTF-8'}{if $has_children && !isset($ismobilemenu)}<span class="is_parent_icon"><b class="is_parent_icon_h"></b><b class="is_parent_icon_v"></b></span>{/if}{if $menus.cate_label}<span class="cate_label">{$menus.cate_label}</span>{/if}</a>
 		{if $has_children}
 			{if isset($ismobilemenu)}<span class="opener">&nbsp;</span>{/if}
 			<ul class="{if isset($ismobilemenu)}mo_advanced_sub_ul mo_{/if}advanced_ml_level_{$m_level+1}">
 			{foreach $menus.children as $menu}
-				{if isset($ismobilemenu) && $menu.hide_on_mobile}{continue}{/if}
+				{if isset($ismobilemenu) && $menu.hide_on_mobile == 1}{continue}{/if}
 				{include file="./stadvancedmenu-link.tpl" menus=$menu m_level=($m_level+1)}
 			{/foreach}
 			</ul>

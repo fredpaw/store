@@ -97,7 +97,7 @@ class StProductCategoriesSlider extends Module
 	{
 		$this->name           = 'stproductcategoriesslider';
 		$this->tab            = 'front_office_features';
-		$this->version        = '1.6.9';
+		$this->version        = '1.7.7';
 		$this->author         = 'SUNNYTOO.COM';
 		$this->need_instance  = 0;
         $this->bootstrap      = true;
@@ -114,9 +114,15 @@ class StProductCategoriesSlider extends Module
     {
         $this->_hooks = array(
                 array(
-        			'id' => 'displayFullWidthTop',
-        			'val' => '4',
-        			'name' => $this->l('FullWidthTop'),
+                    'id' => 'displayFullWidthTop',
+                    'val' => '4',
+                    'name' => $this->l('FullWidthTop'),
+                    'full_width' => 1,
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
+        			'val' => '65536',
+        			'name' => $this->l('FullWidthTop2'),
                     'full_width' => 1,
         		),
         		array(
@@ -218,6 +224,7 @@ class StProductCategoriesSlider extends Module
             || !Configuration::updateValue('ST_PRO_CATE_PAUSE_ON_HOVER', 1)
             || !Configuration::updateValue('ST_PRO_CATE_LOOP', 0)
             || !Configuration::updateValue('ST_PRO_CATE_MOVE', 0)
+            || !Configuration::updateValue('ST_PRO_CATE_COUNTDOWN_ON', 1)
             || !Configuration::updateValue('ST_PRO_CATE_EASING_COL', 0)
             || !Configuration::updateValue('ST_PRO_CATE_SLIDESHOW_COL', 0)
             || !Configuration::updateValue('ST_PRO_CATE_S_SPEED_COL', 7000)
@@ -229,6 +236,7 @@ class StProductCategoriesSlider extends Module
             || !Configuration::updateValue('ST_PRO_CATE_HIDE_MOB', 0)
             || !Configuration::updateValue('ST_PRO_CATE_HIDE_MOB_COL', 0)
             || !Configuration::updateValue('ST_PRO_CATE_DISPLAY_SD', 0)
+            || !Configuration::updateValue('ST_PRO_CATE_COUNTDOWN_ON_COL', 1)
             || !Configuration::updateValue('ST_PRO_CATE_GRID', 0)
             || !Configuration::updateValue('STSN_PRO_CATE_PRO_PER_LG_0', 4)
             || !Configuration::updateValue('STSN_PRO_CATE_PRO_PER_MD_0', 4)
@@ -246,6 +254,7 @@ class StProductCategoriesSlider extends Module
             || !Configuration::updateValue($this->_prefix_st.'SPEED', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'TITLE_HOVER_COLOR', '')
+            || !Configuration::updateValue($this->_prefix_st.'TAB_TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TEXT_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'PRICE_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'LINK_HOVER_COLOR', '')
@@ -298,6 +307,7 @@ class StProductCategoriesSlider extends Module
                 `direction_hover_bg` varchar(7) DEFAULT NULL,
                 `direction_disabled_bg` varchar(7) DEFAULT NULL,
                 `title_alignment` tinyint(1) unsigned NOT NULL DEFAULT 0, 
+                `title_no_bg` tinyint(1) unsigned NOT NULL DEFAULT 0, 
                 `title_font_size` int(10) unsigned NOT NULL DEFAULT 0, 
                 `direction_nav` tinyint(1) unsigned NOT NULL DEFAULT 0, 
 				PRIMARY KEY (`id_st_product_categories_slider`)
@@ -855,6 +865,25 @@ class StProductCategoriesSlider extends Module
                     ),
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
+                    'validation' => 'isBool',
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->l('Heading font size:'),
                     'name' => 'title_font_size',
@@ -1151,6 +1180,25 @@ class StProductCategoriesSlider extends Module
                     'validation' => 'isColor',
                  ),
                  array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'tab_title_no_bg',
+                    'default_value' => 0,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'tab_title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'tab_title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
+                    'validation' => 'isBool',
+                ),
+                 array(
                     'type' => 'color',
                     'label' => $this->l('Text color:'),
                     'name' => 'text_color',
@@ -1243,7 +1291,7 @@ class StProductCategoriesSlider extends Module
             'input' => array(
                 array(
 					'type' => 'switch',
-					'label' => $this->l('Showing random products on your homepage:'),
+					'label' => $this->l('Show products on your homepage randomly:'),
 					'name' => 'random',
 					'is_bool' => true,
                     'default_value' => 0,
@@ -1428,6 +1476,25 @@ class StProductCategoriesSlider extends Module
                     'validation' => 'isBool',
 				),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Display countdown timers:'),
+                    'name' => 'countdown_on',
+                    'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+                    'values' => array(
+                        array(
+                            'id' => 'countdown_on_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'countdown_on_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),
+                array(
 					'type' => 'html',
                     'id' => 'a_cancel',
 					'label' => '',
@@ -1580,6 +1647,25 @@ class StProductCategoriesSlider extends Module
                     'desc' => $this->l('if set to Yes, slider will be hidden on mobile devices (if screen width is less than 768 pixels).'),
                     'validation' => 'isBool',
 				),
+                /*array(
+                    'type' => 'switch',
+                    'label' => $this->l('Display countdown timers:'),
+                    'name' => 'countdown_on_col',
+                    'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+                    'values' => array(
+                        array(
+                            'id' => 'countdown_on_col_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'countdown_on_col_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),*/
                 array(
 					'type' => 'html',
                     'id' => 'a_cancel',
@@ -1818,6 +1904,13 @@ class StProductCategoriesSlider extends Module
 
         return $this->hookDisplayHome($params, $this->getDisplayOn(__FUNCTION__) ,2);
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getDisplayOn(__FUNCTION__) ,2);
+    }
     public function hookDisplayHomeVeryBottom($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -1828,9 +1921,6 @@ class StProductCategoriesSlider extends Module
 
 	public function hookDisplayHomeSecondaryLeft($params)
 	{
-        $this->smarty->assign(array(
-            'is_homepage_secondary_left' => true,
-        ));
         return $this->hookDisplayHome($params, $this->getDisplayOn(__FUNCTION__)); 
     }
     
@@ -1991,6 +2081,7 @@ class StProductCategoriesSlider extends Module
             'display_sd'              => (int)$display_sd,
             'display_as_grid'         => Configuration::get('ST_PRO_CATE_GRID'),
             'hook_hash'               => $display_on,
+            'countdown_on'            => Configuration::get('ST_PRO_CATE_COUNTDOWN_ON'.$ext)
         ));
         return true;
     }
@@ -2004,6 +2095,9 @@ class StProductCategoriesSlider extends Module
                 $custom_css = '';
             
                 $group_css = '';
+                $title_block_no_bg = '.pc_slider_block_container .title_block, .pc_slider_block_container .nav_top_right .flex-direction-nav,.pc_slider_block_container .title_block a, .pc_slider_block_container .title_block span{background:none;}';
+            
+                
                 if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
                     $group_css .= 'background-color:'.$bg_color.';';
                 if ($bg_img = Configuration::get($this->_prefix_st.'BG_IMG'))
@@ -2018,8 +2112,8 @@ class StProductCategoriesSlider extends Module
                     $group_css .= 'background-image: url('.$img.');';
                 }
                 if($group_css)
-                    $custom_css .= '.pc_slider_block_container{background-attachment:fixed;'.$group_css.'}.pc_slider_block_container.section .title_block,.nav_top_right .flex-direction-nav,.pc_slider_block_container.section .title_block a, .pc_slider_block_container.section .title_block span{background:none;}';
-
+                    $custom_css .= '.pc_slider_block_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
+                
                 if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                     $custom_css .= '.pc_slider_block_container{padding-top:'.$top_padding.'px;}';
                 if ($bottom_padding = (int)Configuration::get($this->_prefix_st.'BOTTOM_PADDING'))
@@ -2034,6 +2128,8 @@ class StProductCategoriesSlider extends Module
 
                 if ($title_color = Configuration::get($this->_prefix_st.'TITLE_COLOR'))
                     $custom_css .= '.pc_slider_block_container.block .title_block a, .pc_slider_block_container.block .title_block span{color:'.$title_color.';}';
+                if (Configuration::get($this->_prefix_st.'TAB_TITLE_NO_BG'))
+                    $custom_css .= $title_block_no_bg;
                 if ($title_hover_color = Configuration::get($this->_prefix_st.'TITLE_HOVER_COLOR'))
                     $custom_css .= '.pc_slider_block_container.block .title_block a:hover{color:'.$title_hover_color.';}';
 
@@ -2086,6 +2182,8 @@ class StProductCategoriesSlider extends Module
                             $custom_css .= $classname.'{padding-bottom:'.(int)$v['bottom_padding'].'px;}';
 
                         $group_css = '';
+                        $title_block_no_bg = $classname.' .title_block, '.$classname.' .nav_top_right .flex-direction-nav,'.$classname.' .title_block a{background:none;}';
+            
                         if ($v['bg_color'])
                             $group_css .= 'background-color:'.$v['bg_color'].';';
                         if ($v['bg_img'])
@@ -2100,10 +2198,12 @@ class StProductCategoriesSlider extends Module
                             $group_css .= 'background-image: url('.$img.');';
                         }
                         if($group_css)
-                            $custom_css .= $classname.'{background-attachment:fixed;'.$group_css.'}';
+                            $custom_css .= $classname.'{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
                         
                         if (isset($v['title_alignment']) && $v['title_alignment'])
                             $custom_css .= $classname.' .title_block{text-align:center;}';
+                        if ($v['title_no_bg'])
+                            $custom_css .= $title_block_no_bg;
                         if (isset($v['title_font_size']) && $v['title_font_size'])
                         {
                              $custom_css .= $classname.' .title_block{font-size:'.$v['title_font_size'].'px;}';
@@ -2317,6 +2417,7 @@ class StProductCategoriesSlider extends Module
             'hide_mob'=> Configuration::get('ST_PRO_CATE_HIDE_MOB'),
             'display_sd'=> Configuration::get('ST_PRO_CATE_DISPLAY_SD'),
             'grid'       => Configuration::get('ST_PRO_CATE_GRID'),
+            'countdown_on' => Configuration::get('ST_PRO_CATE_COUNTDOWN_ON'),
             
             'easing_col'=> Configuration::get('ST_PRO_CATE_EASING_COL'),
             'slideshow_col'=> Configuration::get('ST_PRO_CATE_SLIDESHOW_COL'),
@@ -2326,7 +2427,8 @@ class StProductCategoriesSlider extends Module
             'loop_col'=> Configuration::get('ST_PRO_CATE_LOOP_COL'),
             'move_col'=> Configuration::get('ST_PRO_CATE_MOVE_COL'),
             'items_col'=> Configuration::get('ST_PRO_CATE_ITEMS_COL'),
-            'hide_mob_col'=> Configuration::get('ST_PRO_CATE_HIDE_MOB_COL'),  
+            'hide_mob_col'=> Configuration::get('ST_PRO_CATE_HIDE_MOB_COL'),
+            'countdown_on_col' => Configuration::get('ST_PRO_CATE_COUNTDOWN_ON_COL'),  
 
             'top_padding'        => Configuration::get($this->_prefix_st.'TOP_PADDING'),
             'bottom_padding'     => Configuration::get($this->_prefix_st.'BOTTOM_PADDING'),
@@ -2339,6 +2441,7 @@ class StProductCategoriesSlider extends Module
 
             'title_color'           => Configuration::get($this->_prefix_st.'TITLE_COLOR'),
             'title_hover_color'     => Configuration::get($this->_prefix_st.'TITLE_HOVER_COLOR'),
+            'tab_title_no_bg'       => Configuration::get($this->_prefix_st.'TAB_TITLE_NO_BG'),
             'text_color'            => Configuration::get($this->_prefix_st.'TEXT_COLOR'),
             'price_color'           => Configuration::get($this->_prefix_st.'PRICE_COLOR'),
             'link_hover_color'      => Configuration::get($this->_prefix_st.'LINK_HOVER_COLOR'),

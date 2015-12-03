@@ -107,7 +107,6 @@ class StblogCategoryModuleFrontController extends StblogModuleFrontController
                 'category_layouts' => Configuration::get('ST_BLOG_CATE_LAYOUTS'),
 			    'path' => $this->getPath($this->category->id),
                 'imageSize' => StBlogImageClass::$imageTypeDef,
-                'cate_row_blog_nbr' => Configuration::get('ST_BLOG_CATE_ROW_BLOG_NBR'),
                 'display_viewcount' => Configuration::get('ST_BLOG_DISPLAY_VIEWCOUNT'),
                 'requestPage' => $requestPage,
             ));

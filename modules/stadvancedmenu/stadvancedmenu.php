@@ -94,7 +94,7 @@ class StAdvancedMenu extends Module
 	{
 		$this->name          = 'stadvancedmenu';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.9.9';
+		$this->version       = '2.1.1';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
 
@@ -141,6 +141,7 @@ class StAdvancedMenu extends Module
             $this->registerHook('displayTopSecondary') &&
             $this->registerHook('displayLeftColumn') &&
             $this->registerHook('displayMobileMenu') &&
+            $this->registerHook('displaySideBar') &&
 			$this->registerHook('actionObjectCategoryUpdateAfter') &&
 			$this->registerHook('actionObjectCategoryDeleteAfter') &&
 			$this->registerHook('actionObjectCmsUpdateAfter') &&
@@ -309,6 +310,7 @@ class StAdvancedMenu extends Module
                 `active` tinyint(1) unsigned NOT NULL DEFAULT 1,
     			`new_window` TINYINT( 1 ) NOT NULL DEFAULT 0,
                 `txt_color` varchar(7) DEFAULT NULL,
+                `link_color` varchar(7) DEFAULT NULL,
                 `bg_color` varchar(7) DEFAULT NULL,
                 `txt_color_over` varchar(7) DEFAULT NULL,
                 `bg_color_over` varchar(7) DEFAULT NULL,
@@ -821,6 +823,16 @@ class StAdvancedMenu extends Module
                 $this->_html .= $this->displayError($this->l('An error occurred while updating the status.'));
         }
 		
+        if (Tools::isSubmit('copystadvancedmenu'))
+        {
+            if($this->processCopyAdvancedMenu($id_st_advanced_menu))
+            {
+                $this->clearStAdvancedmenuCache();
+                Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&conf=19&token='.Tools::getAdminTokenLite('AdminModules'));
+            }                
+            else
+                $this->_html .= $this->displayError($this->l('An error occurred while copy menu.'));
+        }
         
         if (Tools::isSubmit('addstadvancedmenu'))
 		{
@@ -1292,21 +1304,24 @@ class StAdvancedMenu extends Module
                     ),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'text',
@@ -1760,21 +1775,24 @@ class StAdvancedMenu extends Module
                     ),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'text',
@@ -1995,21 +2013,24 @@ class StAdvancedMenu extends Module
                     ),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'text',
@@ -2174,21 +2195,24 @@ class StAdvancedMenu extends Module
                     ),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'text',
@@ -2410,21 +2434,24 @@ class StAdvancedMenu extends Module
                     ),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'text',
@@ -2632,21 +2659,24 @@ class StAdvancedMenu extends Module
                     ),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'text',
@@ -2689,7 +2719,54 @@ class StAdvancedMenu extends Module
                 'stay' => true
             ),
         );
-
+        
+        $this->fields_form[1]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Advanced settings'),
+                'icon' => 'icon-cogs'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'color',
+                    'label' => $this->l('Text color:'),
+                    'name' => 'txt_color',
+                    'class' => 'color',
+                    'size' => 20,
+                ), 
+                array(
+                    'type' => 'color',
+                    'label' => $this->l('Link color:'),
+                    'name' => 'link_color',
+                    'class' => 'color',
+                    'size' => 20,
+                ), 
+                array(
+                    'type' => 'color',
+                    'label' => $this->l('Link hover color:'),
+                    'name' => 'txt_color_over',
+                    'class' => 'color',
+                    'size' => 20,
+                ),
+                array(
+                    'type' => 'html',
+                    'id' => 'a_cancel',
+                    'label' => '',
+                    'name' => '<a class="btn btn-default btn-block fixed-width-md" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&id_st_advanced_column='.$id_parent.'&viewstadvancedcolumn&token='.Tools::getAdminTokenLite('AdminModules').'"><i class="icon-arrow-left"></i> Back to list</a><a class="btn btn-default btn-block fixed-width-md" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'"><i class="icon-arrow-left"></i> Back to home page</a>',                  
+                ),
+            ),
+            'buttons' => array(
+                array(
+                    'type' => 'submit',
+                    'title'=> $this->l(' Save '),
+                    'icon' => 'process-icon-save',
+                    'class'=> 'pull-right'
+                ),
+            ),
+            'submit' => array(
+                'title' => $this->l('Save and stay'),
+                'stay' => true
+            ),
+        );
         if(Validate::isLoadedObject($menu))
         {
             $this->fields_form[0]['form']['input'][] = array('type' => 'hidden', 'name' => 'id_st_advanced_menu');
@@ -3014,8 +3091,9 @@ class StAdvancedMenu extends Module
 		$helper = new HelperList();
 		$helper->shopLinkType = '';
 		$helper->simple_header = false;
+        $helper->module = $this;
 		$helper->identifier = 'id_st_advanced_menu';
-		$helper->actions = array('view', 'edit', 'delete');
+		$helper->actions = array('view', 'edit', 'delete','duplicate');
 		$helper->show_toolbar = true;
 		$helper->toolbar_btn['new'] =  array(
 			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&add'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
@@ -3027,6 +3105,11 @@ class StAdvancedMenu extends Module
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 		return $helper;
 	}
+    
+    public function displayDuplicateLink($token, $id, $name)
+    {
+        return '<li class="divider"></li><li><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&copy'.$this->name.'&id_st_advanced_menu='.(int)$id.'&token='.$token.'"><i class="icon-copy"></i>'.$this->l(' Duplicate ').'</a></li>';
+    }
 
     public static function displayWidth($value, $row)
     {
@@ -3147,21 +3230,24 @@ class StAdvancedMenu extends Module
                     'desc' => $this->l('This title would not show on the front office.'),
                 ),
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Hide on mobile devices:'),
-                    'name' => 'hide_on_mobile',
+                    'type' => 'radio',
+					'label' => $this->l('Hide:'),
+					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-                    'is_bool' => true,
-                    'values' => array(
+					'values' => array(
+						array(
+							'id' => 'hide_on_mobile_0',
+							'value' => 0,
+							'label' => $this->l('Visible on all devices')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Visible on large devices (screen width > 768px)')),
                         array(
-                            'id' => 'hide_on_mobile_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'hide_on_mobile_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Visible on small devices (screen width < 768px)')),
+					),
                 ),
                 array(
                     'type' => 'switch',
@@ -3430,13 +3516,15 @@ class StAdvancedMenu extends Module
                 {
                     if($v['txt_color'])
                     {
-                        $custom_css .= '#st_advanced_menu_wrap #st_advanced_ma_'.$v['id_st_advanced_menu'].',#st_advanced_menu_column_block #st_advanced_ma_'.$v['id_st_advanced_menu'].'{color:'.$v['txt_color'].';}';
+                        $custom_css .= '#st_advanced_menu_wrap #st_advanced_ma_'.$v['id_st_advanced_menu'].',#st_advanced_menu_column_block #st_advanced_ma_'.$v['id_st_advanced_menu'].', #st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].', #st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' a,#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].',#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' a{color:'.$v['txt_color'].';}';
                         $v['item_t']==1 && $custom_css .= '#st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' .advanced_ma_level_1,#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' .advanced_ma_level_1{color:'.$v['txt_color'].';}';
                     }
+                    if($v['link_color'])
+                        '#st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' a,#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' a{color:'.$v['link_color'].';}';
                     if($v['txt_color_over'])
                     {
-                        $custom_css .= '#st_advanced_menu_wrap #st_advanced_ma_'.$v['id_st_advanced_menu'].':hover, #st_advanced_menu_wrap #st_advanced_menu_'.$v['id_st_advanced_menu'].'.current .advanced_ma_level_0,#st_advanced_menu_column_block #st_advanced_ma_'.$v['id_st_advanced_menu'].':hover, #st_advanced_menu_column_block #st_advanced_menu_'.$v['id_st_advanced_menu'].'.current .advanced_ma_level_0{color:'.$v['txt_color_over'].';}';
-                        $v['item_t']==1 && $custom_css .= '#st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' .advanced_ma_level_1:hover,#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' .advanced_ma_level_1:hover{color:'.$v['txt_color'].';}';
+                        $custom_css .= '#st_advanced_menu_wrap #st_advanced_ma_'.$v['id_st_advanced_menu'].':hover, #st_advanced_menu_wrap #st_advanced_menu_'.$v['id_st_advanced_menu'].'.current .advanced_ma_level_0,#st_advanced_menu_column_block #st_advanced_ma_'.$v['id_st_advanced_menu'].':hover, #st_advanced_menu_column_block #st_advanced_menu_'.$v['id_st_advanced_menu'].'.current .advanced_ma_level_0,#st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' a:hover,#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' a:hover{color:'.$v['txt_color_over'].';}';
+                        $v['item_t']==1 && $custom_css .= '#st_advanced_menu_wrap #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' .advanced_ma_level_1:hover,#st_advanced_menu_column_block #st_advanced_menu_block_'.$v['id_st_advanced_menu'].' .advanced_ma_level_1:hover{color:'.$v['txt_color_over'].';}';
                     }    
 
                     if($v['bg_color'])
@@ -3551,6 +3639,8 @@ class StAdvancedMenu extends Module
                                     $category = new Category($k['item_v'], $this->context->language->id);
 
                                     $sub_categories = $category->recurseLiteCategTree(1,0);
+                                    if ($k['title'])
+                                        $sub_categories['name'] = $k['title'];
                                     $sub_categories['id_image'] = file_exists(_PS_CAT_IMG_DIR_.$sub_categories['id'].'.jpg') ? (int)$sub_categories['id'] : Language::getIsoById(Context::getContext()->language->id).'-default';
                                     $sub_categories['link_rewrite'] = Category::getLinkRewrite($sub_categories['id'], $this->context->language->id);
                                     $sub_categories['children'] = $category->getProducts($this->context->language->id, 0, $k['item_limit']);
@@ -3561,7 +3651,8 @@ class StAdvancedMenu extends Module
                                     //categories
                                     $category = new Category($k['item_v'], $this->context->language->id);
                                     $sub_categories = $category->recurseLiteCategTree($k['sub_levels'],0);
-                                    
+                                    if ($k['title'])
+                                        $sub_categories['name'] = $k['title'];
                                     $this->handle_sub_categories($sub_categories, $k['item_limit'], $k['sub_limit']);
                                     $k['children'] = $sub_categories;
                                 }
@@ -3642,7 +3733,7 @@ class StAdvancedMenu extends Module
             }
     }
 
-    private function _prepareHook($location=0)
+    private function _prepareHook($location=NULL)
     {
         if (!isset(StAdvancedMenu::$cache_stadvancedmenu))
             StAdvancedMenu::$cache_stadvancedmenu = $this->_prepareData();
@@ -3650,10 +3741,15 @@ class StAdvancedMenu extends Module
         if (StAdvancedMenu::$cache_stadvancedmenu === false)
             return false;
 
-        $menu = array();
-        foreach (StAdvancedMenu::$cache_stadvancedmenu as $v) {
-            if($v['location']==$location)
-                $menu[] =$v;
+        if(is_null($location))
+            $menu = StAdvancedMenu::$cache_stadvancedmenu;
+        else
+        {
+            $menu = array();
+            foreach (StAdvancedMenu::$cache_stadvancedmenu as $v) {
+                if($v['location']==$location)
+                    $menu[] =$v;
+            }
         }
 
         $this->smarty->assign(array(
@@ -3661,6 +3757,7 @@ class StAdvancedMenu extends Module
             'megamenu_width' => Configuration::get('STSN_ADV_MEGAMENU_WIDTH'),
             'new_sticker' => Configuration::get('STSN_NEW_STYLE'),
             'sale_sticker' => Configuration::get('STSN_SALE_STYLE'),
+            'adv_menu_title' => Configuration::get('STSN_ADV_MENU_TITLE'),
             'manufacturerSize' => Image::getSize(ImageType::getFormatedName('manufacturer')),
             'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
             'mediumSize'=>Image::getSize(ImageType::getFormatedName('medium')),
@@ -3668,7 +3765,7 @@ class StAdvancedMenu extends Module
         ));
         return true;
     }
-    public function hookDisplayTopSecondary($param)
+    public function hookDisplayTopSecondary($params)
     {
         if (!$this->isCached('stadvancedmenu.tpl', $this->getCacheId()))
         {
@@ -3676,7 +3773,7 @@ class StAdvancedMenu extends Module
         }
         return $this->display(__FILE__, 'stadvancedmenu.tpl', $this->getCacheId());
     }
-    public function hookDisplayLeftColumn($param)
+    public function hookDisplayLeftColumn($params)
     {
         $this->setLastVisitedCategory();
         if (!$this->isCached('stadvancedmenu-column.tpl', $this->getCacheId()))
@@ -3685,15 +3782,23 @@ class StAdvancedMenu extends Module
         }
         return $this->display(__FILE__, 'stadvancedmenu-column.tpl', $this->getCacheId());
     }
-    public function hookDisplayRightColumn($param)
+    public function hookDisplayRightColumn($params)
     {
-        return $this->hookDisplayLeftColumn($param);
+        return $this->hookDisplayLeftColumn($params);
     }
-    public function hookDisplayMobileMenu($param)
+    public function hookDisplayMobileMenu($params)
+    {
+        return $this->display(__FILE__, 'stadvancedmenu-mobile-tri.tpl');
+    }
+    public function hookDisplayMobileBar($params)
+    {
+        return $this->display(__FILE__, 'stadvancedmenu-mobile-tri.tpl');
+    }
+    public function hookDisplaySideBar($params)
     {
         if (!$this->isCached('stadvancedmenu-mobile.tpl', $this->getCacheId()))
         {
-            $this->_prepareHook(0);            
+            $this->_prepareHook();            
         }
         return $this->display(__FILE__, 'stadvancedmenu-mobile.tpl', $this->getCacheId());
     }
@@ -3713,9 +3818,9 @@ class StAdvancedMenu extends Module
         }
         return Cache::retrieve($cache_id);
     }
-    public function hookDisplayTop($param)
+    public function hookDisplayTop($params)
     {
-         return $this->hookDisplayTopSecondary($param);
+         return $this->hookDisplayTopSecondary($params);
     }
     
     public function recurseLink($row)
@@ -3979,6 +4084,7 @@ class StAdvancedMenu extends Module
 	
 	public function hookActionObjectProductDeleteAfter($params)
 	{
+        StAdvancedProductClass::deleteByIdProduct($params['object']->id);
 		$this->clearStAdvancedmenuCache();
 	}
 	
@@ -4164,5 +4270,83 @@ class StAdvancedMenu extends Module
             return false;
         
         return @file_put_contents($file, @file_get_contents($file_tpl));
+    }
+    
+    public function processCopyAdvancedMenu($id_st_advanced_menu = 0)
+    {
+        if (!$id_st_advanced_menu)
+            return false;
+            
+        $root = new StAdvancedMenuClass($id_st_advanced_menu);
+        
+        $id_shop = (int)Context::getContext()->shop->id;
+        
+        // Copy main menu
+        $root2 = clone $root;
+        $root2->id = 0;
+        $root2->id_st_advanced_menu = 0;
+        $root2->id_shop = $id_shop;
+        $ret = $root2->add();
+        
+        // Copy menu column
+        foreach(Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'st_advanced_column WHERE id_st_advanced_menu='.(int)$id_st_advanced_menu) AS $row)
+        {
+            $column = new StAdvancedColumnClass((int)$row['id_st_advanced_column']);
+            $column->id_st_advanced_menu = (int)$root2->id;
+            $column->id=0;
+            $column->id_st_advanced_column = 0;
+            $ret &= $column->add();
+            
+            $ret &= $this->processCopySubMenus($row['id_st_advanced_column'], $column->id, $id_shop);
+        }
+        return $ret;
+    }
+    
+    public function processCopySubMenus($id_menu_column_old = 0, $id_menu_column_new = 0, $id_shop = 0, $id_parent_old = 0, $id_parent_new=0)
+    {
+        if (!$id_menu_column_old || !$id_menu_column_new)
+        {
+            $this->_html .= $this->displayError($this->l('Id menu column error:'));
+            return false;   
+        }        
+    
+        $ret = true;
+        $old = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'st_advanced_menu WHERE id_st_advanced_column='.(int)$id_menu_column_old.' AND id_parent='.$id_parent_old.' ORDER BY id_parent ASC');
+        foreach($old AS $row)
+        {
+            $menu = new StAdvancedMenuClass($row['id_st_advanced_menu']);
+                
+            $menu->id_shop = $id_shop;
+            $menu->id = 0;
+            $menu->id_st_advanced_menu = 0;
+            $menu->id_st_advanced_column = $id_menu_column_new;
+            $menu->id_parent = $id_parent_new;
+            $ret &= $menu->add();
+            
+            $ret &= $this->processCopyBrands($row['id_st_advanced_menu'], $menu->id);
+            $ret &= $this->processCopyProducts($row['id_st_advanced_menu'], $menu->id);
+            $child = Db::getInstance()->getValue('SELECT COUNT(0) FROM '._DB_PREFIX_.'st_advanced_menu WHERE id_parent='.(int)$row['id_st_advanced_menu'].' AND id_st_advanced_column='.(int)$id_menu_column_old);
+            if ($child > 0)
+                $ret &= $this->processCopySubMenus($id_menu_column_old, $id_menu_column_new, $id_shop, $row['id_st_advanced_menu'], $menu->id);
+        }
+        return $ret;
+    }
+    
+    public function processCopyBrands($id_menu_old = 0, $id_mene_new = 0)
+    {
+        $ret = true;
+        $old = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'st_advanced_menu_brand WHERE id_st_advanced_menu='.(int)$id_menu_old);
+        foreach($old AS $row)
+            $ret &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'st_advanced_menu_brand values('.(int)$id_mene_new.', '.(int)$row['id_manufacturer'].')');
+        return $ret;
+    }
+    
+    public function processCopyProducts($id_menu_old = 0, $id_mene_new = 0)
+    {
+        $ret = true;
+        $old = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'st_advanced_menu_product WHERE id_st_advanced_menu='.(int)$id_menu_old);
+        foreach($old AS $row)
+            $ret &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'st_advanced_menu_product values('.(int)$id_mene_new.', '.(int)$row['id_product'].')');
+        return $ret;
     }
 }

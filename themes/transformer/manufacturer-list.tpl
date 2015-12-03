@@ -44,21 +44,6 @@
 	{if $nbManufacturers > 0}
     	<div class="content_sortPagiBar">
         	<div class="sortPagiBar clearfix">
-				{if isset($manufacturer) && $manufacturer.nb_products > 0}
-					<ul class="display">
-						<li class="display-title">
-							{l s='View:'}
-						</li>
-						<li id="grid">
-							<a rel="nofollow" href="#" title="{l s='Grid'}">
-							</a>
-						</li>
-						<li id="list">
-							<a rel="nofollow" href="#" title="{l s='List'}">
-							</a>
-						</li>
-					</ul>
-				{/if}
                 {include file="./nbr-product-page.tpl"}
             </div>
         	<div class="top-pagination-content clearfix bottom-line">
@@ -85,23 +70,23 @@
 						<div class="row">
 			            	<div class="left-side col-xs-12 col-sm-3 col-md-3">
 								<div class="logo">
-									{if $manufacturer.nb_products > 0}
+									{if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 										<a
 										class="lnk_img" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}" title="{$manufacturer.name|escape:'html':'UTF-8'}" >
 									{/if}
 										<img src="{$img_manu_dir}{$manufacturer.image|escape:'html':'UTF-8'}-manufacturer_default.jpg" class="replace-2x" width="{$smarty.capture.manufacturer_default_width}" height="{$smarty.capture.manufacturer_default_width}" alt="{$manufacturer.name|escape:'html':'UTF-8'}" />
-									{if $manufacturer.nb_products > 0}
+									{if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 										</a>
 									{/if}
 								</div> <!-- .logo -->
 							</div> <!-- .left-side -->
 							<div class="middle-side col-xs-12 col-sm-9 col-md-9">
 								<h3 class="s_title_block">
-									{if $manufacturer.nb_products > 0}
+									{if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 										<a class="product-name" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
 									{/if}
 										{$manufacturer.name|truncate:60:'...'|escape:'html':'UTF-8'}
-									{if $manufacturer.nb_products > 0}
+									{if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 										</a>
 									{/if}
 								</h3>
@@ -109,18 +94,20 @@
 									{$manufacturer.short_description}
 								</div>
 								<div class="right-side-content">
-		                            {if $manufacturer.nb_products > 0}
+		                            {if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 		                            	<a class="product-counter" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">
 		                            {/if}
-		                            {if $manufacturer.nb_products == 1}
+		                           {if isset($manufacturer.nb_products) && $manufacturer.nb_products == 1}
 		                            	{l s='%d product' sprintf=$manufacturer.nb_products|intval}
 		                            {else}
-		                            	{l s='%d products' sprintf=$manufacturer.nb_products|intval}
+		                            	 {if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
+			                            	{l s='%d products' sprintf=$manufacturer.nb_products|intval}
+			                              {/if}
 		                            {/if}
-		                            {if $manufacturer.nb_products > 0}
+		                            {if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 		                        		</a>
 		                        	{/if}
-				                    {if $manufacturer.nb_products > 0}
+				                    {if isset($manufacturer.nb_products) && $manufacturer.nb_products > 0}
 				                        <a class="go" href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}"> {l s='view products'}
 				                        </a>
 				                    {/if}

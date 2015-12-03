@@ -26,7 +26,7 @@
 <!-- MODULE Top-sellers Slider -->
 {if $aw_display || (isset($products) && $products)}
 {capture name="column_slider"}{if isset($column_slider) && $column_slider}_column{/if}{/capture}
-<div id="best-sellers_block_center_container_{$hook_hash}" class="best-sellers_block_center_container {if $hide_mob} hidden-xs {/if} block">
+<div id="best-sellers_block_center_container_{$hook_hash}" class="best-sellers_block_center_container {if $hide_mob} hidden-xs {/if} block{if $countdown_on} s_countdown_block{/if}">
 {if isset($homeverybottom) && $homeverybottom}<div class="wide_container"><div class="container">{/if}
 <section id="best-sellers_block_center_{$hook_hash}{$smarty.capture.column_slider}" class="best-sellers_block_center{$smarty.capture.column_slider} products_block {if !!isset($column_slider) || !$column_slider} section {/if} {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">
 	<h4 class="title_block"><a href="{$link->getPageLink('best-sales')|escape:'html'}" title="{l s='Top sellers' mod='stbestsellers'}">{l s='Top sellers' mod='stbestsellers'}</a></h4>

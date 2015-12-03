@@ -23,34 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- MODULE Block cart -->
-<div id="blockcart_mobile_wrap" class="blockcart_wrap {if $PS_CATALOG_MODE} header_user_catalog{/if}">
-		<a id="shopping_cart_mobile" href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart_mod'}" rel="nofollow" class="shopping_cart clearfix header_item">
-			<div class="ajax_cart_left icon_wrap">
-				<i class="icon-basket icon-0x icon_btn"></i>
-				<span class="icon_text">{l s='Cart' mod='blockcart_mod'}</span>
-				<span class="ajax_cart_quantity amount_circle {if $cart_qties > 9} dozens {/if}">{$cart_qties}</span>
-			</div>
-			<span class="ajax_cart_quantity ajax_cart_middle">{$cart_qties}</span>
-			<span class="ajax_cart_product_txt ajax_cart_middle">{l s='item(s)' mod='blockcart_mod'}</span>
-			<span class="ajax_cart_split ajax_cart_middle">{l s='-' mod='blockcart_mod'}</span>
-			<span class="ajax_cart_total ajax_cart_right">
-				{if $cart_qties > 0}
-					{if $priceDisplay == 1}
-						{assign var='blockcart_cart_flag' value='Cart::BOTH_WITHOUT_SHIPPING'|constant}
-						{convertPrice price=$cart->getOrderTotal(false, $blockcart_cart_flag)}
-					{else}
-						{assign var='blockcart_cart_flag' value='Cart::BOTH_WITHOUT_SHIPPING'|constant}
-						{convertPrice price=$cart->getOrderTotal(true, $blockcart_cart_flag)}
-					{/if}
-				{else}
-				    {convertPrice price=0}
-				{/if}
-			</span>
-			{if $ajax_allowed && isset($blockcart_top) && !$blockcart_top}
-				<span class="block_cart_expand{if !isset($colapseExpandStatus) || (isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded')} unvisible{/if}">&nbsp;</span>
-				<span class="block_cart_collapse{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'} unvisible{/if}">&nbsp;</span>
-			{/if}
-		</a>
+{capture name="small_default_width"}{getWidthSize type='small_default'}{/capture}
+{capture name="small_default_height"}{getHeightSize type='small_default'}{/capture}
+<div id="blockcart_mobile_wrap" class="blockcart_wrap {if $PS_CATALOG_MODE} header_user_catalog{/if} st-side-content">
 		{if !$PS_CATALOG_MODE}
 			<div id="cart_block_mobile" class="cart_block block exclusive">
 				<div class="block_content">
@@ -62,7 +37,7 @@
 									{assign var='productId' value=$product.id_product}
 									{assign var='productAttributeId' value=$product.id_product_attribute}
 									<dt data-id="cart_block_product_{$product.id_product|intval}_{if $product.id_product_attribute}{$product.id_product_attribute|intval}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery|intval}{else}0{/if}" class="clearfix {if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
-										<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" alt="{$product.name|escape:'html':'UTF-8'}" /></a>
+										<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" alt="{$product.name|escape:'html':'UTF-8'}" class="replace-2x" width="{$smarty.capture.small_default_width}" height="{$smarty.capture.small_default_height}" /></a>
 
 										<span class="quantity-formated"><span class="quantity">{$product.cart_quantity}</span>x</span><a class="cart_block_product_name" href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}">{$product.name|truncate:25:'...'|escape:'html':'UTF-8'}</a>
 										<span class="remove_link">
@@ -73,6 +48,9 @@
 										<span class="price">
 											{if !isset($product.is_gift) || !$product.is_gift}
 												{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}
+												<div class="hookDisplayProductPriceBlock-price">
+                                                    {hook h="displayProductPriceBlock" product=$product type="price" from="blockcart"}
+                                                </div>
 											{else}
 												{l s='Free!' mod='blockcart_mod'}
 											{/if}
@@ -111,7 +89,7 @@
 								{/foreach}
 							</dl>
 						{/if}
-						<p class="cart_block_no_products{if $products} unvisible{/if}">
+						<p class="cart_block_no_products{if $products} unvisible{/if} alert alert-warning">
 							{l s='No products' mod='blockcart_mod'}
 						</p>
 						{if $discounts|@count > 0}
@@ -138,16 +116,17 @@
 								{/foreach}
 							</table>
 						{/if}
-						<div class="cart-prices">
+						{assign var='free_ship' value=count($cart->getDeliveryAddressesWithoutCarriers(true))}
+						<div class="cart-prices {if !$products} unvisible{/if}">
 							<div class="cart-prices-line first-line">
-								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
+								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery || $free_ship)} unvisible{/if}">
 									{if $shipping_cost_float == 0}
 										{if !($page_name == 'order-opc') && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart_mod'}{else}{l s='Free shipping!' mod='blockcart_mod'}{/if}
 									{else}
 										{$shipping_cost}
 									{/if}
 								</span>
-								<span{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} class="unvisible"{/if}>
+								<span{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery || $free_ship)} class="unvisible"{/if}>
 									{l s='Shipping' mod='blockcart_mod'}
 								</span>
 							</div>
@@ -174,7 +153,7 @@
 								<span class="price cart_block_total ajax_block_cart_total">{$total}</span>
 								<span>{l s='Total' mod='blockcart_mod'}</span>
 							</div>
-							{if $use_taxes && $display_tax_label == 1 && $show_tax}
+							{if $use_taxes && $display_tax_label && $show_tax}
 								<p>
 								{if $priceDisplay == 0}
 									{l s='Prices are tax included' mod='blockcart_mod'}
@@ -184,7 +163,7 @@
 								</p>
 							{/if}
 						</div>
-						<p class="cart-buttons">
+						<p class="cart-buttons {if !$products} unvisible{/if}">
 							<a id="button_order_cart" class="btn btn-default" href="{$link->getPageLink("$order_process", true)|escape:"html":"UTF-8"}" title="{l s='Check out' mod='blockcart_mod'}" rel="nofollow">{l s='Check out' mod='blockcart_mod'}</a>
 						</p>
 					</div>

@@ -98,7 +98,7 @@ class HomeFeaturedSlider extends Module
 	{
 		$this->name = 'homefeaturedslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.4.7';
+		$this->version = '1.4.8';
 		$this->author = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap = true;
@@ -116,9 +116,14 @@ class HomeFeaturedSlider extends Module
         $this->_hooks = array(
             'Hooks' => array(
                 array(
-        			'id' => 'displayFullWidthTop',
+                    'id' => 'displayFullWidthTop',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop')
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
         			'val' => '1',
-        			'name' => $this->l('displayFullWidthTop')
+        			'name' => $this->l('displayFullWidthTop2')
         		),
         		array(
         			'id' => 'displayHomeTop',
@@ -250,6 +255,7 @@ class HomeFeaturedSlider extends Module
 	{
 		if (!Configuration::updateValue('HOME_FEATURED_S_NBR_MOD', 8) 
             || !Configuration::updateValue('HOME_FEATURED_S_CAT', (int)Context::getContext()->shop->getCategory())
+            || !Configuration::updateValue('HOME_FEATURED_S_COUNTDOWN_ON', 1)
             || !parent::install() 
             || !$this->registerHook('displayHeader')
 			|| !$this->registerHook('addproduct')
@@ -305,6 +311,7 @@ class HomeFeaturedSlider extends Module
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_DISABLED_BG', '')
 
             || !Configuration::updateValue($this->_prefix_st.'TITLE_ALIGNMENT', 0)
+            || !Configuration::updateValue($this->_prefix_st.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_FONT_SIZE', 0)
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_NAV', 0)
         )
@@ -497,6 +504,25 @@ class HomeFeaturedSlider extends Module
                     'desc' => $this->l('Choose the category ID of the products that you would like to display on homepage (default: 2 for "Home").'),
                     'validation' => 'isUnsignedInt',
                 ),
+                array(
+					'type' => 'switch',
+					'label' => $this->l('Display countdown timers:'),
+					'name' => 'countdown_on',
+					'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+					'values' => array(
+						array(
+							'id' => 'countdown_on_on',
+							'value' => 1,
+							'label' => $this->l('Yes')),
+						array(
+							'id' => 'countdown_on_off',
+							'value' => 0,
+							'label' => $this->l('No')),
+					),
+                    'validation' => 'isBool',
+				),
             ),
             'submit' => array(
                 'title' => $this->l('   Save all   ')
@@ -786,6 +812,25 @@ class HomeFeaturedSlider extends Module
                             'value' => 1,
                             'label' => $this->l('Center')),
                     ),
+                    'validation' => 'isBool',
+                ),                
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
                     'validation' => 'isBool',
                 ),
                 array(
@@ -1086,7 +1131,7 @@ class HomeFeaturedSlider extends Module
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -1136,6 +1181,7 @@ class HomeFeaturedSlider extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
+            $title_block_no_bg = '.featured_products_sldier_block_center_container .title_block,.featured_products_sldier_block_center_container .nav_top_right .flex-direction-nav,.featured_products_sldier_block_center_container .title_block a, .featured_products_sldier_block_center_container .title_block span{background:none;}';
             
             $group_css = '';
             if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
@@ -1152,7 +1198,7 @@ class HomeFeaturedSlider extends Module
                 $group_css .= 'background-image: url('.$img.');';
             }
             if($group_css)
-                $custom_css .= '.featured_products_sldier_block_center_container{background-attachment:fixed;'.$group_css.'}.featured_products_sldier_block_center_container .section .title_block,.featured_products_sldier_block_center_container .nav_top_right .flex-direction-nav,.featured_products_sldier_block_center_container .section .title_block a, .featured_products_sldier_block_center_container .section .title_block span{background:none;}';
+                $custom_css .= '.featured_products_sldier_block_center_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                 $custom_css .= '.featured_products_sldier_block_center_container{padding-top:'.$top_padding.'px;}';
@@ -1167,7 +1213,9 @@ class HomeFeaturedSlider extends Module
                 $custom_css .= '.featured_products_sldier_block_center_container{margin-bottom:'.(int)$bottom_margin.'px;}';
 
             if (Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'))
-                $custom_css .= '.featured_products_sldier_block_center_container .title_block{text-align:center;}';
+                $custom_css .= '.featured_products_sldier_block_center_container .title_block{text-align:center;}'.$title_block_no_bg;
+            if (Configuration::get($this->_prefix_st.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
             if ($title_font_size = (int)Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'))
             {
                  $custom_css .= '.featured_products_sldier_block_center_container .title_block{font-size:'.$title_font_size.'px;}';
@@ -1247,6 +1295,14 @@ class HomeFeaturedSlider extends Module
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
     }
     
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
+    }
+    
     public function hookDisplayBottomColumn($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -1257,6 +1313,9 @@ class HomeFeaturedSlider extends Module
 
     public function hookDisplayHomeVeryBottom($params)
     {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+        
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
     }    
     public function hookDisplayHomeTertiaryLeft($params)
@@ -1291,9 +1350,6 @@ class HomeFeaturedSlider extends Module
     
 	public function hookDisplayHomeSecondaryLeft($params)
 	{
-        $this->smarty->assign(array(
-            'is_homepage_secondary_left' => true,
-        ));
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__)); 
     }
     
@@ -1479,6 +1535,7 @@ class HomeFeaturedSlider extends Module
             'hide_mob'              => (int)$hide_mob,
             'display_sd'            => (int)$display_sd,
             'display_as_grid'       => Configuration::get('HOME_FEATURED_S_GRID'),
+            'countdown_on'          => Configuration::get('HOME_FEATURED_S_COUNTDOWN_ON'),
 		));
         return true;
     }
@@ -1595,6 +1652,7 @@ class HomeFeaturedSlider extends Module
     {
         $fields_values = array(
             'cat' => Configuration::get('HOME_FEATURED_S_CAT'),
+            'countdown_on' => Configuration::get('HOME_FEATURED_S_COUNTDOWN_ON'),
 
             'nbr_mod' => Configuration::get('HOME_FEATURED_S_NBR_MOD'),
             'easing' => Configuration::get('HOME_FEATURED_S_EASING'),
@@ -1644,6 +1702,7 @@ class HomeFeaturedSlider extends Module
             'direction_disabled_bg' => Configuration::get($this->_prefix_st.'DIRECTION_DISABLED_BG'),    
             
             'title_alignment'       => Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'),
+            'title_no_bg'           => Configuration::get($this->_prefix_st.'TITLE_NO_BG'),
             'title_font_size'       => Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'),
             'direction_nav'         => Configuration::get($this->_prefix_st.'DIRECTION_NAV'),
         );

@@ -43,7 +43,8 @@
   padding: 2px 0; }
 
 #layered_block_left ul li label {
-  cursor: pointer; }
+  cursor: pointer;
+  display: inline; }
 
 #layered_block_left ul {
   padding-left: 0; }

@@ -22,10 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$menu_cate.link|escape:'html':'UTF-8'}" title="{$menu_cate.name|escape:'html':'UTF-8'}" class="advanced_menu_cate_img"{if $nofollow} rel="nofollow"{/if}>
+<a href="{$menu_cate.link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$menu_cate.name|escape:'html':'UTF-8'}"{/if} class="advanced_menu_cate_img"{if $nofollow} rel="nofollow"{/if}{if $new_window} target="_blank"{/if}>
 {if $menu_cate.id_image}
-    <img src="{$link->getCatImageLink($menu_cate.link_rewrite, $menu_cate.id_image, 'category_default')|escape:'html'}" alt="{$menu_cate.name|escape:'html':'UTF-8'}" width="{$categorySize.width}" height="{$categorySize.height}" class="replace-2x img-responsive" />
+    <img src="{$link->getCatImageLink($menu_cate.link_rewrite, $menu_cate.id_image, 'category_default')|escape:'html'}" alt="{$menu_cate.name|escape:'html':'UTF-8'}" width="{$categorySize.width}" height="{$categorySize.height}" class="img-responsive" />
 {else}
-    <img src="{$img_cat_dir}default-category_default.jpg" alt="" width="{$categorySize.width}" height="{$categorySize.height}" class="replace-2x img-responsive" />
+    <img src="{$img_cat_dir}default-category_default.jpg" alt="" width="{$categorySize.width}" height="{$categorySize.height}" class="img-responsive" />
 {/if}
 </a>

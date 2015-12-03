@@ -33,7 +33,7 @@
 			{/strip}
 		</h1>
         {if $category->description}
-			<p class="cat_desc">
+			<p class="cat_desc blog_cat_desc">
 				{$category->description}
 			</p>
 		{/if}

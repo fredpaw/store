@@ -3,24 +3,27 @@
 /*********************************************************************
 					Maintenance Page Styles
 **********************************************************************/
+#body {
+	background-color: #F7F7F7;
+}
 #maintenance {
 	margin: 50px 0 0 0;
+	background-color: #fff;
+	@include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
 	.logo {
 		margin: 0 0 31px 0;	
+		text-align: center;
 	}
 	h1 {
-		font: 600 28px/34px $font-custom;
+		font: 24px $font-custom;
 		color: $base-text-color;
-		text-transform: uppercase;
-		border-bottom: 1px solid $base-border-color;
 		padding: 0 0 14px 0;
 		margin: 0 0 19px 0;
 	}
 	#message {
-		font: 600 16px/31px $font-custom;
-		padding: 0 0 0 18px;
+		font: 14px $font-custom;
 		color: #555454;
-		text-transform: uppercase;	
+		text-align: center;	
 	}
 }
 img {

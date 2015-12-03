@@ -28,7 +28,7 @@
 {if isset($product_categories) && count($product_categories)}
     {foreach $product_categories as $p_c}
         {if isset($homeverybottom) && $homeverybottom}<div id="product_categories_slider_container_{$p_c.id_category}" class="wide_container {if $hide_mob} hidden-xs {/if} block"><div class="container">{/if}
-        <section id="product_categories_slider_{$p_c.id_category}" class="product_categories_slider_block{$smarty.capture.column_slider}{if !isset($homeverybottom) || !$homeverybottom} block{/if} products_block section {if $hide_mob} hidden-xs {/if} {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">
+        <section id="product_categories_slider_{$p_c.id_category}" class="product_categories_slider_block{$smarty.capture.column_slider}{if !isset($homeverybottom) || !$homeverybottom} block{/if} products_block section {if $hide_mob} hidden-xs {/if} {if $countdown_on} s_countdown_block{/if} {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">
             <h4 class="title_block mar_b1">
                 <a href="{$link->getCategoryLink($p_c.id_category, $p_c.link_rewrite)|escape:'html'}" title="{$p_c.name|escape:'html':'UTF-8'}">{$p_c.name|escape:'html':'UTF-8'}</a>
             </h4>            

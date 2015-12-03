@@ -26,26 +26,26 @@
 {if isset($stmenu)}
 <ul class="mo_advanced_mu_level_0">
 	{foreach $stmenu as $mm}
-		{if $mm.hide_on_mobile}{continue}{/if}
-		<li class="mo_advanced_ml_level_0">
-			<a id="st_mo_advanced_ma_{$mm.id_st_advanced_menu}" href="{if $mm.m_link}{$mm.m_link|escape:'html':'UTF-8'}{else}javascript:;{/if}" class="mo_advanced_ma_level_0" title="{$mm.m_title|escape:'html':'UTF-8'}"{if $mm.nofollow} rel="nofollow"{/if}>{if $mm.m_icon}{$mm.m_icon}{else}{if $mm.icon_class}<i class="{$mm.icon_class}"></i>{/if}{$mm.m_name|escape:'html':'UTF-8'}{/if}{if $mm.cate_label}<span class="cate_label">{$mm.cate_label}</span>{/if}</a>
+		{if $mm.hide_on_mobile == 1}{continue}{/if}
+		<li class="mo_advanced_ml_level_0 mo_advanced_ml_column">
+			<a id="st_mo_advanced_ma_{$mm.id_st_advanced_menu}" href="{if $mm.m_link}{$mm.m_link|escape:'html':'UTF-8'}{else}javascript:;{/if}" class="mo_advanced_ma_level_0" {if !$adv_menu_title} title="{$mm.m_title|escape:'html':'UTF-8'}"{/if}{if $mm.nofollow} rel="nofollow"{/if}{if $mm.new_window} target="_blank"{/if}>{if $mm.m_icon}{$mm.m_icon}{else}{if $mm.icon_class}<i class="{$mm.icon_class}"></i>{/if}{$mm.m_name|escape:'html':'UTF-8'}{/if}{if $mm.cate_label}<span class="cate_label">{$mm.cate_label}</span>{/if}</a>
 			{if isset($mm.column) && count($mm.column)}
 				<span class="opener">&nbsp;</span>
 				{foreach $mm.column as $column}
-					{if $column.hide_on_mobile}{continue}{/if}
+					{if $column.hide_on_mobile == 1}{continue}{/if}
 					{if isset($column.children) && count($column.children)}
 						{foreach $column.children as $block}
-							{if $block.hide_on_mobile}{continue}{/if}
+							{if $block.hide_on_mobile == 1}{continue}{/if}
 							{if $block.item_t==1}
 								{if $block.subtype==2  && isset($block.children)}
 									<ul class="mo_advanced_mu_level_1 mo_advanced_sub_ul">
 										<li class="mo_advanced_ml_level_1 mo_advanced_sub_li">
-											<a id="st_mo_advanced_ma_{$block.id_st_advanced_menu}" href="{$block.children.link|escape:'html':'UTF-8'}" title="{$block.children.name|escape:'html':'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$block.children.name|escape:'html':'UTF-8'}{if $block.cate_label}<span class="cate_label">{$block.cate_label}</span>{/if}</a>
+											<a id="st_mo_advanced_ma_{$block.id_st_advanced_menu}" href="{$block.children.link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$block.children.name|escape:'html':'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$block.children.name|escape:'html':'UTF-8'}{if $block.cate_label}<span class="cate_label">{$block.cate_label}</span>{/if}</a>
 											{if isset($block.children.children) && is_array($block.children.children) && count($block.children.children)}
 												<span class="opener">&nbsp;</span>
 												<ul class="mo_advanced_mu_level_2 mo_advanced_sub_ul">
 												{foreach $block.children.children as $product}
-												<li class="mo_advanced_ml_level_2 mo_advanced_sub_li"><a href="{$product.link|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="mo_advanced_ma_level_2 mo_advanced_sub_a">{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}</a></li>
+												<li class="mo_advanced_ml_level_2 mo_advanced_sub_li"><a href="{$product.link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$product.name|escape:'html':'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="mo_advanced_ma_level_2 mo_advanced_sub_a">{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}</a></li>
 												{/foreach}
 												</ul>	
 											{/if}
@@ -55,9 +55,9 @@
 									{foreach $block.children.children as $menu}
 										<ul class="mo_advanced_mu_level_1 mo_advanced_sub_ul">
 											<li class="mo_advanced_ml_level_1 mo_advanced_sub_li">
-												<a href="{$menu.link|escape:'html':'UTF-8'}" title="{$menu.name|escape:'html':'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$menu.name|escape:'html':'UTF-8'}</a>
+												<a href="{$menu.link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$menu.name|escape:'html':'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$menu.name|escape:'html':'UTF-8'}</a>
 												{if isset($menu.children) && is_array($menu.children) && count($menu.children)}
-													{include file="./stadvancedmenu-category.tpl" nofollow=$block.nofollow menus=$menu.children m_level=2 ismobilemenu=true}
+													{include file="./stadvancedmenu-category.tpl" nofollow=$block.nofollow new_window=$block.new_window menus=$menu.children m_level=2 ismobilemenu=true}
 												{/if}
 											</li>
 										</ul>	
@@ -65,9 +65,9 @@
 								{elseif $block.subtype==1 || $block.subtype==3}
 									<ul class="mo_advanced_mu_level_1 mo_advanced_sub_ul">
 										<li class="mo_advanced_ml_level_1 mo_advanced_sub_li">
-											<a  id="st_mo_advanced_ma_{$block.id_st_advanced_menu}" href="{$block.children.link|escape:'html':'UTF-8'}" title="{$block.children.name|escape:'html':'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$block.children.name|escape:'html':'UTF-8'}{if $block.cate_label}<span class="cate_label">{$block.cate_label}</span>{/if}</a>
+											<a  id="st_mo_advanced_ma_{$block.id_st_advanced_menu}" href="{$block.children.link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$block.children.name|escape:'html':'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$block.children.name|escape:'html':'UTF-8'}{if $block.cate_label}<span class="cate_label">{$block.cate_label}</span>{/if}</a>
     										{if isset($block.children.children) && count($block.children.children)}
-												{include file="./stadvancedmenu-category.tpl" nofollow=$block.nofollow menus=$block.children.children m_level=2 ismobilemenu=true}
+												{include file="./stadvancedmenu-category.tpl" nofollow=$block.nofollow new_window=$block.new_window menus=$block.children.children m_level=2 ismobilemenu=true}
 											{/if}
 										</li>
 									</ul>	
@@ -76,10 +76,10 @@
 								<div id="st_advanced_menu_block_{$block.id_st_advanced_menu}" class="stmobileadvancedmenu_column">
 								{foreach $block.children as $product}
 									<div class="mo_advanced_pro_div">
-										<a class="product_img_link"	href="{$link->getProductLink($product->id, $product->link_rewrite, $product->category)|escape:'html':'UTF-8'}" title="{$product->name|escape:'html':'UTF-8'}" itemprop="url"{if $block.nofollow} rel="nofollow"{/if}>
-											<img class="replace-2x img-responsive" src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}" alt="{if !empty($product->legend)}{$product->legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" title="{if !empty($product->legend)}{$product->legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} itemprop="image" />
+										<a class="product_img_link"	href="{$link->getProductLink($product->id, $product->link_rewrite, $product->category)|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$product->name|escape:'html':'UTF-8'}"{/if} itemprop="url"{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if}>
+											<img class="replace-2x img-responsive menu_pro_img" src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')|escape:'html':'UTF-8'}" alt="{if !empty($product->legend)}{$product->legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" {if !$adv_menu_title} title="{if !empty($product->legend)}{$product->legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"{/if} {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} itemprop="image" />
 										</a>
-										<a class="product-name" href="{$link->getProductLink($product->id, $product->link_rewrite, $product->category)|escape:'html':'UTF-8'}" title="{$product->name|escape:'html':'UTF-8'}" itemprop="url"{if $block.nofollow} rel="nofollow"{/if}>
+										<a class="product-name" href="{$link->getProductLink($product->id, $product->link_rewrite, $product->category)|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$product->name|escape:'html':'UTF-8'}"{/if} itemprop="url"{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if}>
 											{$product->name|truncate:45:'...'|escape:'html':'UTF-8'}
 										</a>
 									</div>
@@ -90,7 +90,7 @@
 									{foreach $block.children as $brand}
     									<ul class="mo_advanced_mu_level_1 mo_advanced_sub_ul">
 											<li class="mo_advanced_ml_level_1 mo_advanced_sub_li">
-												<a href="{$link->getmanufacturerLink($brand.id_manufacturer, $brand.link_rewrite)}" title="{$brand.name|escape:'html':'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$brand.name|escape:'html':'UTF-8'}</a>
+												<a href="{$link->getmanufacturerLink($brand.id_manufacturer, $brand.link_rewrite)}" {if !$adv_menu_title} title="{$brand.name|escape:'html':'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{$brand.name|escape:'html':'UTF-8'}</a>
 											</li>
 										</ul>	
 									{/foreach}
@@ -98,7 +98,7 @@
 									<div id="st_advanced_menu_block_{$block.id_st_advanced_menu}" class="stmobileadvancedmenu_column">
 										{foreach $block.children as $brand}
 	    									<div class="mo_advanced_brand_div">
-												<a href="{$link->getmanufacturerLink($brand.id_manufacturer, $brand.link_rewrite)}" title="{$brand.name|escape:html:'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="st_advanced_menu_brand">
+												<a href="{$link->getmanufacturerLink($brand.id_manufacturer, $brand.link_rewrite)}" {if !$adv_menu_title} title="{$brand.name|escape:html:'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="st_advanced_menu_brand">
 								                    <img src="{$img_manu_dir}{$brand.id_manufacturer|escape:'htmlall':'UTF-8'}-manufacturer_default.jpg" alt="{$brand.name|escape:html:'UTF-8'}" width="{$manufacturerSize.width}" height="{$manufacturerSize.height}" class="replace-2x img-responsive" />
 								                </a>
 											</div>
@@ -108,13 +108,13 @@
 							{elseif $block.item_t==4}
 								<ul class="mo_advanced_mu_level_1 mo_advanced_sub_ul">
 									<li class="mo_advanced_ml_level_1 mo_advanced_sub_li">
-										<a  id="st_mo_advanced_ma_{$block.id_st_advanced_menu}" href="{$block.m_link|escape:'html':'UTF-8'}" title="{$block.m_title|escape:'html':'UTF-8'}"{if $block.nofollow} rel="nofollow"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a">{if $block.icon_class}<i class="{$block.icon_class}"></i>{/if}{$block.m_name|escape:'html':'UTF-8'}{if $block.cate_label}<span class="cate_label">{$block.cate_label}</span>{/if}</a>
+										<a  id="st_mo_advanced_ma_{$block.id_st_advanced_menu}" href="{if $block.m_link}{$block.m_link|escape:'html':'UTF-8'}{else}javascript:;{/if}" {if !$adv_menu_title} title="{$block.m_title|escape:'html':'UTF-8'}"{/if}{if $block.nofollow} rel="nofollow"{/if}{if $block.new_window} target="_blank"{/if} class="mo_advanced_ma_level_1 mo_advanced_sub_a {if !$block.m_link} advanced_ma_span{/if}">{if $block.icon_class}<i class="{$block.icon_class}"></i>{/if}{$block.m_name|escape:'html':'UTF-8'}{if $block.cate_label}<span class="cate_label">{$block.cate_label}</span>{/if}</a>
 										{if isset($block.children) && is_array($block.children) && count($block.children)}
 											{foreach $block.children as $menu}
-												{if $menu.hide_on_mobile}{continue}{/if}
+												{if $menu.hide_on_mobile == 1}{continue}{/if}
 												<span class="opener">&nbsp;</span>
 												<ul class="mo_advanced_mu_level_2 mo_advanced_sub_ul">
-												{include file="./stadvancedmenu-link.tpl" nofollow=$block.nofollow menus=$menu m_level=2 ismobilemenu=true}
+												{include file="./stadvancedmenu-link.tpl" nofollow=$block.nofollow new_window=$block.new_window menus=$menu m_level=2 ismobilemenu=true}
 												</ul>
 											{/foreach}
 										{/if}

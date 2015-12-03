@@ -27,6 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+include_once(dirname(__FILE__).'/StSpecialSliderClass.php');
 class StSpecialSlider extends Module
 {
     protected static $cache_products = array();
@@ -96,7 +97,7 @@ class StSpecialSlider extends Module
 	{
 		$this->name           = 'stspecialslider';
 		$this->tab            = 'front_office_features';
-		$this->version        = '1.7.7';
+		$this->version        = '1.8.0';
 		$this->author         = 'SUNNYTOO.COM';
 		$this->need_instance  = 0;
         $this->bootstrap      = true;        
@@ -114,9 +115,14 @@ class StSpecialSlider extends Module
         $this->_hooks = array(
             'Hooks' => array(
                 array(
-        			'id' => 'displayFullWidthTop',
+                    'id' => 'displayFullWidthTop',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop')
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
         			'val' => '1',
-        			'name' => $this->l('displayFullWidthTop')
+        			'name' => $this->l('displayFullWidthTop2')
         		),
         		array(
         			'id' => 'displayHomeTop',
@@ -256,12 +262,14 @@ class StSpecialSlider extends Module
     
 	function install()
 	{
-		if (!parent::install() 
+		if (!parent::install()
+            || !$this->installDB() 
             || !$this->registerHook('displayHeader')
 			|| !$this->registerHook('addproduct')
 			|| !$this->registerHook('updateproduct')
 			|| !$this->registerHook('deleteproduct')
             || !$this->registerHook('displayHome')
+            || !$this->registerHook('displayAdminProductPriceFormFooter')
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_NBR', 8) 
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_EASING', 0)
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_SLIDESHOW', 0)
@@ -270,6 +278,7 @@ class StSpecialSlider extends Module
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_PAUSE_ON_HOVER', 1)
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_LOOP', 0)
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_MOVE', 0)
+            || !Configuration::updateValue($this->_prefix_st.'COUNTDOWN_ON', 1)
             || !Configuration::updateValue('ST_SPECIAL_S_NBR_COL', 8) 
             || !Configuration::updateValue('ST_SPECIAL_S_EASING_COL', 0)
             || !Configuration::updateValue('ST_SPECIAL_S_SLIDESHOW_COL', 0)
@@ -279,6 +288,7 @@ class StSpecialSlider extends Module
             || !Configuration::updateValue('ST_SPECIAL_S_LOOP_COL', 0)
             || !Configuration::updateValue('ST_SPECIAL_S_MOVE_COL', 0)
             || !Configuration::updateValue('ST_SPECIAL_S_ITEMS_COL', 4)
+            || !Configuration::updateValue($this->_prefix_st.'COUNTDOWN_ON_COL', 1)
             || !Configuration::updateValue('ST_SPECIAL_SOBY', 7)
             || !Configuration::updateValue('ST_SPECIAL_S_SOBY_COL', 7)
             || !Configuration::updateValue('ST_SPECIAL_SLIDER_HIDE_MOB', 0)
@@ -319,10 +329,12 @@ class StSpecialSlider extends Module
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_DISABLED_BG', '')
             
             || !Configuration::updateValue($this->_prefix_st.'TITLE_ALIGNMENT', 0)
+            || !Configuration::updateValue($this->_prefix_st.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_FONT_SIZE', 0)
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_NAV', 0)
         )
 			return false;
+            
 		$this->clearSliderCache();
 		return true;
 	}
@@ -330,7 +342,27 @@ class StSpecialSlider extends Module
     public function uninstall()
 	{
 		$this->clearSliderCache();
-		return parent::uninstall();
+		if (!parent::uninstall() 
+            || !$this->uninstallDB()
+        )
+			return false;
+		return true;
+	}
+    
+    private function installDB()
+	{
+		return Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'st_special_product` (
+                 `id_product` int(10) NOT NULL,  
+                 `id_shop` int(11) NOT NULL,                   
+                PRIMARY KEY (`id_product`,`id_shop`),    
+                KEY `id_shop` (`id_shop`)       
+			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+	}
+    
+	private function uninstallDB()
+	{
+		return Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'st_special_product`');
 	}
 
     private function _checkEnv()
@@ -390,86 +422,127 @@ class StSpecialSlider extends Module
                 $result['r'] = true;
             die(json_encode($result));
         }
+        if (Tools::getValue('act') == 'gsp' && Tools::getValue('ajax')==1)
+        {
+            if(!$q = Tools::getValue('q'))
+                die;
+            $result = $this->getAllSpecialProducts($q, Tools::getValue('excludeIds'));
+            foreach ($result AS $value)
+		      echo trim($value['name']).'|'.(int)($value['id_product'])."\n";
+            die;
+        }
+        if (Tools::getValue('act') == 'setstspecial' && Tools::getValue('ajax')==1)
+        {
+            $ret = array('r'=>false,'msg'=>'');
+            if(!$id_product = Tools::getValue('id_product'))
+                $ret['msg'] = $this->l('Product ID error');
+            else
+            {
+                if (StSpecialSliderClass::setByProductId($id_product, (int)Tools::getValue('fl'), $this->context->shop->id))
+                {
+                    $ret['r'] = true;
+                    $ret['msg'] = $this->l('Successful update');
+                    $this->clearSliderCache();
+                }  
+                else
+                    $ret['msg'] = $this->l('Error occurred when updating');
+            }
+            echo json_encode($ret);
+            die;
+        }
 	    $this->initFieldsForm();
 		if (isset($_POST['savestspecialslider']))
 		{
-            foreach($this->fields_form as $form)
-                foreach($form['form']['input'] as $field)
-                    if(isset($field['validation']))
-                    {
-                        $errors = array();       
-                        $value = Tools::getValue($field['name']);
-                        if (isset($field['required']) && $field['required'] && $value==false && (string)$value != '0')
-        						$errors[] = sprintf(Tools::displayError('Field "%s" is required.'), $field['label']);
-                        elseif($value)
-                        {
-        					if (!Validate::$field['validation']($value))
-        						$errors[] = sprintf(Tools::displayError('Field "%s" is invalid.'), $field['label']);
-                        }
-        				// Set default value
-        				if ($value === false && isset($field['default_value']))
-        					$value = $field['default_value'];
-                            
-                        if(count($errors))
-                        {
-                            $this->validation_errors = array_merge($this->validation_errors, $errors);
-                        }
-                        elseif($value==false)
-                        {
-                            switch($field['validation'])
-                            {
-                                case 'isUnsignedId':
-                                case 'isUnsignedInt':
-                                case 'isInt':
-                                case 'isBool':
-                                    $value = 0;
-                                break;
-                                case 'isNullOrUnsignedId':
-                                    $value = $value==='0' ? '0' : '';
-                                break;
-                                default:
-                                    $value = '';
-                                break;
-                            }
-                            Configuration::updateValue($this->_prefix_st.strtoupper($field['name']), $value);
-                        }
-                        else
-                            Configuration::updateValue($this->_prefix_st.strtoupper($field['name']), $value);
-                    }
-            $this->updateCatePerRow();
-            $this->saveHook();
-            if(!count($this->validation_errors))
-            {
-                if (isset($_FILES['bg_img']) && isset($_FILES['bg_img']['tmp_name']) && !empty($_FILES['bg_img']['tmp_name'])) 
+		    StSpecialSliderClass::deleteByShop((int)$this->context->shop->id);
+            $res = true;
+            if($id_product= Tools::getValue('id_product'))
+                foreach($id_product AS $value)
                 {
-                    if ($vali = ImageManager::validateUpload($_FILES['bg_img'], Tools::convertBytes(ini_get('upload_max_filesize'))))
-                       $this->validation_errors[] = Tools::displayError($vali);
-                    else 
+                  $res &= Db::getInstance()->insert('st_special_product', array(
+        					'id_product' => (int)$value,
+        					'id_shop' => (int)$this->context->shop->id,
+        				));  
+                }
+            if($res)
+            {
+                foreach($this->fields_form as $form)
+                    foreach($form['form']['input'] as $field)
+                        if(isset($field['validation']))
+                        {
+                            $errors = array();       
+                            $value = Tools::getValue($field['name']);
+                            if (isset($field['required']) && $field['required'] && $value==false && (string)$value != '0')
+            						$errors[] = sprintf(Tools::displayError('Field "%s" is required.'), $field['label']);
+                            elseif($value)
+                            {
+            					if (!Validate::$field['validation']($value))
+            						$errors[] = sprintf(Tools::displayError('Field "%s" is invalid.'), $field['label']);
+                            }
+            				// Set default value
+            				if ($value === false && isset($field['default_value']))
+            					$value = $field['default_value'];
+                                
+                            if(count($errors))
+                            {
+                                $this->validation_errors = array_merge($this->validation_errors, $errors);
+                            }
+                            elseif($value==false)
+                            {
+                                switch($field['validation'])
+                                {
+                                    case 'isUnsignedId':
+                                    case 'isUnsignedInt':
+                                    case 'isInt':
+                                    case 'isBool':
+                                        $value = 0;
+                                    break;
+                                    case 'isNullOrUnsignedId':
+                                        $value = $value==='0' ? '0' : '';
+                                    break;
+                                    default:
+                                        $value = '';
+                                    break;
+                                }
+                                Configuration::updateValue($this->_prefix_st.strtoupper($field['name']), $value);
+                            }
+                            else
+                                Configuration::updateValue($this->_prefix_st.strtoupper($field['name']), $value);
+                        }
+                $this->updateCatePerRow();
+                $this->saveHook();
+                if(!count($this->validation_errors))
+                {
+                    if (isset($_FILES['bg_img']) && isset($_FILES['bg_img']['tmp_name']) && !empty($_FILES['bg_img']['tmp_name'])) 
                     {
-                        $bg_image = $this->uploadCheckAndGetName($_FILES['bg_img']['name']);
-                        if(!$bg_image)
-                            $this->validation_errors[] = Tools::displayError('Image format not recognized');
-                        $this->_checkEnv();
-                        if (!move_uploaded_file($_FILES['bg_img']['tmp_name'], _PS_UPLOAD_DIR_.$this->name.'/'.$bg_image))
-                            $this->validation_errors[] = Tools::displayError('Error move uploaded file');
-                        else
-                            Configuration::updateValue($this->_prefix_st.'BG_IMG', $this->name.'/'.$bg_image);
+                        if ($vali = ImageManager::validateUpload($_FILES['bg_img'], Tools::convertBytes(ini_get('upload_max_filesize'))))
+                           $this->validation_errors[] = Tools::displayError($vali);
+                        else 
+                        {
+                            $bg_image = $this->uploadCheckAndGetName($_FILES['bg_img']['name']);
+                            if(!$bg_image)
+                                $this->validation_errors[] = Tools::displayError('Image format not recognized');
+                            $this->_checkEnv();
+                            if (!move_uploaded_file($_FILES['bg_img']['tmp_name'], _PS_UPLOAD_DIR_.$this->name.'/'.$bg_image))
+                                $this->validation_errors[] = Tools::displayError('Error move uploaded file');
+                            else
+                                Configuration::updateValue($this->_prefix_st.'BG_IMG', $this->name.'/'.$bg_image);
+                        }
                     }
                 }
-            }
-            if(count($this->validation_errors))
-                $this->_html .= $this->displayError(implode('<br/>',$this->validation_errors));
-            else 
-            {
-		        $this->clearSliderCache();
-                $this->_html .= $this->displayConfirmation($this->l('Settings updated'));     
+                if(count($this->validation_errors))
+                    $this->_html .= $this->displayError(implode('<br/>',$this->validation_errors));
+                else 
+                {
+    		        $this->clearSliderCache();
+                    $this->_html .= $this->displayConfirmation($this->l('Settings updated'));     
+                }
             }   
         }
-        $this->fields_form[0]['form']['input']['special_pro_per_0']['name'] = $this->BuildDropListGroup($this->findCateProPer());
+        $this->fields_form[1]['form']['input']['special_pro_per_0']['name'] = $this->BuildDropListGroup($this->findCateProPer());
         if ($bg_img = Configuration::get($this->_prefix_st.'BG_IMG'))
         {
             $this->fetchMediaServer($bg_img);
-            $this->fields_form[0]['form']['input']['bg_img_field']['image'] = '<img width=200 src="'.($bg_img).'" /><p><a class="btn btn-default st_delete_image" href="javascript:;"><i class="icon-trash"></i> Delete</a></p>';
+            $this->fields_form[1]['form']['input']['bg_img_field']['image'] = '<img width=200 src="'.($bg_img).'" /><p><a class="btn btn-default st_delete_image" href="javascript:;"><i class="icon-trash"></i> Delete</a></p>';
         }
 		$helper = $this->initForm();
 		return $this->_html.$helper->generateForm($this->fields_form);
@@ -498,7 +571,26 @@ class StSpecialSlider extends Module
     }
     public function initFieldsForm()
     {
-		$this->fields_form[0]['form'] = array(
+        $this->fields_form[0]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('General'),
+                'icon'  => 'icon-cogs'
+			),
+			'input' => array(
+				'products' => array(
+					'type' => 'text',
+					'label' => $this->l('Specific special products:'),
+					'name' => 'products',
+                    'autocomplete' => false,
+                    'class' => 'fixed-width-xxl',
+                    'desc' => '',
+				),
+            ),
+            'submit' => array(
+				'title' => $this->l('   Save all  ')
+			),
+        );
+		$this->fields_form[1]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Slide on homepage'),
                 'icon'  => 'icon-cogs'
@@ -712,6 +804,25 @@ class StSpecialSlider extends Module
                     'validation' => 'isBool',
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Display countdown timers:'),
+                    'name' => 'countdown_on',
+                    'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+                    'values' => array(
+                        array(
+                            'id' => 'countdown_on_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'countdown_on_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->l('Top padding:'),
                     'name' => 'top_padding',
@@ -801,6 +912,25 @@ class StSpecialSlider extends Module
                             'value' => 1,
                             'label' => $this->l('Center')),
                     ),
+                    'validation' => 'isBool',
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
                     'validation' => 'isBool',
                 ),
                 array(
@@ -914,7 +1044,7 @@ class StSpecialSlider extends Module
 			),
 		);
         
-		$this->fields_form[1]['form'] = array(
+		$this->fields_form[2]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Slide on sidebar'),
                 'icon'  => 'icon-cogs'
@@ -1085,12 +1215,31 @@ class StSpecialSlider extends Module
                     ),
                     'validation' => 'isBool',
                 ),
+                /*array(
+                    'type' => 'switch',
+                    'label' => $this->l('Display countdown timers:'),
+                    'name' => 'countdown_on_col',
+                    'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+                    'values' => array(
+                        array(
+                            'id' => 'countdown_on_col_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'countdown_on_col_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),*/
 			),
 			'submit' => array(
 				'title' => $this->l('   Save all  ')
 			),
 		);
-        $this->fields_form[2]['form'] = array(
+        $this->fields_form[3]['form'] = array(
             'legend' => array(
                 'title' => $this->l('Slide on footer'),
                 'icon'  => 'icon-cogs'
@@ -1140,7 +1289,7 @@ class StSpecialSlider extends Module
                 'title' => $this->l('   Save   ')
             ),
         );
-        $this->fields_form[3]['form'] = array(
+        $this->fields_form[4]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Home page tabs'),
                 'icon'  => 'icon-cogs'
@@ -1172,12 +1321,12 @@ class StSpecialSlider extends Module
 			),
 		);
         
-        $this->fields_form[4]['form'] = array(
+        $this->fields_form[5]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -1189,7 +1338,7 @@ class StSpecialSlider extends Module
         {
             if (!is_array($values) || !count($values))
                 continue;
-            $this->fields_form[4]['form']['input'][] = array(
+            $this->fields_form[5]['form']['input'][] = array(
 					'type' => 'checkbox',
 					'label' => $this->l($key),
 					'name' => $key,
@@ -1228,6 +1377,7 @@ class StSpecialSlider extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
+            $title_block_no_bg = '.special-products_block_center_container .title_block, .special-products_block_center_container .nav_top_right .flex-direction-nav,.special-products_block_center_container .title_block a, .special-products_block_center_container .title_block span{background:none;}';
             
             $group_css = '';
             if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
@@ -1244,7 +1394,7 @@ class StSpecialSlider extends Module
                 $group_css .= 'background-image: url('.$img.');';
             }
             if($group_css)
-                $custom_css .= '.special-products_block_center_container{background-attachment:fixed;'.$group_css.'}.special-products_block_center_container .section .title_block, .special-products_block_center_container .nav_top_right .flex-direction-nav,.special-products_block_center_container .section .title_block a, .special-products_block_center_container .section .title_block span{background:none;}';
+                $custom_css .= '.special-products_block_center_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                 $custom_css .= '.special-products_block_center_container{padding-top:'.$top_padding.'px;}';
@@ -1259,7 +1409,9 @@ class StSpecialSlider extends Module
                 $custom_css .= '.special-products_block_center_container{margin-bottom:'.$bottom_margin.'px;}';
 
             if (Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'))
-                $custom_css .= '.special-products_block_center_container .title_block{text-align:center;}';
+                $custom_css .= '.special-products_block_center_container .title_block{text-align:center;}'.$title_block_no_bg;
+            if (Configuration::get($this->_prefix_st.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
             if ($title_font_size = (int)Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'))
             {
                  $custom_css .= '.special-products_block_center_container .title_block{font-size:'.$title_font_size.'px;}';
@@ -1298,6 +1450,15 @@ class StSpecialSlider extends Module
                 $this->smarty->assign('custom_css', preg_replace('/\s\s+/', ' ', $custom_css));
         }
         return $this->display(__FILE__, 'header.tpl', $this->getCacheId());
+    }
+    public function hookDisplayAdminProductPriceFormFooter($params)
+    {
+        $this->smarty->assign(array(
+            'id_product' => Tools::getValue('id_product'),
+            'currentIndex' => $this->context->link->getAdminLink('AdminModules', true).'&configure='.$this->name,
+            'checked' => StSpecialSliderClass::exists(Tools::getValue('id_product') ,$this->context->shop->id)
+            ));
+        return $this->display(__FILE__, 'views/templates/admin/stspecialslider.tpl');
     }
     public function hookDisplayHomeTop($params)
     {
@@ -1356,6 +1517,13 @@ class StSpecialSlider extends Module
 
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
+    }
     public function hookDisplayHomeVeryBottom($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -1375,9 +1543,6 @@ class StSpecialSlider extends Module
     
 	public function hookDisplayHomeSecondaryLeft($params)
 	{
-        $this->smarty->assign(array(
-            'is_homepage_secondary_left' => true,
-        ));
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__)); 
     }
     
@@ -1398,7 +1563,7 @@ class StSpecialSlider extends Module
         
         if(!$nbr)
             return false;
-            
+        
         $order_by = 'price';
         $order_way = 'ASC';
         $soby = $col ? (int)Configuration::get('ST_SPECIAL_'.$pre.'_SOBY'.$ext) : (int)Configuration::get('ST_SPECIAL_SOBY');
@@ -1448,8 +1613,40 @@ class StSpecialSlider extends Module
             break;
         }
         
+        $products = array();
+        $id_checked = array();
+        foreach(StSpecialSliderClass::getByShop($this->context->shop->id) as $value)
+            $id_checked[] = $value['id_product'];
+        if ($id_checked)
+        {
+            $id_address = $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+    		$ids = Address::getCountryAndState($id_address);
+    		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
+            $beginning = $ending = date('Y-m-d H:i:s');
+    
+    		$id_special = SpecificPrice::getProductIdByDate(
+    			$this->context->shop->id,
+    			$this->context->currency->id,
+    			$id_country,
+    			$this->context->customer->id_default_group,
+    			$beginning,
+    			$ending
+    		);
+            if (!$id_special)
+                return $products;
+            $nbr = count($id_special);
+        }
+        
         $products = Product::getPricesDrop((int)($this->context->language->id), 0, (int)$nbr, false, $order_by, $order_way);
-
+        
+        if (!$products)
+            return $products;
+        
+        if($id_checked)
+            foreach($products AS $key => $value)
+                if (!in_array($value['id_product'], $id_checked))
+                    unset($products[$key]);
+        
         $homeSize = Image::getSize(ImageType::getFormatedName('home'));
         
         if(is_array($products) && count($products))
@@ -1521,6 +1718,7 @@ class StSpecialSlider extends Module
             'aw_display'            => $aw_display,
 
             'display_as_grid'       => Configuration::get('ST_SPECIAL_SLIDER_GRID'),
+            'countdown_on'          => Configuration::get($this->_prefix_st.'COUNTDOWN_ON'.$ext),
 		));
         return true;
     }
@@ -1620,7 +1818,8 @@ class StSpecialSlider extends Module
             $this->smarty->assign(array(
                 'speical_products' => StSpecialSlider::$cache_products[3],
                 'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-                'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
+                'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
+                'countdown_on' => Configuration::get($this->_prefix_st.'COUNTDOWN_ON'),
             ));
         }
 
@@ -1653,6 +1852,7 @@ class StSpecialSlider extends Module
     private function getConfigFieldsValues()
     {
         $fields_values = array(
+            'products' => '',
             'slider_nbr'=> Configuration::get('ST_SPECIAL_SLIDER_NBR'),
             'slider_easing'=> Configuration::get('ST_SPECIAL_SLIDER_EASING'),
             'slider_slideshow'=> Configuration::get('ST_SPECIAL_SLIDER_SLIDESHOW'),
@@ -1666,6 +1866,7 @@ class StSpecialSlider extends Module
             'slider_display_sd'=> Configuration::get('ST_SPECIAL_DISPLAY_SD'),
             'slider_grid'=> Configuration::get('ST_SPECIAL_SLIDER_GRID'),
             'slider_aw_display' => Configuration::get('ST_SPECIAL_SLIDER_AW_DISPLAY'),
+            'countdown_on'  => Configuration::get($this->_prefix_st.'COUNTDOWN_ON'),
             
             's_nbr_col'=> Configuration::get('ST_SPECIAL_S_NBR_COL'),
             's_easing_col'=> Configuration::get('ST_SPECIAL_S_EASING_COL'),
@@ -1679,6 +1880,7 @@ class StSpecialSlider extends Module
             's_soby_col'=> Configuration::get('ST_SPECIAL_S_SOBY_COL'),
             's_hide_mob_col'=> Configuration::get('ST_SPECIAL_S_HIDE_MOB_COL'),
             's_aw_display_col' => Configuration::get('ST_SPECIAL_S_AW_DISPLAY_COL'),
+            'countdown_on_col' => Configuration::get($this->_prefix_st.'COUNTDOWN_ON_COL'),
             
             's_nbr_fot'=> Configuration::get('ST_SPECIAL_S_NBR_FOT'),
             's_soby_fot'=> Configuration::get('ST_SPECIAL_S_SOBY_FOT'),   
@@ -1708,6 +1910,7 @@ class StSpecialSlider extends Module
             'direction_disabled_bg' => Configuration::get($this->_prefix_st.'DIRECTION_DISABLED_BG'),
             
             'title_alignment'       => Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'),
+            'title_no_bg'           => Configuration::get($this->_prefix_st.'TITLE_NO_BG'),
             'title_font_size'       => Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'),
             'direction_nav'         => Configuration::get($this->_prefix_st.'DIRECTION_NAV'),
         );
@@ -1724,6 +1927,17 @@ class StSpecialSlider extends Module
                         $fields_values[$key.'_'.$value['id']] = 1;
             }
         }
+        
+        $products_html = '';
+        foreach(StSpecialSliderClass::getByShop((int)$this->context->shop->id) AS $value)
+        {
+            $products_html .= '<li>'.Product::getProductName($value['id_product']).'
+            <a href="javascript:;" class="del_product"><img src="../img/admin/delete.gif" /></a>
+            <input type="hidden" name="id_product[]" value="'.$value['id_product'].'" /></li>';
+        }
+        
+        $this->fields_form[0]['form']['input']['products']['desc'] = $this->l('Only display the following products on frontoffice if specified.').'<br/>'.$this->l('Current products')
+                .': <ul id="curr_products">'.$products_html.'</ul>';
         
         return $fields_values;
     }
@@ -1793,5 +2007,33 @@ class StSpecialSlider extends Module
     {
         $slider = _THEME_PROD_PIC_DIR_.$slider;
         $slider = context::getContext()->link->protocol_content.Tools::getMediaServer($slider).$slider;
+    }
+    
+    private function getAllSpecialProducts($q = '',$excludeIds = false)
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT `id_product`, `id_product_attribute`
+			FROM `'._DB_PREFIX_.'specific_price`
+			WHERE `reduction` > 0
+		    ', false);
+		$ids_product = array();
+		while ($row = Db::getInstance()->nextRow($result))
+			$ids_product[] = (int)$row['id_product'];
+        if (!$ids_product)
+            return $ids_product;
+        
+        $sql = '
+		SELECT p.`id_product`,pl.`name`
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+			p.`id_product` = pl.`id_product`
+			AND pl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').'
+		)
+        WHERE p.`id_product` IN('.implode(',', array_unique($ids_product)).')
+        AND pl.`name` LIKE "%'.$q.'%"
+        '.($excludeIds ? 'AND p.`id_product` NOT IN('.$excludeIds.')' : '').'
+        ';
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 }

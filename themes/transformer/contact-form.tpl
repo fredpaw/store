@@ -35,7 +35,7 @@
 			</a>
 		</li>
 		<li class="pull-right">
-			<a href="{$base_dir}" title="{l s='Home'}" rel="nofollow">
+			<a href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Home'}" rel="nofollow">
 				<i class="icon-home icon-mar-lr2"></i>{l s='Home'}
 			</a>
 		</li>
@@ -49,7 +49,7 @@
 			</a>
 		</li>
 		<li class="pull-right">
-			<a href="{$base_dir}" title="{l s='Home'}" rel="nofollow">
+			<a href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Home'}" rel="nofollow">
 				<i class="icon-home icon-mar-lr2"></i>{l s='Home'}
 			</a>
 		</li>
@@ -64,13 +64,19 @@
 				<div class="col-xs-12 col-md-4">
 					<div class="form-group selector1">
 						<label for="id_contact">{l s='Subject Heading'}</label>
-					{if isset($customerThread.id_contact) && $customerThread.id_contact}
+					{if isset($customerThread.id_contact) && $customerThread.id_contact && $contacts|count}
+							{assign var=flag value=true}
 							{foreach from=$contacts item=contact}
 								{if $contact.id_contact == $customerThread.id_contact}
 									<input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contact.name|escape:'html':'UTF-8'}" readonly="readonly" />
-									<input type="hidden" name="id_contact" value="{$contact.id_contact}" />
+									<input type="hidden" name="id_contact" value="{$contact.id_contact|intval}" />
+									{$flag=false}
 								{/if}
 							{/foreach}
+							{if $flag && isset($contacts.0.id_contact)}
+									<input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contacts.0.name|escape:'html':'UTF-8'}" readonly="readonly" />
+									<input type="hidden" name="id_contact" value="{$contacts.0.id_contact|intval}" />
+							{/if}
 					</div>
 					{else}
 						<select id="id_contact" class="form-control" name="id_contact">
@@ -83,7 +89,7 @@
 						<p id="desc_contact0" class="desc_contact{if isset($smarty.request.id_contact)} unvisible{/if}">&nbsp;</p>
 						{foreach from=$contacts item=contact}
 							<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title{if !isset($smarty.request.id_contact) || $smarty.request.id_contact|intval != $contact.id_contact|intval} unvisible{/if}">
-								<i class="icon-comment-alt"></i>{$contact.description|escape:'html':'UTF-8'}
+								{$contact.description|escape:'html':'UTF-8'}
 							</p>
 						{/foreach}
 					{/if}

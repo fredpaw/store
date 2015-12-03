@@ -25,10 +25,15 @@
 *}
 
 {if isset($blogs)}
+    {assign var='blog_grid_per_lg' value=Configuration::get('STSN_BLOG_GRID_PER_LG_0')}
+    {assign var='blog_grid_per_md' value=Configuration::get('STSN_BLOG_GRID_PER_MD_0')}
+    {assign var='blog_grid_per_sm' value=Configuration::get('STSN_BLOG_GRID_PER_SM_0')}
+    {assign var='blog_grid_per_xs' value=Configuration::get('STSN_BLOG_GRID_PER_XS_0')}
+    {assign var='blog_grid_per_xxs' value=Configuration::get('STSN_BLOG_GRID_PER_XXS_0')}
 	<!-- Products list -->
-	<ul class="blog_list_grid blog_list blog_list_grid_{$cate_row_blog_nbr}col clearfix">
+	<ul class="blog_list_grid blog_list clearfix">
 	{foreach $blogs as $blog}
-		<li class="block_blog {if $blog@first}first_item{elseif $blog@last}last_item{/if}">
+		<li class="block_blog col-lg-{(12/$blog_grid_per_lg)|replace:'.':'-'} col-md-{(12/$blog_grid_per_md)|replace:'.':'-'} col-sm-{(12/$blog_grid_per_sm)|replace:'.':'-'} col-xs-{(12/$blog_grid_per_xs)|replace:'.':'-'} col-xxs-{(12/$blog_grid_per_xxs)|replace:'.':'-'} {if $blog@iteration%$blog_grid_per_lg == 1} first-item-of-desktop-line{/if}{if $blog@iteration%$blog_grid_per_md == 1} first-item-of-line{/if}{if $blog@iteration%$blog_grid_per_sm == 1} first-item-of-tablet-line{/if}{if $blog@iteration%$blog_grid_per_xs == 1} first-item-of-mobile-line{/if}{if $blog@iteration%$blog_grid_per_xxs == 1} first-item-of-portrait-line{/if}">
             {if $blog.type==1}
                 <div class="blog_image"><a href="{$blog.link|escape:'html'}" rel="bookmark" title="{$blog.name|escape:'html':'UTF-8'}"><img src="{$blog.cover.links.medium}" alt="{$blog.name|escape:'html':'UTF-8'}" width="{$imageSize[1]['medium'][0]}" height="{$imageSize[1]['medium'][1]}" class="hover_effect" /></a></div>
             {/if}

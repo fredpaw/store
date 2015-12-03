@@ -105,7 +105,7 @@ class StEasyContentClass extends ObjectModel
 		'fields'    => array(
 			'location'        => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
 			'span' => array('type' => self::TYPE_INT),
-			'hide_on_mobile'  => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'hide_on_mobile'  => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
 			'active'          => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'position'        => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
 			'id_category'     => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),

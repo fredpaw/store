@@ -28,7 +28,7 @@
 	{foreach $menus as $menu}
 		{assign var='has_children' value=(isset($menu.children) && is_array($menu.children) && count($menu.children))}
 		<li class="{if isset($ismobilemenu)}mo_advanced_sub_li mo_{/if}advanced_ml_level_{$m_level}">
-			<a href="{$menu.link|escape:'html':'UTF-8'}" title="{$menu.name|escape:'html':'UTF-8'}"{if $nofollow} rel="nofollow"{/if} class="{if isset($ismobilemenu)}mo_advanced_sub_a mo_{/if}advanced_ma_level_{$m_level} advanced_ma_item {if $has_children} has_children {/if}">{$menu.name|escape:'html':'UTF-8'}{if $has_children && !isset($ismobilemenu)}<span class="is_parent_icon"><b class="is_parent_icon_h"></b><b class="is_parent_icon_v"></b></span>{/if}</a>
+			<a href="{$menu.link|escape:'html':'UTF-8'}" {if !$adv_menu_title} title="{$menu.name|escape:'html':'UTF-8'}"{/if}{if $nofollow} rel="nofollow"{/if}{if $new_window} target="_blank"{/if} class="{if isset($ismobilemenu)}mo_advanced_sub_a mo_{/if}advanced_ma_level_{$m_level} advanced_ma_item {if $has_children} has_children {/if}">{$menu.name|escape:'html':'UTF-8'}{if $has_children && !isset($ismobilemenu)}<span class="is_parent_icon"><b class="is_parent_icon_h"></b><b class="is_parent_icon_v"></b></span>{/if}</a>
 		{if $has_children}
 			{include file="./stadvancedmenu-category.tpl" menus=$menu.children m_level=($m_level+1)}
 		{/if}

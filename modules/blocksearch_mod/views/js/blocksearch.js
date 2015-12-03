@@ -39,7 +39,7 @@ $(document).ready(function()
 	});
 
 
-	var width_ac_results = 	$input.parent('form').width();
+	var width_ac_results = 	$input.parent('form').outerWidth();
 	if (typeof ajaxsearch != 'undefined' && ajaxsearch)
 	{
 		$input

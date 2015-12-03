@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:49
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:07
          compiled from "D:\xampp\htdocs\store\modules\sthomenew\views\templates\hook\sthomenew.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:32736564ebf09aa1b09-00907336%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:2950565e95172694e6-92752986%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '11ddbb07e2152ff7f547e8a64bd739ebb5fedc3d' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\sthomenew\\views\\templates\\hook\\sthomenew.tpl',
-      1 => 1447993231,
+      1 => 1449038241,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '32736564ebf09aa1b09-00907336',
+  'nocache_hash' => '2950565e95172694e6-92752986',
   'function' => 
   array (
   ),
@@ -22,6 +22,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'column_slider' => 0,
     'hook_hash' => 0,
     'hide_mob' => 0,
+    'countdown_on' => 0,
     'homeverybottom' => 0,
     'display_as_grid' => 0,
     'link' => 0,
@@ -43,9 +44,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf09ced333_33301952',
+  'unifunc' => 'content_565e951743b7b2_21819603',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf09ced333_33301952')) {function content_564ebf09ced333_33301952($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e951743b7b2_21819603')) {function content_565e951743b7b2_21819603($_smarty_tpl) {?>
 
 <!-- MODULE Home New Products -->
 <?php if ($_smarty_tpl->tpl_vars['aw_display']->value||((isset($_smarty_tpl->tpl_vars['products']->value)&&$_smarty_tpl->tpl_vars['products']->value))) {?>
@@ -56,7 +57,7 @@ if (!empty($_capture_buffer)) {
  Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
 } else $_smarty_tpl->capture_error();?>
 <div id="new-products_block_center_container_<?php echo $_smarty_tpl->tpl_vars['hook_hash']->value;?>
-" class="new-products_block_center_container block <?php if ($_smarty_tpl->tpl_vars['hide_mob']->value) {?> hidden-xs <?php }?>">
+" class="new-products_block_center_container block <?php if ($_smarty_tpl->tpl_vars['hide_mob']->value) {?> hidden-xs <?php }?><?php if ($_smarty_tpl->tpl_vars['countdown_on']->value) {?> s_countdown_block<?php }?>">
 <?php if (isset($_smarty_tpl->tpl_vars['homeverybottom']->value)&&$_smarty_tpl->tpl_vars['homeverybottom']->value) {?><div class="wide_container"><div class="container"><?php }?>
 <section id="new-products_block_center<?php echo $_smarty_tpl->tpl_vars['hook_hash']->value;?>
 <?php echo Smarty::$_smarty_vars['capture']['column_slider'];?>

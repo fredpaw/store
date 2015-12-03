@@ -34,13 +34,13 @@
 			</p>
 			<div class="clear" ></div>
 			<p id="admin-action-result"></p>
-			</p>
 		</div>
 	{/if}
 
 	{hook h='displayAnywhere' function="displayCmsMainSlide" identify=$cms->id mod='stowlcarousel' caller='stowlcarousel'}
     {hook h='displayAnywhere' function="displayCmsMainSlide" identify=$cms->id mod='stcameraslideshow' caller='stcameraslideshow'}
     {hook h='displayAnywhere' function="displayCmsMainSlide" identify=$cms->id mod='stiosslider' caller='stiosslider'}
+    {hook h='displayAnywhere' function="displayCmsMainSlide" identify=$cms->id mod='stadvancedbanner' caller='stadvancedbanner'}
 	<div class="rte{if $content_only} content_only{/if}">
 		{$cms->content}
 	</div>

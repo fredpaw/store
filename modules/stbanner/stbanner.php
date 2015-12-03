@@ -767,7 +767,7 @@ class StBanner extends Module
 						)
         			),
                     'desc' => '<div class="alert alert-info"><a href="javascript:;" onclick="$(\'#des_page_layout\').toggle();return false;">'.$this->l('Click here to see hook position').'</a>'.
-                        '<div id="des_page_layout" style="display:none;"><img src="'.$this->_path.'views/img/hook_into_hint.jpg" /></div></div>',
+                        '<div id="des_page_layout" style="display:none;"><img src="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" /></div></div>',
 				),
                 array(
     				'type' => 'html',

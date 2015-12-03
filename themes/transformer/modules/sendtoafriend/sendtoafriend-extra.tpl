@@ -29,9 +29,9 @@
 	</a>
 	<div style="display: none;">
 		<div id="send_friend_form">
-			<h2  class="block-heading">
+			<p  class="block-heading">
 				{l s='Send to a friend' mod='sendtoafriend'}
-			</h2>
+			</p>
 				<div class="product clearfix">
 					<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'medium_default')|escape:'html':'UTF-8'}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$stf_product->name|escape:'html':'UTF-8'}" />
 					<h5 class="product_name">{$stf_product->name}</h5>

@@ -77,9 +77,9 @@
 <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
 {elseif $value eq 'facebook_share'}
 <a class="addthis_button_facebook_share" fb:share:layout="button_count"></a>
-{elseif $value eq 'google_google_plusone'}
+{elseif $value eq 'google_plusone'}
 <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
-{elseif $value eq 'google_google_plusone_badge'}
+{elseif $value eq 'google_plusone_badge'}
 <a class="addthis_button_google_plusone_badge" g:plusone:size="small"></a>
 {elseif $value eq 'pinterest_share'}
 <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal" pi:pinit:url="http://www.addthis.com/features/pinterest" pi:pinit:media="http://www.addthis.com/cms-content/images/features/pinterest-lg.png"></a>

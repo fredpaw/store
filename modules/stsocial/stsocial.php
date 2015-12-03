@@ -357,13 +357,13 @@ class StSocial extends Module
         {
         	$custom_css = '';
         	if(Configuration::get('ST_SOCIAL_COLOR'))
-        		$custom_css .= '.stsocial_list li a,#stsocial_list_topbar li a{color:'.Configuration::get('ST_SOCIAL_COLOR').';}';
+        		$custom_css .= '.stsocial_list li a,#footer .stsocial_list li a,#stsocial_list_topbar li a{color:'.Configuration::get('ST_SOCIAL_COLOR').';}';
         	if(Configuration::get('ST_SOCIAL_HOVER_COLOR'))
-        		$custom_css .= '.stsocial_list li a:hover,#stsocial_list_topbar li a:hover{color:'.Configuration::get('ST_SOCIAL_HOVER_COLOR').';}';
+        		$custom_css .= '.stsocial_list li a:hover,#footer .stsocial_list li a:hover,#stsocial_list_topbar li a:hover{color:'.Configuration::get('ST_SOCIAL_HOVER_COLOR').';}';
         	if(Configuration::get('ST_SOCIAL_BG'))
-        		$custom_css .= '.stsocial_list li a,#stsocial_list_topbar li a{background-color:'.Configuration::get('ST_SOCIAL_BG').';}';
+        		$custom_css .= '.stsocial_list li a,#footer .stsocial_list li a,#stsocial_list_topbar li a{background-color:'.Configuration::get('ST_SOCIAL_BG').';}';
         	if(Configuration::get('ST_SOCIAL_HOVER_BG'))
-        		$custom_css .= '.stsocial_list li a:hover,#stsocial_list_topbar li a:hover{background-color:'.Configuration::get('ST_SOCIAL_HOVER_BG').';}';
+        		$custom_css .= '.stsocial_list li a:hover,#footer .stsocial_list li a:hover,#stsocial_list_topbar li a:hover{background-color:'.Configuration::get('ST_SOCIAL_HOVER_BG').';}';
             if($custom_css)
                 $this->smarty->assign('custom_css', preg_replace('/\s\s+/', ' ', $custom_css));
         }

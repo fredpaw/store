@@ -26,7 +26,7 @@
 
 {if isset($blogs)}
 	<!-- Products list -->
-	<ul id="blog_list_large" class="blog_list clearfix">
+	<ul class="blog_list_large clearfix">
 	{foreach $blogs as $blog}
 		<li class="block_blog {if $blog@first}first_item{elseif $blog@last}last_item{/if} clearfix">
             {if $blog.type==1 && $blog['covered']}

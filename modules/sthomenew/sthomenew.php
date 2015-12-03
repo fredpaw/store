@@ -95,7 +95,7 @@ class StHomeNew extends Module
 	{
 		$this->name           = 'sthomenew';
 		$this->tab            = 'front_office_features';
-		$this->version        = '1.7.8';
+		$this->version        = '1.7.9';
 		$this->author         = 'SUNNYTOO.COM';
 		$this->need_instance  = 0;
         $this->bootstrap      = true;
@@ -113,9 +113,14 @@ class StHomeNew extends Module
         $this->_hooks = array(
             'Hooks' => array(
                 array(
-        			'id' => 'displayFullWidthTop',
+                    'id' => 'displayFullWidthTop',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop')
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
         			'val' => '1',
-        			'name' => $this->l('displayFullWidthTop')
+        			'name' => $this->l('displayFullWidthTop2')
         		),
         		array(
         			'id' => 'displayHomeTop',
@@ -260,6 +265,7 @@ class StHomeNew extends Module
             || !Configuration::updateValue($this->_prefix_st.'PAUSE_ON_HOVER', 1)
             || !Configuration::updateValue($this->_prefix_st.'LOOP', 0)
             || !Configuration::updateValue($this->_prefix_st.'MOVE', 0)
+            || !Configuration::updateValue($this->_prefix_st.'COUNTDOWN_ON', 1)
             || !Configuration::updateValue($this->_prefix_st.'NBR_COL', 8) 
             || !Configuration::updateValue($this->_prefix_st.'EASING_COL', 0)
             || !Configuration::updateValue($this->_prefix_st.'SLIDESHOW_COL', 0)
@@ -269,6 +275,7 @@ class StHomeNew extends Module
             || !Configuration::updateValue($this->_prefix_st.'LOOP_COL', 0)
             || !Configuration::updateValue($this->_prefix_st.'MOVE_COL', 0)
             || !Configuration::updateValue($this->_prefix_st.'ITEMS_COL', 4)
+            || !Configuration::updateValue($this->_prefix_st.'COUNTDOWN_ON_COL', 1)
             || !Configuration::updateValue($this->_prefix_st.'SOBY', 1)
             || !Configuration::updateValue($this->_prefix_st.'SOBY_COL', 1)
             || !Configuration::updateValue($this->_prefix_st.'HIDE_MOB', 0)
@@ -306,6 +313,7 @@ class StHomeNew extends Module
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_DISABLED_BG', '')
 
             || !Configuration::updateValue($this->_prefix_st.'TITLE_ALIGNMENT', 0)
+            || !Configuration::updateValue($this->_prefix_st.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_FONT_SIZE', 0)
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_NAV', 0)
         )
@@ -699,6 +707,25 @@ class StHomeNew extends Module
                     'validation' => 'isBool',
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Display countdown timers:'),
+                    'name' => 'countdown_on',
+                    'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+                    'values' => array(
+                        array(
+                            'id' => 'countdown_on_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'countdown_on_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->l('Top padding:'),
                     'name' => 'top_padding',
@@ -788,6 +815,25 @@ class StHomeNew extends Module
                             'value' => 1,
                             'label' => $this->l('Center')),
                     ),
+                    'validation' => 'isBool',
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
                     'validation' => 'isBool',
                 ),
                 array(
@@ -1071,6 +1117,25 @@ class StHomeNew extends Module
                     ),
                     'validation' => 'isBool',
                 ),
+                /*array(
+                    'type' => 'switch',
+                    'label' => $this->l('Display countdown timers:'),
+                    'name' => 'countdown_on_col',
+                    'is_bool' => true,
+                    'default_value' => 1,
+                    'desc' => $this->l('Make sure the Coundown module is installed & enabled.'),
+                    'values' => array(
+                        array(
+                            'id' => 'countdown_on_col_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'countdown_on_col_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),*/
 			),
 			'submit' => array(
 				'title' => $this->l('   Save all   ')
@@ -1133,7 +1198,7 @@ class StHomeNew extends Module
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -1183,6 +1248,7 @@ class StHomeNew extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
+            $title_block_no_bg = '.new-products_block_center_container .title_block, .new-products_block_center_container .nav_top_right .flex-direction-nav,.new-products_block_center_container .title_block a, .new-products_block_center_container .title_block span{background:none;}';
             
             $group_css = '';
             if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
@@ -1199,7 +1265,7 @@ class StHomeNew extends Module
                 $group_css .= 'background-image: url('.$img.');';
             }
             if($group_css)
-                $custom_css .= '.new-products_block_center_container{background-attachment:fixed;'.$group_css.'}.new-products_block_center_container .section .title_block, .new-products_block_center_container .nav_top_right .flex-direction-nav,.new-products_block_center_container .section .title_block a, .new-products_block_center_container .section .title_block span{background:none;}';
+                $custom_css .= '.new-products_block_center_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                 $custom_css .= '.new-products_block_center_container{padding-top:'.$top_padding.'px;}';
@@ -1214,7 +1280,10 @@ class StHomeNew extends Module
                 $custom_css .= '.new-products_block_center_container{margin-bottom:'.$bottom_margin.'px;}';
 
             if (Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'))
-                $custom_css .= '.new-products_block_center_container .title_block{text-align:center;}';
+                $custom_css .= '.new-products_block_center_container .title_block{text-align:center;}'.$title_block_no_bg;
+            if (Configuration::get($this->_prefix_st.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
+
             if ($title_font_size = (int)Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'))
             {
                  $custom_css .= '.new-products_block_center_container .title_block{font-size:'.$title_font_size.'px;}';
@@ -1312,6 +1381,13 @@ class StHomeNew extends Module
 
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
+    }
     public function hookDisplayBottomColumn($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -1321,9 +1397,6 @@ class StHomeNew extends Module
     }
 	public function hookDisplayHomeSecondaryLeft($params)
 	{
-        $this->smarty->assign(array(
-            'is_homepage_secondary_left' => true,
-        ));
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__)); 
     }
     
@@ -1482,6 +1555,7 @@ class StHomeNew extends Module
             'display_sd'            => (int)$display_sd,
             'aw_display'            => (int)$aw_display,
             'display_as_grid'       => Configuration::get($this->_prefix_st.'GRID'),
+            'countdown_on'          => Configuration::get($this->_prefix_st.'COUNTDOWN_ON'.$ext),
 		));
         return true;
     }
@@ -1651,6 +1725,7 @@ class StHomeNew extends Module
             'display_sd'         => Configuration::get($this->_prefix_st.'DISPLAY_SD'),
             'aw_display'         => Configuration::get($this->_prefix_st.'AW_DISPLAY'),
             'grid'               => Configuration::get($this->_prefix_st.'GRID'),
+            'countdown_on'       => Configuration::get($this->_prefix_st.'COUNTDOWN_ON'),
             
             'nbr_col'            => Configuration::get($this->_prefix_st.'NBR_COL'),
             'easing_col'         => Configuration::get($this->_prefix_st.'EASING_COL'),
@@ -1664,6 +1739,7 @@ class StHomeNew extends Module
             'soby_col'           => Configuration::get($this->_prefix_st.'SOBY_COL'),
             'hide_mob_col'       => Configuration::get($this->_prefix_st.'HIDE_MOB_COL'),
             'aw_display_col'     => Configuration::get($this->_prefix_st.'AW_DISPLAY_COL'),
+            'countdown_on_col'   => Configuration::get($this->_prefix_st.'COUNTDOWN_ON_COL'),
             
             'nbr_fot'            => Configuration::get($this->_prefix_st.'NBR_FOT'),
             'soby_fot'           => Configuration::get($this->_prefix_st.'SOBY_FOT'),    
@@ -1690,6 +1766,7 @@ class StHomeNew extends Module
             'direction_disabled_bg' => Configuration::get($this->_prefix_st.'DIRECTION_DISABLED_BG'),
             
             'title_alignment'       => Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'),
+            'title_no_bg'           => Configuration::get($this->_prefix_st.'TITLE_NO_BG'),
             'title_font_size'       => Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'),
             'direction_nav'         => Configuration::get($this->_prefix_st.'DIRECTION_NAV'),
         );

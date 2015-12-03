@@ -74,6 +74,7 @@
                                     <span class="price-percent-reduction">-{$specific_prices.reduction*100|floatval}%</span>
                                 {/if}
                             {/if}
+                            {hook h="displayProductPriceBlock" product=$special type="price"}
                         {/if}
                     </div>
                 </div>

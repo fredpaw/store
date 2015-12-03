@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $page_name == 'category' || $page_name == 'prices-drop' || $page_name == 'best-sales' || $page_name == 'manufacturer' || $page_name == 'supplier' || $page_name == 'new-products' || $page_name == 'search'}
 {if isset($HOOK_RIGHT_COLUMN) || isset($HOOK_LEFT_COLUMN) }
 	{assign var='st_columns_nbr' value=1}
@@ -73,10 +72,16 @@
 	{assign var='sale_sticker' value=Configuration::get('STSN_SALE_STYLE')}
 	{assign var='pro_list_display_brand_name' value=Configuration::get('STSN_PRO_LIST_DISPLAY_BRAND_NAME')}
 	{assign var='st_display_add_to_cart' value=Configuration::get('STSN_DISPLAY_ADD_TO_CART')}
+	{assign var='use_view_more_instead' value=Configuration::get('STSN_USE_VIEW_MORE_INSTEAD')}
 	{assign var='flyout_wishlist' value=Configuration::get('STSN_FLYOUT_WISHLIST')}
 	{assign var='flyout_quickview' value=Configuration::get('STSN_FLYOUT_QUICKVIEW')}
 	{assign var='flyout_comparison' value=Configuration::get('STSN_FLYOUT_COMPARISON')}  
 	{assign var='flyout_buttons' value=Configuration::get('STSN_FLYOUT_BUTTONS')}
+    {assign var='countdown_active' value=Configuration::get('ST_COUNTDOWN_ACTIVE')}
+    {assign var='countdown_style' value=Configuration::get('ST_COUNTDOWN_STYLE')}
+    {assign var='countdown_v_alignment' value=Configuration::get('ST_COUNTDOWN_V_ALIGNMENT')}
+    {assign var='countdown_title_aw_display' value=Configuration::get('ST_COUNTDOWN_TITLE_AW_DISPLAY')}
+
 	<!-- Products list -->
 	<ul{if isset($id) && $id} id="{$id}"{/if} class="product_list grid row{if isset($class) && $class} {$class}{/if}" data-classnames="col-lg-{(12/$smarty.capture.nbItemsPerLineDesktop)|replace:'.':'-'} col-md-{(12/$smarty.capture.nbItemsPerLine)|replace:'.':'-'} col-sm-{(12/$smarty.capture.nbItemsPerLineTablet)|replace:'.':'-'} col-xs-{(12/$smarty.capture.nbItemsPerLineMobile)|replace:'.':'-'} col-xxs-{(12/$smarty.capture.nbItemsPerLinePortrait)|replace:'.':'-'}" data-default-view="{if $for_w=='category'}{if Configuration::get('STSN_PRODUCT_VIEW')=='list_view'} list {else} grid {/if}{/if}">
 	{foreach from=$products item=product name=products}
@@ -96,8 +101,9 @@
 		{if $smarty.foreach.products.iteration%$smarty.capture.nbItemsPerLineTablet == 0} last-item-of-tablet-line{elseif $smarty.foreach.products.iteration%$smarty.capture.nbItemsPerLineTablet == 1} first-item-of-tablet-line{/if}{if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModuloTablet)} last-tablet-line{/if}{if $smarty.foreach.products.index < $smarty.capture.nbItemsPerLineTablet} first-tablet-line{/if}
 		{if $smarty.foreach.products.iteration%$smarty.capture.nbItemsPerLineMobile == 0} last-item-of-mobile-line{elseif $smarty.foreach.products.iteration%$smarty.capture.nbItemsPerLineMobile == 1} first-item-of-mobile-line{/if}{if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModuloMobile)} last-mobile-line{/if}{if $smarty.foreach.products.index < $smarty.capture.nbItemsPerLineMobile} first-mobile-line{/if}
 		{if $smarty.foreach.products.iteration%$smarty.capture.nbItemsPerLinePortrait == 0} last-item-of-portrait-line{elseif $smarty.foreach.products.iteration%$smarty.capture.nbItemsPerLinePortrait == 1} first-item-of-portrait-line{/if}{if $smarty.foreach.products.iteration > ($smarty.foreach.products.total - $totModuloPortrait)} last-portrait-line{/if}{if $smarty.foreach.products.index < $smarty.capture.nbItemsPerLinePortrait} first-portrait-line{/if}">
-			<div class="product-container" itemscope itemtype="http://schema.org/Product">
-            	{assign var='pro_image' value=$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')} 
+			<div class="product-container" itemscope itemtype="https://schema.org/Product">
+            	{assign var='pro_image' value=$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')}
+            	{capture name="pro_count_down"}{/capture}
             	<div class="pro_outer_box">
 				<div class="pro_first_box">
 					<a class="product_img_link"	href="{$product.link|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}" itemprop="url">
@@ -106,16 +112,29 @@
 						{if $new_sticker!=2 && isset($product.new) && $product.new == 1}<span class="new"><i>{l s='New'}</i></span>{/if}{if $sale_sticker!=2 && isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}<span class="on_sale"><i>{l s='Sale'}</i></span>{/if}						
 	                    {if (!$PS_CATALOG_MODE && ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 							{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
-								{if $discount_percentage==2 && isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
-		                            {if $product.specific_prices && $product.specific_prices.reduction_type=='percentage'}
-		                            	<span class="sale_percentage_sticker img-circle">
-									        {$product.specific_prices.reduction*100|floatval}%<br />{l s='Off'}
-										</span>
-		                            {elseif $product.specific_prices && $product.specific_prices.reduction_type=='amount' && $product.specific_prices.reduction|floatval !=0}
-		                            	<span class="sale_percentage_sticker img-circle">
-		                            		{l s='Save'}<br />{convertPrice price=$product.price_without_reduction-$product.price|floatval}
-		                            	</span>
+								{if $product.price_without_reduction > 0 && isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+		                            {if $discount_percentage==2}
+			                            {if $product.specific_prices && $product.specific_prices.reduction_type=='percentage'}
+			                            	<span class="sale_percentage_sticker img-circle">
+										        {$product.specific_prices.reduction*100|floatval}%<br />{l s='Off'}
+											</span>
+			                            {elseif $product.specific_prices && $product.specific_prices.reduction_type=='amount' && $product.specific_prices.reduction|floatval !=0}
+			                            	<span class="sale_percentage_sticker img-circle">
+			                            		{l s='Save'}<br />{convertPrice price=$product.price_without_reduction-$product.price|floatval}
+			                            	</span>
+			                            {/if}
 		                            {/if}
+		                            {if $countdown_active}
+			                            {capture name="pro_count_down"}
+						                    {if ($smarty.now|date_format:'%Y-%m-%d %H:%M:%S' >= $product.specific_prices.from && $smarty.now|date_format:'%Y-%m-%d %H:%M:%S' < $product.specific_prices.to)}
+						                    <div class="countdown_wrap countdown_timer countdown_style_{$countdown_style|default:0} {if $countdown_v_alignment} v_middle{/if} {if $for_w=='category'} c_countdown_timer{else} s_countdown_timer{/if}" data-countdown="{$product.specific_prices.to|date_format:'%Y/%m/%d %H:%M:%S'}" data-id-product="{$product.id_product}"></div>
+						                    {elseif ($product.specific_prices.to == '0000-00-00 00:00:00') && ($product.specific_prices.from == '0000-00-00 00:00:00') && $countdown_title_aw_display}
+						                    	<div class="countdown_wrap {if $for_w=='category'} c_countdown_perm{else} s_countdown_perm{/if} {if $countdown_v_alignment} v_middle{/if}" data-id-product="{$product.id_product}">
+						                    		<div class="countdown_title">{l s='Limited special offer'}</div>
+						                    	</div>
+						                    {/if}
+						                {/capture}
+					                {/if}
 		                        {/if}
 	                        {/if}
 	                    {/if}
@@ -131,19 +150,28 @@
 							{/if}
 						{/if}
 					</a>
+					{assign var="fly_i" value=0}
 	                {capture name="pro_a_cart"}
-						{if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.customizable != 2 && !$PS_CATALOG_MODE}
-	    					{if (!isset($product.customization_required) || !$product.customization_required) && ($product.allow_oosp || $product.quantity > 0)}
-	        					{capture}add=1&amp;id_product={$product.id_product|intval}{if isset($static_token)}&amp;token={$static_token}{/if}{/capture}
-								<a class="ajax_add_to_cart_button btn btn-default btn_primary" href="{$link->getPageLink('cart', true, NULL, $smarty.capture.default, false)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart'}" data-id-product="{$product.id_product|intval}" data-minimal_quantity="{if isset($product.product_attribute_minimal_quantity) && $product.product_attribute_minimal_quantity > 1}{$product.product_attribute_minimal_quantity|intval}{else}{$product.minimal_quantity|intval}{/if}"><div><i class="icon-basket icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to cart'}</span></div></a>			
-	    					{else}
-	                            <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View'}</span></div></a>
+	                	{if isset($use_view_more_instead) && $use_view_more_instead==1}
+	                		 <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View more'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more'}</span></div></a>
+	                	{else}
+							{if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.customizable != 2 && !$PS_CATALOG_MODE}
+		    					{if (!isset($product.customization_required) || !$product.customization_required) && ($product.allow_oosp || $product.quantity > 0)}
+		        					{capture}add=1&amp;id_product={$product.id_product|intval}{if isset($product.id_product_attribute) && $product.id_product_attribute}&amp;ipa={$product.id_product_attribute|intval}{/if}{if isset($static_token)}&amp;token={$static_token}{/if}{/capture}
+									<a class="ajax_add_to_cart_button btn btn-default btn_primary" href="{$link->getPageLink('cart', true, NULL, $smarty.capture.default, false)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart'}" data-id-product-attribute="{$product.id_product_attribute|intval}" data-id-product="{$product.id_product|intval}" data-minimal_quantity="{if isset($product.product_attribute_minimal_quantity) && $product.product_attribute_minimal_quantity >= 1}{$product.product_attribute_minimal_quantity|intval}{else}{$product.minimal_quantity|intval}{/if}"><div><i class="icon-basket icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to cart'}</span></div></a>
+									{if isset($use_view_more_instead) && $use_view_more_instead==2}
+		                                <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View more'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more'}</span></div></a>
+		                                {if !$st_display_add_to_cart}{assign var="fly_i" value=$fly_i+1}{/if}
+		                            {/if}	
+		    					{else}
+		                            <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View'}</span></div></a>
+		    					{/if}
 	    					{/if}
 	    				{/if}
 	                {/capture}
 	                {capture name="pro_a_compare"}
                 		{if !$flyout_comparison && isset($comparator_max_item) && $comparator_max_item}
-							<a class="add_to_compare" href="{$product.link|escape:'html':'UTF-8'}" data-id-product="{$product.id_product}" rel="nofollow" data-product-cover="{$link->getImageLink($product.link_rewrite, $product.id_image, 'thumb_default')|escape:'html':'UTF-8'}" data-product-name="{$product.name|escape:'html':'UTF-8'}"><div><i class="icon-ajust icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to compare'}</span></div></a>
+							<a class="add_to_compare" href="{$product.link|escape:'html':'UTF-8'}" data-id-product="{$product.id_product}" rel="nofollow" data-product-cover="{$link->getImageLink($product.link_rewrite, $product.id_image, 'thumb_default')|escape:'html':'UTF-8'}" data-product-name="{$product.name|escape:'html':'UTF-8'}" title="{l s='Add to compare'}"><div><i class="icon-ajust icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to compare'}</span></div></a>
 	        			{/if} 
 	                {/capture}
 	                {capture name="pro_a_wishlist"}
@@ -153,10 +181,9 @@
 	                {/capture}
 	                {capture name="pro_quick_view"}
 	                    {if !$flyout_quickview && isset($quick_view) && $quick_view}
-	                        <a class="quick-view" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}"><div><i class="icon-search-1 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Quick view'}</span></div></a>
+	                        <a class="quick-view" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}" title="{l s='Quick view'}"><div><i class="icon-search-1 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Quick view'}</span></div></a>
 	                    {/if}
 	                {/capture}
-	                {assign var="fly_i" value=0}
                 	{if !$st_display_add_to_cart && trim($smarty.capture.pro_a_cart)}{assign var="fly_i" value=$fly_i+1}{/if}
 	                {if trim($smarty.capture.pro_a_compare)}{assign var="fly_i" value=$fly_i+1}{/if}
 	                {if trim($smarty.capture.pro_quick_view)}{assign var="fly_i" value=$fly_i+1}{/if}
@@ -167,18 +194,19 @@
 	                    {$smarty.capture.pro_a_compare}
 	                    {$smarty.capture.pro_a_wishlist}
 	                </div>
+	                {if isset($smarty.capture.pro_count_down)}{$smarty.capture.pro_count_down}{/if}
 				</div>
 	        	<div class="pro_second_box">
 	        		<h5 itemprop="name" class="s_title_block {if $length_of_product_name} nohidden{/if}">{if isset($product.pack_quantity) && $product.pack_quantity}{$product.pack_quantity|intval|cat:' x '}{/if}<a class="product-name" href="{$product.link|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}" itemprop="url" >{if $length_of_product_name==2}{$product.name|escape:'htmlall':'UTF-8'}{elseif $length_of_product_name==1}{$product.name|escape:'htmlall':'UTF-8'|truncate:75:'...'}{else}{$product.name|escape:'htmlall':'UTF-8'|truncate:35:'...'}{/if}</a></h5>
+	        		{hook h='displayProductListReviews' product=$product}
 	        		{if $pro_list_display_brand_name && $product.id_manufacturer}<p class="pro_list_manufacturer">{$product.manufacturer_name|truncate:60:'...'|escape:'html':'UTF-8'}</p>{/if}
 					{if (!$PS_CATALOG_MODE && ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
-					<div class="price_container" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-						{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}<span itemprop="price" class="price product-price">{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}</span>
+					<div class="price_container" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}{hook h="displayProductPriceBlock" product=$product type="before_price"}<span itemprop="price" class="price product-price">{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}</span>
 						<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
-	                    {if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+	                    {if $product.price_without_reduction > 0 && isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 	                    	{hook h="displayProductPriceBlock" product=$product type="old_price"}
 	                        <span class="old-price product-price">{displayWtPrice p=$product.price_without_reduction}</span>
-	                        {hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 	                        {if $discount_percentage==1}
 		                        {if $product.specific_prices && $product.specific_prices.reduction_type=='percentage'}
 		                        	<span class="sale_percentage">
@@ -198,19 +226,22 @@
 	                        {/if}
 	                    {/if}
 	                    {if $PS_STOCK_MANAGEMENT && isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}
+	                    	<span class="unvisible">
 							{if ($product.allow_oosp || $product.quantity > 0)}
-								<link itemprop="availability" href="http://schema.org/InStock" />
+								<link itemprop="availability" href="https://schema.org/InStock" />{if $product.quantity <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}
 							{elseif (isset($product.quantity_all_versions) && $product.quantity_all_versions > 0)}
-								<link itemprop="availability" href="http://schema.org/LimitedAvailability" />
-
+								<link itemprop="availability" href="https://schema.org/LimitedAvailability" />{l s='Product available with different options'}
 							{else}
-								<link itemprop="availability" href="http://schema.org/OutOfStock" />
+								<link itemprop="availability" href="https://schema.org/OutOfStock" />{l s='Out of stock'}
 							{/if}
+							</span>
 						{/if}
 	                    {hook h="displayProductPriceBlock" product=$product type="price"}
 						{hook h="displayProductPriceBlock" product=$product type="unit_price"}
+						{hook h="displayProductPriceBlock" product=$product type='after_price'}
 	                    {/if}
 					</div>
+                    
 				    {if isset($product.online_only) && $product.online_only}<div class="mar_b6 product_online_only_flags"><span class="online_only sm_lable">{l s='Online only'}</span></div>{/if}
 					{/if}					
 					{if isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}
@@ -221,7 +252,7 @@
 						{if isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}
 							<div class="availability product_stock_info mar_b6">
 								{if ($product.allow_oosp || $product.quantity > 0)}
-									<span class="{if $product.quantity <= 0 && !$product.allow_oosp}out-of-stock{else}available-now{/if} hidden sm_lable">
+									<span class="{if $product.quantity <= 0 && isset($product.allow_oosp) && !$product.allow_oosp}out-of-stock{elseif $product.quantity <= 0}available-dif{else}available-now{/if} hidden sm_lable">
 										{if $product.quantity <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{else}{if $sold_out_style==0}{l s='Out of stock'}{/if}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}
 									</span>
 								{elseif (isset($product.quantity_all_versions) && $product.quantity_all_versions > 0)}
@@ -255,7 +286,7 @@
 						</div>
 					{/if}
 	                {if $for_w=='category'}{hook h='displayAnywhere' function="getProductAttributes" id_product=$product.id_product mod='stthemeeditor' caller='stthemeeditor'}{/if}
-	                {hook h="displayProductDeliveryTime" product=$product}
+	                {if isset($product.is_virtual) && !$product.is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 	                {hook h="displayProductPriceBlock" product=$product type="weight"}
 	                <p class="product-desc {$smarty.capture.display_sd} " itemprop="description">{$product.description_short|strip_tags:'UTF-8'|truncate:360:'...'}</p>
 	                <div class="act_box {if $st_display_add_to_cart==1} display_when_hover {elseif $st_display_add_to_cart==2} display_normal {/if}">

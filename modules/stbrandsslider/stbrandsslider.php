@@ -144,19 +144,17 @@ class StBrandsSlider extends Module
             || !Configuration::updateValue($this->_prefix_st.'BG_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'SPEED', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_COLOR', '')
-            || !Configuration::updateValue($this->_prefix_st.'TITLE_HOVER_COLOR', '')
-            || !Configuration::updateValue($this->_prefix_st.'TEXT_COLOR', '')
-            || !Configuration::updateValue($this->_prefix_st.'PRICE_COLOR', '')
-            || !Configuration::updateValue($this->_prefix_st.'LINK_HOVER_COLOR', '')
-            || !Configuration::updateValue($this->_prefix_st.'GRID_HOVER_BG', '')
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_BG', '')
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_HOVER_BG', '')
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_DISABLED_BG', '')
             
             || !Configuration::updateValue($this->_prefix_st.'TITLE_ALIGNMENT', 0)
+            || !Configuration::updateValue($this->_prefix_st.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_FONT_SIZE', 0)
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_NAV', 0)
+            
+            || !Configuration::updateValue($this->_prefix_st.'ALL', 0)
             )
 			return false;
         $this->clearBrandsSliderCache();
@@ -168,9 +166,14 @@ class StBrandsSlider extends Module
         $this->_hooks = array(
             'Hooks' => array(
                 array(
-        			'id' => 'displayFullWidthTop',
+                    'id' => 'displayFullWidthTop',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop')
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
         			'val' => '1',
-        			'name' => $this->l('displayFullWidthTop')
+        			'name' => $this->l('displayFullWidthTop2')
         		),
         		array(
         			'id' => 'displayHomeTop',
@@ -233,6 +236,23 @@ class StBrandsSlider extends Module
         			'id' => 'displayRightColumn',
         			'val' => '1',
         			'name' => $this->l('displayRightColumn')
+        		)
+            ),
+            'Footer' => array(
+        		array(
+        			'id' => 'displayFooterTop',
+        			'val' => '1',
+        			'name' => $this->l('displayFooterTop')
+        		),
+                array(
+        			'id' => 'displayFooter',
+        			'val' => '1',
+        			'name' => $this->l('displayFooter')
+        		),
+                array(
+        			'id' => 'displayFooterSecondary',
+        			'val' => '1',
+        			'name' => $this->l('displayFooterSecondary')
         		)
             )
         );
@@ -543,9 +563,26 @@ class StBrandsSlider extends Module
                     'validation' => 'isUnsignedInt',
                     //'desc' => $this->l('If you choose "RANDOM" smarty cache will be disabled'),
                 ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Show all Brands:'),
+                    'name' => 'all',
+                    'default_value' => 0,
+                    'values' => array(
+                        array(
+                            'id' => 'all_1',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'all_0',
+                            'value' => 0,
+                            'label' => $this->l('No'))
+                    ),
+                    'validation' => 'isUnsignedInt',
+                ),
 				'manufacturers' => array(
 					'type' => 'text',
-					'label' => $this->l('Brands/Manufacturers:'),
+					'label' => $this->l('Specific Brands:'),
 					'name' => 'manufacturers',
                     'autocomplete' => false,
                     'class' => 'fixed-width-xxl',
@@ -669,7 +706,6 @@ class StBrandsSlider extends Module
 					),
                     'validation' => 'isBool',
 				),
-
                 array(
                     'type' => 'text',
                     'label' => $this->l('Top padding:'),
@@ -763,6 +799,25 @@ class StBrandsSlider extends Module
                     'validation' => 'isBool',
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
+                    'validation' => 'isBool',
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->l('Heading font size:'),
                     'name' => 'title_font_size',
@@ -774,46 +829,6 @@ class StBrandsSlider extends Module
                     'type' => 'color',
                     'label' => $this->l('Heading color:'),
                     'name' => 'title_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Heading hover color:'),
-                    'name' => 'title_hover_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Text color:'),
-                    'name' => 'text_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Price color:'),
-                    'name' => 'price_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Product name hover color:'),
-                    'name' => 'link_hover_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Grid hover background:'),
-                    'name' => 'grid_hover_bg',
                     'class' => 'color',
                     'size' => 20,
                     'validation' => 'isColor',
@@ -988,7 +1003,7 @@ class StBrandsSlider extends Module
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -1039,6 +1054,7 @@ class StBrandsSlider extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
+            $title_block_no_bg = '.brands_slider_container .title_block, .brands_slider_container .nav_top_right .flex-direction-nav,.brands_slider_container .title_block a, .brands_slider_container .title_block span{background:none;}';
             
             $group_css = '';
             if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
@@ -1055,7 +1071,7 @@ class StBrandsSlider extends Module
                 $group_css .= 'background-image: url('.$img.');';
             }
             if($group_css)
-                $custom_css .= '.brands_slider_container{background-attachment:fixed;'.$group_css.'}.brands_slider_container .section .title_block, .brands_slider_container .nav_top_right .flex-direction-nav,.brands_slider_container .section .title_block a, .brands_slider_container .section .title_block span{background:none;}';
+                $custom_css .= '.brands_slider_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                 $custom_css .= '.brands_slider_container{padding-top:'.$top_padding.'px;}';
@@ -1070,7 +1086,9 @@ class StBrandsSlider extends Module
                 $custom_css .= '.brands_slider_container{margin-bottom:'.$bottom_margin.'px;}';
 
             if (Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'))
-                $custom_css .= '.brands_slider_container .title_block{text-align:center;}';
+                $custom_css .= '.brands_slider_container .title_block{text-align:center;}'.$title_block_no_bg;
+            if (Configuration::get($this->_prefix_st.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
             if ($title_font_size = (int)Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'))
             {
                  $custom_css .= '.brands_slider_container .title_block{font-size:'.$title_font_size.'px;}';
@@ -1079,22 +1097,6 @@ class StBrandsSlider extends Module
             
             if ($title_color = Configuration::get($this->_prefix_st.'TITLE_COLOR'))
                 $custom_css .= '.brands_slider_container.block .title_block a, .brands_slider_container.block .title_block span{color:'.$title_color.';}';
-            if ($title_hover_color = Configuration::get($this->_prefix_st.'TITLE_HOVER_COLOR'))
-                $custom_css .= '.brands_slider_container.block .title_block a:hover{color:'.$title_hover_color.';}';
-
-            if ($text_color = Configuration::get($this->_prefix_st.'TEXT_COLOR'))
-                $custom_css .= '.brands_slider_container .s_title_block a,
-                .brands_slider_container .price,
-                .brands_slider_container .old_price,
-                .brands_slider_container .product_desc{color:'.$text_color.';}';
-
-            if ($price_color = Configuration::get($this->_prefix_st.'PRICE_COLOR'))
-                $custom_css .= '.brands_slider_container .price{color:'.$price_color.';}';
-            if ($link_hover_color = Configuration::get($this->_prefix_st.'LINK_HOVER_COLOR'))
-                $custom_css .= '.brands_slider_container .s_title_block a:hover{color:'.$link_hover_color.';}';
-
-            if ($grid_hover_bg = Configuration::get($this->_prefix_st.'GRID_HOVER_BG'))
-                $custom_css .= '.brands_slider_container .products_slider .ajax_block_product:hover .pro_second_box, .brands_slider_container .product_list.grid .ajax_block_product:hover .pro_second_box{background-color:'.$grid_hover_bg.';}';
 
             if ($direction_color = Configuration::get($this->_prefix_st.'DIRECTION_COLOR'))
                 $custom_css .= '.brands_slider_container .flex-direction-nav a{color:'.$direction_color.';}';
@@ -1147,6 +1149,13 @@ class StBrandsSlider extends Module
     }
     
     public function hookDisplayFullWidthTop($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
+    }
+    public function hookDisplayFullWidthTop2($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
             return false;
@@ -1210,23 +1219,38 @@ class StBrandsSlider extends Module
     
     public function hookDisplayFooterTop($params)
     {
-        $this->smarty->assign('brandsslider_footer',true);
-        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__));
+        return $this->hookDisplayFooter($params, $this->getHookHash(__FUNCTION__));
     }
-    public function hookDisplayFooter($params)
+    public function hookDisplayFooter($params, $hook_hash = '')
     {
-        $this->smarty->assign('brandsslider_footer',true);
-        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__));
+        if (!$hook_hash)
+            $hook_hash = $this->getHookHash(__FUNCTION__);
+	    if (!$this->isCached('stbrandsslider-footer.tpl', $this->stGetCacheId($hook_hash)))
+	    {
+            if (Configuration::get('BRANDS_ALL'))
+                $brands = Manufacturer::getManufacturers();
+            else
+                $brands = $this->getManufacturers(Configuration::get('BRANDS_SLIDER_NBR'), $this->context->shop->id,$this->context->language->id);
+            
+            $this->smarty->assign(array(
+                'brands'            => $brands,
+    			'manufacturerSize'  => Image::getSize(ImageType::getFormatedName('thumb')),
+                'hook_hash'         => $hook_hash
+    		));
+	    }
+		return $this->display(__FILE__, 'stbrandsslider-footer.tpl', $this->stGetCacheId($hook_hash));
     }
     public function hookDisplayFooterSecondary($params)
     {
-        $this->smarty->assign('brandsslider_footer',true);
-        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__));
+        return $this->hookDisplayFooter($params, $this->getHookHash(__FUNCTION__));
     }
     
     private function _prepareHook($col=0)
     {
-        $brands = $this->getManufacturers(Configuration::get('BRANDS_SLIDER_NBR'), $this->context->shop->id,$this->context->language->id);
+        if (Configuration::get('BRANDS_ALL'))
+            $brands = $this->getManufacturersAll();
+        else
+            $brands = $this->getManufacturers(Configuration::get('BRANDS_SLIDER_NBR'), $this->context->shop->id,$this->context->language->id);
 
         $pre = $col ? 'S' : 'SLIDER';
         $ext = $col ? '_COL' : '';
@@ -1320,6 +1344,46 @@ class StBrandsSlider extends Module
 				$manufacturers[$i]['link_rewrite'] = 0;
 		return $manufacturers;
 	}
+    
+    public function getManufacturersAll($active = true)
+	{
+		$id_lang = (int)$this->context->language->id;
+        
+        $order_by = 'm.`name` DESC'; 
+        switch(Configuration::get($this->_prefix_st.'SLIDER_ORDER'))
+        {
+            case 1:
+                $order_by = ' m.`name` ASC ';
+            break;
+            case 2:
+                $order_by = ' m.`name` DESC ';
+            break;
+            case 3:
+                $order_by = ' RAND() ';
+            break;
+            default:
+                $order_by = ' m.`name` ASC ';
+            break;
+        }   
+   
+		$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT m.*, ml.`description`, ml.`short_description`
+		FROM `'._DB_PREFIX_.'manufacturer` m
+		'.Shop::addSqlAssociation('manufacturer', 'm').'
+		INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int)$id_lang.')
+		'.($active ? 'WHERE m.`active` = 1' : '')
+		.' GROUP BY m.`id_manufacturer`'
+        .' ORDER by'.$order_by);
+		if ($manufacturers === false)
+			return false;
+
+		$total_manufacturers = count($manufacturers);
+		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
+		for ($i = 0; $i < $total_manufacturers; $i++)
+			$manufacturers[$i]['link_rewrite'] = ($rewrite_settings ? Tools::link_rewrite($manufacturers[$i]['name']) : 0);
+		return $manufacturers;
+	}
+    
     private function getConfigFieldsValues()
     {
         $fields_values = array(
@@ -1343,7 +1407,8 @@ class StBrandsSlider extends Module
             's_loop_col' => Configuration::get('BRANDS_S_LOOP_COL'),
             's_items_col' => Configuration::get('BRANDS_S_ITEMS_COL'),
             
-            'manufacturers' => '',  
+            'manufacturers' => '',
+            'all' =>  Configuration::get($this->_prefix_st.'ALL'),
 
             'top_padding'        => Configuration::get($this->_prefix_st.'TOP_PADDING'),
             'bottom_padding'     => Configuration::get($this->_prefix_st.'BOTTOM_PADDING'),
@@ -1355,17 +1420,13 @@ class StBrandsSlider extends Module
             'speed'              => Configuration::get($this->_prefix_st.'SPEED'),
 
             'title_color'           => Configuration::get($this->_prefix_st.'TITLE_COLOR'),
-            'title_hover_color'     => Configuration::get($this->_prefix_st.'TITLE_HOVER_COLOR'),
-            'text_color'            => Configuration::get($this->_prefix_st.'TEXT_COLOR'),
-            'price_color'           => Configuration::get($this->_prefix_st.'PRICE_COLOR'),
-            'link_hover_color'      => Configuration::get($this->_prefix_st.'LINK_HOVER_COLOR'),
-            'grid_hover_bg'         => Configuration::get($this->_prefix_st.'GRID_HOVER_BG'),
             'direction_color'         => Configuration::get($this->_prefix_st.'DIRECTION_COLOR'),
             'direction_bg'         => Configuration::get($this->_prefix_st.'DIRECTION_BG'),
             'direction_hover_bg'   => Configuration::get($this->_prefix_st.'DIRECTION_HOVER_BG'),
             'direction_disabled_bg' => Configuration::get($this->_prefix_st.'DIRECTION_DISABLED_BG'),
             
             'title_alignment'       => Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'),
+            'title_no_bg'           => Configuration::get($this->_prefix_st.'TITLE_NO_BG'),
             'title_font_size'       => Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'),
             'direction_nav'         => Configuration::get($this->_prefix_st.'DIRECTION_NAV'),
         );
@@ -1378,7 +1439,7 @@ class StBrandsSlider extends Module
             <input type="hidden" name="id_manufacturer[]" value="'.$value['id_manufacturer'].'" /></li>';
         }
         
-        $this->fields_form[0]['form']['input']['manufacturers']['desc'] = $this->l('Current manufacturers')
+        $this->fields_form[0]['form']['input']['manufacturers']['desc'] = $this->l('Actually only for "Show all Brands" is set to "No".').'<br/>'.$this->l('Current manufacturers')
                 .': <ul id="curr_manufacturers">'.$manufacturers_html.'</ul>';
                 
         foreach($this->_hooks AS $key => $values)

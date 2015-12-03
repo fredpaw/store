@@ -68,17 +68,17 @@
         <!-- Subcategories -->
         <div id="subcategories">
             <h4 class="heading hidden">{l s='Subcategories'}</h4>
-            <ul class="inline_list {if $display_subcategory==1} subcate_grid_view row {else} subcate_list_view {/if}">
+            <ul class="inline_list {if $display_subcategory==1 || $display_subcategory==3} subcate_grid_view row {else} subcate_list_view {/if}">
             {foreach from=$subcategories item=subcategory name=subcategories}
-                <li class="clearfix {if $display_subcategory==1} col-lg-{(12/$sttheme.categories_per_lg)|replace:'.':'-'} col-md-{(12/$sttheme.categories_per_md)|replace:'.':'-'} col-sm-{(12/$sttheme.categories_per_sm)|replace:'.':'-'} col-xs-{(12/$sttheme.categories_per_xs)|replace:'.':'-'} col-xxs-{(12/$sttheme.categories_per_xxs)|replace:'.':'-'}  {if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_lg == 1} first-item-of-desktop-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_md == 1} first-item-of-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_sm == 1} first-item-of-tablet-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_xs == 1} first-item-of-mobile-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_xxs == 1} first-item-of-portrait-line{/if} {/if}">
+                <li class="clearfix {if $display_subcategory==1 || $display_subcategory==3} col-lg-{(12/$sttheme.categories_per_lg)|replace:'.':'-'} col-md-{(12/$sttheme.categories_per_md)|replace:'.':'-'} col-sm-{(12/$sttheme.categories_per_sm)|replace:'.':'-'} col-xs-{(12/$sttheme.categories_per_xs)|replace:'.':'-'} col-xxs-{(12/$sttheme.categories_per_xxs)|replace:'.':'-'}  {if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_lg == 1} first-item-of-desktop-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_md == 1} first-item-of-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_sm == 1} first-item-of-tablet-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_xs == 1} first-item-of-mobile-line{/if}{if $smarty.foreach.subcategories.iteration%$sttheme.categories_per_xxs == 1} first-item-of-portrait-line{/if} {/if}">
                     <a href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}" title="{$subcategory.name|escape:'html':'UTF-8'}" class="img">
                         {if $subcategory.id_image}
                             <img class="replace-2x" src="{$link->getCatImageLink($subcategory.link_rewrite, $subcategory.id_image, 'medium_default')|escape:'html':'UTF-8'}" alt="{$subcategory.name|escape:'html':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
                         {else}
-                            <img src="{$img_cat_dir}{$lang_iso}-default-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+                            <img src="{$img_cat_dir}{$lang_iso}-default-medium_default.jpg" alt="{$subcategory.name|escape:'html':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
                         {/if}
                     </a>
-                    <h5><a class="subcategory-name" href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}" title="{$subcategory.name|escape:'html':'UTF-8'}">{$subcategory.name|truncate:25:'...'|escape:'html':'UTF-8'}</a></h5>
+                    <h5><a class="subcategory-name" href="{$link->getCategoryLink($subcategory.id_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}" title="{$subcategory.name|escape:'html':'UTF-8'}">{if $display_subcategory==2 || $display_subcategory==3}{$subcategory.name|escape:'html':'UTF-8'}{else}{$subcategory.name|truncate:25:'...'|escape:'html':'UTF-8'}{/if}</a></h5>
                     {if $subcategory.description}
                         <div class="subcat_desc">{$subcategory.description}</div>
                     {/if}

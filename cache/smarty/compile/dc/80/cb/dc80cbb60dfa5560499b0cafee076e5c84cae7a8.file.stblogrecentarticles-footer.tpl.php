@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:48
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:06
          compiled from "D:\xampp\htdocs\store\modules\stblogrecentarticles\views\templates\hook\stblogrecentarticles-footer.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:20358564ebf089a92f5-11357149%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:19898565e95169361b3-47597748%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'dc80cbb60dfa5560499b0cafee076e5c84cae7a8' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\stblogrecentarticles\\views\\templates\\hook\\stblogrecentarticles-footer.tpl',
-      1 => 1447993231,
+      1 => 1449038240,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '20358564ebf089a92f5-11357149',
+  'nocache_hash' => '19898565e95169361b3-47597748',
   'function' => 
   array (
   ),
@@ -25,12 +25,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf08a0bf85_24418653',
+  'unifunc' => 'content_565e95169a3ca2_48073650',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf08a0bf85_24418653')) {function content_564ebf08a0bf85_24418653($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e95169a3ca2_48073650')) {function content_565e95169a3ca2_48073650($_smarty_tpl) {?>
 <!-- St Blog recent articles -->
 <section id="st_blog_recent_article-footer_<?php echo $_smarty_tpl->tpl_vars['hook_hash']->value;?>
-" class="block col-xs-12 col-sm-3 col-md-3">
+" class="st_blog_recent_article-footer block col-xs-12 col-sm-3 col-md-3">
     <a href="javascript:;" class="opener visible-xs">&nbsp;</a>
     <h4 class="title_block"><?php echo smartyTranslate(array('s'=>'Recent articles','mod'=>'stblogrecentarticles'),$_smarty_tpl);?>
 </h4>

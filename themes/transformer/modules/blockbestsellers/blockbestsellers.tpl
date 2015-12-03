@@ -49,6 +49,7 @@
                     {if !$PS_CATALOG_MODE}
                         <div class="price-box">
                             <span class="price">{$product.price}</span>
+                            {hook h="displayProductPriceBlock" product=$product type="price"}
                         </div>
                     {/if}
                 </div>

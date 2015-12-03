@@ -698,3 +698,13 @@ span.new {
 #search_block_top .search_query, #search_block_mobile_bar .search_query {
   border-left-width: 0;
   border-right-width: 1px; }
+
+.mo_advanced_ml_level_0, .mo_advanced_sub_li {
+  padding-left: auto;
+  padding-right: 10px; }
+
+.advanced_ma_level_0.ma_icon i, .mo_advanced_ma_level_0.ma_icon i {
+  margin-left: 0; }
+.advanced_ma_level_0 i, .mo_advanced_ma_level_0 i {
+  margin-right: 0;
+  margin-left: 4px; }

@@ -31,6 +31,13 @@
 {addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
 {addJsDef priceDisplayMethod=$priceDisplay}
 {addJsDef roundMode=$roundMode}
+{addJsDef currency=$currency}
+{if isset($currencyRate)}
+{addJsDef currencyRate=$currencyRate|floatval}
+{/if}
+{addJsDef currencySign=$currency->sign|html_entity_decode:2:"UTF-8"}
+{addJsDef currencyFormat=$currency->format|intval}
+{addJsDef currencyBlank=$currency->blank|intval}
 {addJsDef isLogged=$is_logged|intval}
 {addJsDef isGuest=$is_guest|intval}
 {addJsDef page_name=$page_name|escape:'html':'UTF-8'}
@@ -51,4 +58,5 @@
 {addJsDefL name=min_item}{l s='Please select at least one product' js=1}{/addJsDefL}
 {addJsDefL name=max_item}{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item js=1}{/addJsDefL}
 {addJsDef displayList=Configuration::get('PS_GRID_PRODUCT')|boolval}
+{addJsDef highDPI=Configuration::get('PS_HIGHT_DPI')|boolval}
 {/strip}

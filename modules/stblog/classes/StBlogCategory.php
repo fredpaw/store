@@ -977,7 +977,7 @@ class StBlogCategory extends ObjectModel
             $id_lang = Context::getContext()->language->id;
             
 		if (!isset($root_category))
-			$root_category = self::getTopCategory(Category($id_lang))->id;
+			$root_category = self::getTopCategory((int)$id_lang)->id;
 
 		if (!Validate::isInt($root_category))
 			die(Tools::displayError());

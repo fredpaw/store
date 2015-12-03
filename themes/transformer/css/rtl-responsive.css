@@ -107,4 +107,8 @@
     left: 9999px; }
 
   .delivery_options table td {
-    text-align: right; } }
+    text-align: right; }
+
+  body.is_rtl .pb-center-column,
+  body.is_rtl .pb-left-column {
+    float: none !important; } }

@@ -115,8 +115,8 @@
         {/literal} 
         //]]>
         </script>
-    {else}
-        <ul class="row blog_row_list">
+    {elseif $display_as_grid==1 || $display_as_grid==3}
+        <ul class="row{if $display_as_grid==1} blog_row_list{else} blog_list_grid blog_list{/if}">
         {foreach $blogs as $blog}
             <li class="block_blog col-lg-{(12/$pro_per_lg)|replace:'.':'-'} col-md-{(12/$pro_per_md)|replace:'.':'-'} col-sm-{(12/$pro_per_sm)|replace:'.':'-'} col-xs-{(12/$pro_per_xs)|replace:'.':'-'} col-xxs-{(12/$pro_per_xxs)|replace:'.':'-'}  {if $blog@iteration%$pro_per_lg == 1} first-item-of-desktop-line{/if}{if $blog@iteration%$pro_per_md == 1} first-item-of-line{/if}{if $blog@iteration%$pro_per_sm == 1} first-item-of-tablet-line{/if}{if $blog@iteration%$pro_per_xs == 1} first-item-of-mobile-line{/if}{if $blog@iteration%$pro_per_xxs == 1} first-item-of-portrait-line{/if} clearfix">
                 <div class="blog_image">
@@ -131,6 +131,30 @@
                 </div>
                 <p class="s_title_block"><a href="{$blog.link|escape:'html'}" title="{$blog.name|escape:'htmlall':'UTF-8'}">{$blog.name|escape:'htmlall':'UTF-8'|truncate:70:'...'}</a></p>
                 {if $blog.content_short}<p class="blok_blog_short_content">{$blog.content_short|strip_tags:'UTF-8'|truncate:120:'...'}<a href="{$blog.link|escape:'html'}" title="{l s='Read More' mod='stblogfeaturedarticles'}" class="go">{l s='Read More' mod='stblogfeaturedarticles'}</a></p>{/if}
+                <div class="blog_info">
+                    <span class="date-add">{dateFormat date=$blog.date_add full=0}</span>
+                    {hook h='displayAnywhere' function="getCommentNumber" id_blog=$blog.id_st_blog link_rewrite=$blog.link_rewrite mod='stblogcomments' caller='stblogcomments'}
+                    {if $display_viewcount}<span><i class="icon-eye-2 icon-mar-lr2"></i>{$blog.counter}</span>{/if}
+                </div>
+            </li>
+        {/foreach}
+        </ul>
+    {else}
+        <ul class="blog_list_large">
+        {foreach $blogs as $blog}
+            <li class="block_blog {if $blog@first}first_item{elseif $blog@last}last_item{/if}">
+                <div class="blog_image">
+                    <a href="{$blog.link|escape:'html'}" title="{$blog.name|escape:'htmlall':'UTF-8'}">
+                    <img src="{$blog.cover.links.large}" alt="{$blog.name|escape:'htmlall':'UTF-8'}" width="{$imageSize[1]['large'][0]}" height="{$imageSize[1]['large'][1]}" class="hover_effect" />
+                    {if $blog.type==2}
+                        <span class="icon_wrap"><i class="icon-camera-2 icon-1x"></i></span>
+                    {elseif $blog.type==3}
+                        <span class="icon_wrap"><i class="icon-video icon-1x"></i></span>
+                    {/if}                 
+                    </a>
+                </div>
+                <p class="s_title_block"><a href="{$blog.link|escape:'html'}" title="{$blog.name|escape:'htmlall':'UTF-8'}">{$blog.name|escape:'htmlall':'UTF-8'|truncate:70:'...'}</a></p>
+                {if $blog.content_short}<p class="blok_blog_short_content">{$blog.content_short}<a href="{$blog.link|escape:'html'}" title="{l s='Read More' mod='stblogfeaturedarticles'}" class="go">{l s='Read More' mod='stblogfeaturedarticles'}</a></p>{/if}
                 <div class="blog_info">
                     <span class="date-add">{dateFormat date=$blog.date_add full=0}</span>
                     {hook h='displayAnywhere' function="getCommentNumber" id_blog=$blog.id_st_blog link_rewrite=$blog.link_rewrite mod='stblogcomments' caller='stblogcomments'}

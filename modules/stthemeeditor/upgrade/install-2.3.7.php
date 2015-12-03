@@ -7,24 +7,24 @@ function upgrade_module_2_3_7($object)
 {
     $result = true;
     
-    $result &= Configuration::updateValue('STSN_TRACKING_CODE', '');
-    $result &= Configuration::updateValue('STSN_NEW_STYLE', 0);
-    $result &= Configuration::updateValue('STSN_NEW_BG_IMG', '');
-    $result &= Configuration::updateValue('STSN_NEW_STICKERS_TOP', 25);
-    $result &= Configuration::updateValue('STSN_NEW_STICKERS_RIGHT', 0);
-    $result &= Configuration::updateValue('STSN_SALE_STYLE', 0);
-    $result &= Configuration::updateValue('STSN_SALE_BG_IMG', '');
-    $result &= Configuration::updateValue('STSN_SALE_STICKERS_TOP', 25);
-    $result &= Configuration::updateValue('STSN_SALE_STICKERS_LEFT', 0);
-    $result &= Configuration::updateValue('STSN_PRICE_DROP_COLOR', '');
-    $result &= Configuration::updateValue('STSN_PRICE_DROP_BORDER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_PRICE_DROP_BG_COLOR', '');
-    $result &= Configuration::updateValue('STSN_PRICE_DROP_BOTTOM', 50);
-    $result &= Configuration::updateValue('STSN_PRICE_DROP_RIGHT', 10);
-    $result &= Configuration::updateValue('STSN_PRICE_DROP_WIDTH', 0);
-    $result &= Configuration::updateValue('STSN_LOGO_POSITION', 0);
-    $result &= Configuration::updateValue('STSN_LOGO_HEIGHT', 0);
-    $result &= Configuration::updateValue('STSN_CATEGORIES_PER_ROW', 5);
+    $result &= Configuration::updateGlobalValue('STSN_TRACKING_CODE', '');
+    $result &= Configuration::updateGlobalValue('STSN_NEW_STYLE', 0);
+    $result &= Configuration::updateGlobalValue('STSN_NEW_BG_IMG', '');
+    $result &= Configuration::updateGlobalValue('STSN_NEW_STICKERS_TOP', 25);
+    $result &= Configuration::updateGlobalValue('STSN_NEW_STICKERS_RIGHT', 0);
+    $result &= Configuration::updateGlobalValue('STSN_SALE_STYLE', 0);
+    $result &= Configuration::updateGlobalValue('STSN_SALE_BG_IMG', '');
+    $result &= Configuration::updateGlobalValue('STSN_SALE_STICKERS_TOP', 25);
+    $result &= Configuration::updateGlobalValue('STSN_SALE_STICKERS_LEFT', 0);
+    $result &= Configuration::updateGlobalValue('STSN_PRICE_DROP_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_PRICE_DROP_BORDER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_PRICE_DROP_BG_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_PRICE_DROP_BOTTOM', 50);
+    $result &= Configuration::updateGlobalValue('STSN_PRICE_DROP_RIGHT', 10);
+    $result &= Configuration::updateGlobalValue('STSN_PRICE_DROP_WIDTH', 0);
+    $result &= Configuration::updateGlobalValue('STSN_LOGO_POSITION', 0);
+    $result &= Configuration::updateGlobalValue('STSN_LOGO_HEIGHT', 0);
+    $result &= Configuration::updateGlobalValue('STSN_CATEGORIES_PER_ROW', 5);
     
     $_hooks = array(
         array('displayTopLeft','displayTopLeft','Top left-hand side of the page',1),

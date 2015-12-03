@@ -27,9 +27,9 @@
 <div style="display:none;">
 	<div id="new_comment_form">
 		<form id="id_new_comment_form" action="#">
-			<h2 class="block-heading">
+			<p class="block-heading">
 				{l s='Write a review' mod='productcomments'}
-			</h2>
+			</p>
 				{if isset($product) && $product}
 					<div class="product clearfix">
 						<img src="{$productcomment_cover_image}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product->name|escape:'html':'UTF-8'}" class="hidden-xs" />
@@ -50,11 +50,11 @@
 							<li>
 								<label>{$criterion.name|escape:'html':'UTF-8'}</label>
 								<div class="star_content">
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" checked="checked" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" checked="checked" />
 								</div>
 								<div class="clearfix"></div>
 							</li>
@@ -104,9 +104,9 @@
 		{if $comments}
 			{foreach from=$comments item=comment}
 				{if $comment.content}
-				<div class="comment row" itemprop="review" itemscope itemtype="http://schema.org/Review">
+				<div class="comment row" itemprop="review" itemscope itemtype="https://schema.org/Review">
 					<div class="comment_author col-xs-12 col-sm-3 col-md-3">
-						<div class="star_content clearfix"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+						<div class="star_content clearfix"  itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 							{section name="i" start=0 loop=5 step=1}
 								{if $comment.grade le $smarty.section.i.index}
 									<div class="star"></div>

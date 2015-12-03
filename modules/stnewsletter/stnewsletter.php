@@ -47,6 +47,7 @@ class StNewsLetter extends Module
     public static $location = array(
         4 => array('id' =>4 , 'name' => 'Popup'),
         36 => array('id' =>36 , 'name' => 'Full width top', 'full_width' => 1),
+        31 => array('id' =>31 , 'name' => 'Full width top 2', 'full_width' => 1),
         16 => array('id' =>16 , 'name' => 'Homepage top'),
         1 => array('id' =>1 , 'name' => 'Homepage'),
         17 => array('id' =>17 , 'name' => 'Homepage bottom'),
@@ -100,7 +101,7 @@ class StNewsLetter extends Module
 	{
 		$this->name          = 'stnewsletter';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.0';
+		$this->version       = '1.0.1';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
 		$this->bootstrap 	 = true;
@@ -122,6 +123,8 @@ class StNewsLetter extends Module
             $this->_cookie_path = '/';
         if (!$this->_cookie_domain)
             $this->_cookie_domain = null;
+        
+        $this->file = 'export_'.date('YmdHis').'.csv';
 	}
 
     
@@ -132,6 +135,7 @@ class StNewsLetter extends Module
             $this->registerHook('displayHeader') &&
             $this->registerHook('displayAnywhere') &&
             $this->registerHook('displayFullWidthTop') &&
+            $this->registerHook('displayFullWidthTop2') &&
             $this->registerHook('displayHomeTop') &&
             $this->registerHook('displayHome') &&
             $this->registerHook('displayHomeTertiaryLeft') &&
@@ -498,7 +502,7 @@ class StNewsLetter extends Module
             {
                 $this->clearStNewsLetterCache();
                 if(isset($_POST['savesettingstnewsletterAndStay']))
-                    Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&conf=4&setting'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules')); 
+                    Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&conf=4&token='.Tools::getAdminTokenLite('AdminModules')); 
                 else
                     $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
             }
@@ -524,9 +528,122 @@ class StNewsLetter extends Module
 		}
         else
         {
+            if (Tools::isSubmit('submitExport') && $action = Tools::getValue('action'))
+			     $this->export_csv();
             $helper = $this->initList();
-            return $this->_html.$helper->generateList(StNewsLetterClass::getAll((int)$this->context->language->id), $this->fields_list);
+            $this->_html .= $helper->generateList(StNewsLetterClass::getAll((int)$this->context->language->id), $this->fields_list);
+            $this->initFieldsForm();
+			$helper = $this->initSettingForm();
+            $this->_html .= $helper->generateForm($this->fields_form);
+            $this->_html .= $this->renderExportForm();
+            return $this->_html;
         }
+    }
+    
+    public function renderExportForm()
+	{
+		// Getting data...
+		$countries = Country::getCountries($this->context->language->id);
+
+		// ...formatting array
+		$countries_list = array(array('id' => 0, 'name' => $this->l('All countries')));
+		foreach ($countries as $country)
+			$countries_list[] = array('id' => $country['id_country'], 'name' => $country['name']);
+
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Export customers\' addresses'),
+					'icon' => 'icon-envelope'
+				),
+				'input' => array(
+					array(
+						'type' => 'select',
+						'label' => $this->l('Customers\' country'),
+						'desc' => $this->l('Filter customers by country.'),
+						'name' => 'COUNTRY',
+						'required' => false,
+						'default_value' => (int)$this->context->country->id,
+						'options' => array(
+							'query' => $countries_list,
+							'id' => 'id',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Newsletter subscribers'),
+						'desc' => $this->l('Filter customers who have subscribed to the newsletter or not, and who have an account or not.'),
+						'hint' => $this->l('Customers can subscribe to your newsletter when registering, or by entering their email in the newsletter popup.'),
+						'name' => 'SUSCRIBERS',
+						'required' => false,
+						'default_value' => (int)$this->context->country->id,
+						'options' => array(
+							'query' => array(
+								array('id' => 0, 'name' => $this->l('All subscribers')),
+								array('id' => 1, 'name' => $this->l('Subscribers with an account')),
+								array('id' => 2, 'name' => $this->l('Subscribers without an account')),
+								array('id' => 3, 'name' => $this->l('Non-subscribers'))
+							),
+							'id' => 'id',
+							'name' => 'name',
+						)
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Opted-in subscribers'),
+						'desc' => $this->l('Filter customers who have agreed to receive your partners\' offers or not.'),
+						'hint' => $this->l('Opted-in subscribers have agreed to receive your partners\' offers.'),
+						'name' => 'OPTIN',
+						'required' => false,
+						'default_value' => (int)$this->context->country->id,
+						'options' => array(
+							'query' => array(
+								array('id' => 0, 'name' => $this->l('All customers')),
+								array('id' => 2, 'name' => $this->l('Opt-in subscribers')),
+								array('id' => 1, 'name' => $this->l('Opt-in non-subscribers'))
+							),
+							'id' => 'id',
+							'name' => 'name',
+						)
+					),
+                    array(
+        				'type' => 'html',
+                        'id' => 'a_go',
+        				'label' => '',
+        				'name' => '<a class="btn btn-default btn-block fixed-width-md" href="'.AdminController::$currentIndex.'&configure=blocknewsletter&token='.Tools::getAdminTokenLite('AdminModules').'"><i class="icon-arrow-right"></i> View subscribers </a>',                  
+        			),
+					array(
+						'type' => 'hidden',
+						'name' => 'action',
+					)
+				),
+				'submit' => array(
+					'title' => $this->l('Export .CSV file'),
+					'class' => 'btn btn-default pull-right',
+					'name' => 'submitExport',
+				)
+			),
+		);
+
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table = $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'btnSubmit';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
     }
 
     public function uploadCheckAndGetName($name)
@@ -632,9 +749,9 @@ class StNewsLetter extends Module
             'href' => AdminController::$currentIndex.'&configure='.$this->name.'&addstnewsletter&token='.Tools::getAdminTokenLite('AdminModules'),
             'desc' => $this->l('Add a block'),
         );
-        $helper->toolbar_btn['edit'] =  array(
-			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&setting'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
-			'desc' => $this->l('Setting'),
+        $helper->toolbar_btn['export'] =  array(
+			'href' => AdminController::$currentIndex.'&configure=blocknewsletter&token='.Tools::getAdminTokenLite('AdminModules'),
+			'desc' => $this->l('View subscribers'),
 		);
 
         $helper->title = $this->displayName;
@@ -769,7 +886,7 @@ class StNewsLetter extends Module
                             'value' => 0,
                             'label' => $this->l('No')),
                     ),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
                 ), 
 
                 array(
@@ -1206,25 +1323,12 @@ class StNewsLetter extends Module
 						'label' => $this->l('Welcome voucher code'),
 						'name' => 'voucher_code',
 						'class' => 'fixed-width-md',
-						'desc' => $this->l('Leave blank to disable by default.')
+						'desc' => $this->l('Leave blank to disable by default.'),
+                        'validation' => 'isString',
 					),
-                array(
-					'type' => 'html',
-                    'id' => 'a_cancel',
-					'label' => '',
-					'name' => '<a class="btn btn-default btn-block fixed-width-md" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'"><i class="icon-arrow-left"></i> Back to list</a>',                  
-				),
-            ),
-            'buttons' => array(
-                array(
-                    'type' => 'submit',
-                    'title'=> $this->l(' Save and back '),
-                    'icon' => 'process-icon-save',
-                    'class'=> 'pull-right'
-                ),
             ),
 			'submit' => array(
-				'title' => $this->l('Save and stay'),
+				'title' => $this->l('Save'),
                 'stay' => true
 			),
         );
@@ -1258,6 +1362,10 @@ class StNewsLetter extends Module
             'verification_email'          => Configuration::get($this->_prefix_st.'VERIFICATION_EMAIL'),
             'confirmation_email'          => Configuration::get($this->_prefix_st.'CONFIRMATION_EMAIL'),
             'voucher_code'                => Configuration::get($this->_prefix_st.'VOUCHER_CODE'),
+            'COUNTRY'                     => Tools::getValue('COUNTRY'),
+			'SUSCRIBERS'                  => Tools::getValue('SUSCRIBERS'),
+			'OPTIN'                       => Tools::getValue('OPTIN'),
+            'action'                      => 'customers',
         );
         return $fields_values;
     }
@@ -1453,6 +1561,16 @@ class StNewsLetter extends Module
             if(!$this->_prepareHook(36))
                 return false;
         return $this->display(__FILE__, 'stnewsletter.tpl', $this->stGetCacheId(36));
+    }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+        
+        if (!$this->isCached('stnewsletter.tpl', $this->stGetCacheId(31)))
+            if(!$this->_prepareHook(31))
+                return false;
+        return $this->display(__FILE__, 'stnewsletter.tpl', $this->stGetCacheId(31));
     }
     public function hookDisplayHomeTop($params)
     {
@@ -1841,7 +1959,7 @@ class StNewsLetter extends Module
 	 */
 	public function sendVoucher($email, $code)
 	{
-		return Mail::Send(Context::getContext()->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher', Context::getContext()->language->id), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, Context::getContext()->shop->id);
+		return Mail::Send(Context::getContext()->language->id, 'stnewsletter_voucher', Mail::l('Newsletter voucher', Context::getContext()->language->id), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, Context::getContext()->shop->id);
 	}
 
 	/**
@@ -1853,7 +1971,7 @@ class StNewsLetter extends Module
 	 */
 	public function sendConfirmationEmail($email)
 	{
-		return Mail::Send(Context::getContext()->language->id, 'newsletter_conf', Mail::l('Newsletter confirmation', Context::getContext()->language->id), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/', false, Context::getContext()->shop->id);
+		return Mail::Send(Context::getContext()->language->id, 'stnewsletter_conf', Mail::l('Newsletter confirmation', Context::getContext()->language->id), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/', false, Context::getContext()->shop->id);
 	}
 
 	/**
@@ -1872,6 +1990,108 @@ class StNewsLetter extends Module
 			)
 		);
 
-		return Mail::Send(Context::getContext()->language->id, 'newsletter_verif', Mail::l('Email verification', Context::getContext()->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, Context::getContext()->shop->id);
+		return Mail::Send(Context::getContext()->language->id, 'stnewsletter_verif', Mail::l('Email verification', Context::getContext()->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/', false, Context::getContext()->shop->id);
+	}
+    
+    public function export_csv()
+	{
+		if (!isset($this->context))
+			$this->context = Context::getContext();
+
+		$result = $this->getCustomers();
+
+		if ($result)
+		{
+			if (!$nb = count($result))
+				$this->_html .= $this->displayError($this->l('No customers found with these filters!'));
+			elseif ($fd = @fopen(dirname(__FILE__).'/'.strval(preg_replace('#\.{2,}#', '.', Tools::getValue('action'))).'_'.$this->file, 'w'))
+			{
+				$header = array('id', 'shop_name', 'gender', 'lastname', 'firstname', 'email', 'subscribed', 'subscribed_on');
+				$array_to_export = array_merge(array($header), $result);
+				foreach ($array_to_export as $tab)
+					$this->myFputCsv($fd, $tab);
+				fclose($fd);
+				$this->_html .= $this->displayConfirmation(
+					sprintf($this->l('The .CSV file has been successfully exported: %d customers found.'), $nb).'<br />
+				<a href="'.$this->context->shop->getBaseURI().'modules/'.$this->name.'/'.Tools::safeOutput(strval(Tools::getValue('action'))).'_'.$this->file.'">
+				<b>'.$this->l('Download the file').' '.$this->file.'</b>
+				</a>
+				<br />
+				<ol style="margin-top: 10px;">
+					<li style="color: red;">'.
+					$this->l('WARNING: If opening this .csv file with Excel, remember to choose UTF-8 encoding or you may see strange characters.').
+					'</li>
+				</ol>');
+			}
+			else
+				$this->_html .= $this->displayError($this->l('Error: cannot write').' '.dirname(__FILE__).'/'.strval(Tools::getValue('action')).'_'.$this->file.' !');
+		}
+		else
+			$this->_html .= $this->displayError($this->l('No result found!'));
+	}
+
+	private function getCustomers()
+	{
+		$id_shop = false;
+
+		// Get the value to know with subscrib I need to take 1 with account 2 without 0 both 3 not subscrib
+		$who = (int)Tools::getValue('SUSCRIBERS');
+
+		// get optin 0 for all 1 no optin 2 with optin
+		$optin = (int)Tools::getValue('OPTIN');
+
+		$country = (int)Tools::getValue('COUNTRY');
+
+		if (Context::getContext()->cookie->shopContext)
+			$id_shop = (int)Context::getContext()->shop->id;
+
+		$customers = array();
+		if ($who == 1 || $who == 0 || $who == 3)
+		{
+			$dbquery = new DbQuery();
+			$dbquery->select('c.`id_customer` AS `id`, s.`name` AS `shop_name`, gl.`name` AS `gender`, c.`lastname`, c.`firstname`, c.`email`, c.`newsletter` AS `subscribed`, c.`newsletter_date_add`');
+			$dbquery->from('customer', 'c');
+			$dbquery->leftJoin('shop', 's', 's.id_shop = c.id_shop');
+			$dbquery->leftJoin('gender', 'g', 'g.id_gender = c.id_gender');
+			$dbquery->leftJoin('gender_lang', 'gl', 'g.id_gender = gl.id_gender AND gl.id_lang = '.$this->context->employee->id_lang);
+			$dbquery->where('c.`newsletter` = '.($who == 3 ? 0 : 1));
+			if ($optin == 2 || $optin == 1)
+				$dbquery->where('c.`optin` = '.($optin == 1 ? 0 : 1));
+			if ($country)
+				$dbquery->where('(SELECT COUNT(a.`id_address`) as nb_country
+													FROM `'._DB_PREFIX_.'address` a
+													WHERE a.deleted = 0
+													AND a.`id_customer` = c.`id_customer`
+													AND a.`id_country` = '.$country.') >= 1');
+			if ($id_shop)
+				$dbquery->where('c.`id_shop` = '.$id_shop);
+
+			$customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($dbquery->build());
+		}
+
+		$non_customers = array();
+		if (($who == 0 || $who == 2) && (!$optin || $optin == 2) && !$country)
+		{
+			$dbquery = new DbQuery();
+			$dbquery->select('CONCAT(\'N\', n.`id`) AS `id`, s.`name` AS `shop_name`, NULL AS `gender`, NULL AS `lastname`, NULL AS `firstname`, n.`email`, n.`active` AS `subscribed`, n.`newsletter_date_add`');
+			$dbquery->from('newsletter', 'n');
+			$dbquery->leftJoin('shop', 's', 's.id_shop = n.id_shop');
+			$dbquery->where('n.`active` = 1');
+			if ($id_shop)
+				$dbquery->where('n.`id_shop` = '.$id_shop);
+			$non_customers = Db::getInstance()->executeS($dbquery->build());
+		}
+
+		$subscribers = array_merge($customers, $non_customers);
+
+		return $subscribers;
+	}
+
+	private function myFputCsv($fd, $array)
+	{
+		$line = implode(';', $array);
+		$line .= "\n";
+		if (!fwrite($fd, $line, 4096))
+			$this->post_errors[] = $this->l('Error: cannot write').' '.dirname(__FILE__).'/'.$this->file.' !';
 	}
 }

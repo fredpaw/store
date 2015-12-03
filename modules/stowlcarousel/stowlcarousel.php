@@ -36,6 +36,7 @@ class StOwlCarousel extends Module
     protected static $access_rights = 0775;
     public static $location = array(
         21 => array('id' =>21 , 'name' => 'Full width top', 'full_width' => 1),
+        26 => array('id' =>26 , 'name' => 'Full width top 2', 'full_width' => 1),
         19 => array('id' =>19 , 'name' => 'Top column'),
         17 => array('id' =>17 , 'name' => 'HomepageTop'),
         3 => array('id' =>3 , 'name' => 'Homepage'),
@@ -173,7 +174,7 @@ class StOwlCarousel extends Module
 	{
 		$this->name          = 'stowlcarousel';
 		$this->tab           = 'front_office_features';
-		$this->version       = '2.0.9';
+		$this->version       = '2.1.8';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
@@ -274,6 +275,7 @@ class StOwlCarousel extends Module
             $this->registerHook('displayTopColumn') && 
             $this->registerHook('displayHomeVeryBottom') && 
             $this->registerHook('displayFullWidthTop') && 
+            $this->registerHook('displayFullWidthTop2') && 
             $this->registerHook('displayHomeVeryBottom');
 		if ($res)
 			foreach(Shop::getShops(false) as $shop)
@@ -611,6 +613,16 @@ class StOwlCarousel extends Module
             else
                 $this->_html .= $this->displayError($this->l('Failed to update the position.'));
 		}
+        if (Tools::isSubmit('copystowlcarousel'))
+        {
+            if($this->processCopyOwlCarousel($id_st_owl_carousel_group))
+            {
+                $this->clearOwlCarouselCache();
+                Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&conf=19&token='.Tools::getAdminTokenLite('AdminModules'));
+            }  
+            else
+                $this->_html .= $this->displayError($this->l('An error occurred while copy Owl Carousel.'));
+        }
         if (Tools::getValue('action') == 'updatePositions')
         {
             $this->processUpdatePositions();
@@ -1089,7 +1101,7 @@ class StOwlCarousel extends Module
 						)
         			),
                     'desc' => '<div class="alert alert-info"><a href="javascript:;" onclick="$(\'#des_page_layout\').toggle();return false;">'.$this->l('Click here to see hook position').'</a>'.
-                        '<div id="des_page_layout" style="display:none;"><img src="'.$this->_path.'views/img/hook_into_hint.jpg" /></div></div>',
+                        '<div id="des_page_layout" style="display:none;"><img src="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" /></div></div>',
 				),
                 'templates' => array(
                     'type' => 'html',
@@ -1175,7 +1187,7 @@ class StOwlCarousel extends Module
 							'value' => 0,
 							'label' => $this->l('No')),
 					),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
 				), 
                 array(
 					'type' => 'text',
@@ -1848,7 +1860,7 @@ class StOwlCarousel extends Module
                             'value' => 0,
                             'label' => $this->l('No')),
                     ),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
                 ),
                 array(
                     'type' => 'radio',
@@ -2142,8 +2154,9 @@ class StOwlCarousel extends Module
 		$helper = new HelperList();
 		$helper->shopLinkType = '';
 		$helper->simple_header = false;
+        $helper->module = $this;
 		$helper->identifier = 'id_st_owl_carousel_group';
-		$helper->actions = array('view', 'edit', 'delete');
+		$helper->actions = array('view', 'edit', 'delete','duplicate');
 		$helper->show_toolbar = true;
 		$helper->imageType = 'jpg';
 		$helper->toolbar_btn['new'] =  array(
@@ -2157,6 +2170,10 @@ class StOwlCarousel extends Module
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 		return $helper;
 	}
+    public function displayDuplicateLink($token, $id, $name)
+    {
+        return '<li class="divider"></li><li><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&copy'.$this->name.'&id_st_owl_carousel_group='.(int)$id.'&token='.$token.'"><i class="icon-copy"></i>'.$this->l(' Duplicate ').'</a></li>';
+    }
     public static function showSlideGroupName($value,$row)
     {
         $slide_group = new StOwlCarouselGroup((int)$value);
@@ -2222,7 +2239,7 @@ class StOwlCarousel extends Module
 		$helper->imageType = 'jpg';
 		$helper->toolbar_btn['new'] =  array(
 			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&addstowlcarousel&id_st_owl_carousel_group='.(int)Tools::getValue('id_st_owl_carousel_group').'&token='.Tools::getAdminTokenLite('AdminModules'),
-			'desc' => $this->l('Add a item')
+			'desc' => $this->l('Add an item')
 		);
         $helper->toolbar_btn['edit'] =  array(
 			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&update'.$this->name.'&id_st_owl_carousel_group='.(int)Tools::getValue('id_st_owl_carousel_group').'&fr=view&token='.Tools::getAdminTokenLite('AdminModules'),
@@ -2522,6 +2539,17 @@ class StOwlCarousel extends Module
         }
         return false;
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        $page_name = Context::getContext()->smarty->getTemplateVars('page_name');
+        if($page_name=='index')
+        {
+            if(!$this->_prepareHook(26,1))
+                    return false;
+            return $this->display(__FILE__, 'stowlcarousel.tpl');
+        }
+        return false;
+    }
 	public function hookDisplayHomeVeryBottom($params)
 	{
         if(Dispatcher::getInstance()->getController()!='index')
@@ -2769,6 +2797,48 @@ class StOwlCarousel extends Module
 
 		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $default_value);
 	}
+    
+    public function processCopyOwlCarousel($id_st_owl_carousel_group = 0)
+    {
+        if (!$id_st_owl_carousel_group)
+            return false;
+            
+        $group = new StOwlCarouselGroup($id_st_owl_carousel_group);
+        
+        $group2 = clone $group;
+        $group2->id = 0;
+        $group2->id_st_owl_carousel_group = 0;
+        $ret = $group2->add();
+        
+        if (!Shop::isFeatureActive())
+        {
+            Db::getInstance()->insert('st_owl_carousel_group_shop', array(
+                'id_st_owl_carousel_group' => (int)$group2->id,
+                'id_shop' => (int)Context::getContext()->shop->id,
+            ));
+        }
+        else
+        {
+            $assos_shop = Tools::getValue('checkBoxShopAsso_st_advanced_banner_group');
+            if (empty($assos_shop))
+                $assos_shop[(int)Context::getContext()->shop->id] = Context::getContext()->shop->id;
+            foreach ($assos_shop as $id_shop => $row)
+                Db::getInstance()->insert('st_owl_carousel_group_shop', array(
+                    'id_st_owl_carousel_group' => (int)$group2->id,
+                    'id_shop' => (int)$id_shop,
+                ));
+        }
+        
+        foreach(Db::getInstance()->executeS('SELECT id_st_owl_carousel FROM '._DB_PREFIX_.'st_owl_carousel WHERE id_st_owl_carousel_group='.(int)$group->id) AS $row)
+        {
+            $slider = new StOwlCarouselClass($row['id_st_owl_carousel']);
+            $slider->id = 0;
+            $slider->id_st_owl_carousel = 0;
+            $slider->id_st_owl_carousel_group = (int)$group2->id;
+            $ret &= $slider->add();
+        }
+        return $ret;
+    }
         
     public function processUpdatePositions()
 	{

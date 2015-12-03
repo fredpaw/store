@@ -67,8 +67,8 @@ class StMultiLink extends Module
         7 => array('id' =>7 , 'name' => 'Blog left column'),
         8 => array('id' =>8 , 'name' => 'Blog right column'),
 
-        27 => array('id' =>27 , 'name' => 'Top'),
-        28 => array('id' =>28 , 'name' => 'Top left'),
+        29 => array('id' =>29 , 'name' => 'Top'),
+        30 => array('id' =>30 , 'name' => 'Top left'),
     );
     
     public static $span_map = array(
@@ -108,7 +108,7 @@ class StMultiLink extends Module
 	{
 		$this->name          = 'stmultilink';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.9.4';
+		$this->version       = '1.9.8';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
@@ -136,6 +136,8 @@ class StMultiLink extends Module
 			$this->registerHook('actionObjectSupplierDeleteAfter') &&
 			$this->registerHook('actionObjectManufacturerUpdateAfter') &&
 			$this->registerHook('actionObjectManufacturerDeleteAfter') &&
+            $this->registerHook('actionObjectCategoryUpdateAfter') &&
+			$this->registerHook('actionObjectCategoryDeleteAfter') &&
 			$this->registerHook('actionShopDataDuplication') &&
 			$this->registerHook('displayStBlogLeftColumn') && 
             $this->registerHook('displayStBlogRightColumn') && 
@@ -160,7 +162,8 @@ class StMultiLink extends Module
 	{
 		$return = (bool)Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'st_multi_link` (                  
-              `id_st_multi_link` int(10) NOT NULL AUTO_INCREMENT,   
+              `id_st_multi_link` int(10) NOT NULL AUTO_INCREMENT,
+              `id_category` int(10) unsigned NOT NULL DEFAULT 0,   
               `id_cms` int(10) unsigned NOT NULL DEFAULT 0,
               `id_cms_category` int(10) unsigned NOT NULL DEFAULT 0,
               `id_supplier` int(10) unsigned NOT NULL DEFAULT 0,
@@ -527,6 +530,18 @@ class StMultiLink extends Module
                     'nofollow' => $m['nofollow'],
                 ); 
         }
+        elseif($m['id_category'])
+        {
+			$category = new Category((int)$m['id_category'], (int)$id_lang);
+			if (Validate::isLoadedObject($category))
+                $result = array(
+                    'url' => $category->getLink(),
+                    'title' => $category->name,
+                    'label' => $category->name,
+                    'new_window' => $m['new_window'],
+                    'nofollow' => $m['nofollow'],
+                ); 
+        }
         elseif($m['name'])
         {
             $result = array(
@@ -552,19 +567,19 @@ class StMultiLink extends Module
     {
         return $this->hookDisplayTopBar($params);
     }
-    public function displayTop($params)
+    public function hookDisplayTop($params)
     {
-        if (!$this->isCached('stmultilink-top.tpl', $this->stGetCacheId(27)))
-            if(!$this->_prepareHook(27,1))
+        if (!$this->isCached('stmultilink-top.tpl', $this->stGetCacheId(29)))
+            if(!$this->_prepareHook(29,1))
                 return false;
-        return $this->display(__FILE__, 'stmultilink-top.tpl', $this->stGetCacheId(27));
+        return $this->display(__FILE__, 'stmultilink-top.tpl', $this->stGetCacheId(29));
     }      
-    public function displayTopLeft($params)
+    public function hookDisplayTopLeft($params)
     {
-        if (!$this->isCached('stmultilink-top.tpl', $this->stGetCacheId(28)))
-            if(!$this->_prepareHook(28,1))
+        if (!$this->isCached('stmultilink-top.tpl', $this->stGetCacheId(30)))
+            if(!$this->_prepareHook(30,1))
                 return false;
-        return $this->display(__FILE__, 'stmultilink-top.tpl', $this->stGetCacheId(28));
+        return $this->display(__FILE__, 'stmultilink-top.tpl', $this->stGetCacheId(30));
     }      
     public function hookDisplayLeftColumn($params)
     {
@@ -793,7 +808,7 @@ class StMultiLink extends Module
             if(!$link->id_st_multi_link_group)
                 $error[] = $this->displayError($this->l('The field "Link group" is required'));
             
-            $link->id_cms = $link->id_cms_category = $link->id_supplier = $link->id_manufacturer = 0;
+            $link->id_category = $link->id_cms = $link->id_cms_category = $link->id_supplier = $link->id_manufacturer = 0;
             $link->pagename = '';
             if($links = Tools::getValue('links'))
             {
@@ -813,6 +828,9 @@ class StMultiLink extends Module
                         break;
                         case 4:
                             $link->id_manufacturer = (int)$values[2];
+                        break;
+                        case 5:
+                            $link->id_category = (int)$values[2];
                         break;
                     }
                  }
@@ -1038,7 +1056,7 @@ class StMultiLink extends Module
 						)
         			),
                     'desc' => '<div class="alert alert-info"><a href="javascript:;" onclick="$(\'#des_page_layout\').toggle();return false;">'.$this->l('Click here to see hook position').'</a>'.
-                        '<div id="des_page_layout" style="display:none;"><img src="'.$this->_path.'views/img/hook_into_hint.jpg" /></div></div>',
+                        '<div id="des_page_layout" style="display:none;"><img src="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" /></div></div>',
 				),
                 array(
 					'type' => 'switch',
@@ -1286,6 +1304,10 @@ class StMultiLink extends Module
     public function createLinks()
     {
         $id_lang = $this->context->language->id;
+        
+        $category_arr = array();
+		$this->getCategoryOption($category_arr, Category::getRootCategory()->id, (int)$id_lang, (int)Shop::getContextShopID(),true);
+        
         $supplier_arr = array();
 		$suppliers = Supplier::getSuppliers(false, $id_lang);
 		foreach ($suppliers as $supplier)
@@ -1300,6 +1322,7 @@ class StMultiLink extends Module
 		$this->getCMSOptions($cms_arr, 0, 1, $id_lang);
         
         return array(
+            array('name'=>$this->l('Category'),'query'=>$category_arr),
             array('name'=>$this->l('Information'),'query'=>$this->getInformationLinks()),
             array('name'=>$this->l('My account'),'query'=>$this->getMyAccountLinks()),
             array('name'=>$this->l('Supplier'),'query'=>$supplier_arr),
@@ -1308,6 +1331,30 @@ class StMultiLink extends Module
             array('name'=>$this->l('Blog'),'query'=>$this->getBlogLinks()),
         );
     }
+    
+    private function getCategoryOption(&$category_arr, $id_category = 1, $id_lang = false, $id_shop = false, $recursive = true)
+	{
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+		$category = new Category((int)$id_category, (int)$id_lang, (int)$id_shop);
+
+		if (is_null($category->id))
+			return;
+
+		if ($recursive)
+		{
+			$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
+			$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
+		}
+
+		$shop = (object) Shop::getShop((int)$category->getShopID());
+		$category_arr[] = array('id'=>'5_'.(int)$category->id,'name'=>(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')');
+
+		if (isset($children) && is_array($children) && count($children))
+			foreach ($children as $child)
+			{
+				$this->getCategoryOption($category_arr, (int)$child['id_category'], (int)$id_lang, (int)$child['id_shop'],$recursive);
+			}
+	}
     
 	private function getCMSOptions(&$cms_arr, $parent = 0, $depth = 1, $id_lang = false)
 	{
@@ -1561,7 +1608,7 @@ class StMultiLink extends Module
         if($link->id)
         {
             $this->fields_form_link[0]['form']['input'][] = array('type' => 'hidden', 'name' => 'id_st_multi_link');
-            $isDisabled = $link->pagename || $link->id_cms_category || $link->id_cms || $link->id_supplier || $link->id_manufacturer;
+            $isDisabled = $link->pagename || $link->id_cms_category || $link->id_cms || $link->id_supplier || $link->id_manufacturer || $link->id_category;
             $this->fields_form_link[0]['form']['input']['name']['disabled'] = $this->fields_form_link[0]['form']['input']['url']['disabled'] = $isDisabled;
         }
         elseif($id_st_multi_link_group)
@@ -1595,11 +1642,25 @@ class StMultiLink extends Module
                 $helper->tpl_vars['fields_value']['links'] = '3_'.$link->id_supplier;
             elseif($link->id_manufacturer)
                 $helper->tpl_vars['fields_value']['links'] = '4_'.$link->id_manufacturer;
+            elseif($link->id_category)
+                $helper->tpl_vars['fields_value']['links'] = '5_'.$link->id_category;
         }
 		return $helper;
 	}
     
-	
+	public function hookActionObjectCategoryUpdateAfter($params)
+	{
+		$this->clearMultiLinkCache();
+	}
+    
+    public function hookActionObjectCategoryDeleteAfter($params)
+	{
+		$this->clearMultiLinkCache();
+        if(!$params['object']->id)
+            return ;
+        StMultiLinkClass::deleteByCategoryId((int)$params['object']->id);
+	}
+    
 	public function hookActionObjectCmsUpdateAfter($params)
 	{
 		$this->clearMultiLinkCache();

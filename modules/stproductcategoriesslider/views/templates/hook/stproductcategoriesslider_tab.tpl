@@ -25,7 +25,7 @@
 
 <!-- MODULE Product categories slider -->
 {if isset($product_categories) && count($product_categories)}
-<div id="pc_slider_block_container_{$hook_hash}" class="pc_slider_block_container block {if $hide_mob} hidden-xs {/if}">
+<div id="pc_slider_block_container_{$hook_hash}" class="pc_slider_block_container block {if $hide_mob} hidden-xs {/if} {if $countdown_on} s_countdown_block{/if}">
 {if isset($homeverybottom) && $homeverybottom}<div class="wide_container "><div class="container">{/if}
 <div id="pc_slider_block_{$hook_hash}" class="pc_slider_block section">
 <h4 id="pc_slider_tabs_{$hook_hash}" class="pc_slider_tabs title_block clearfix {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">

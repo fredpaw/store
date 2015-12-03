@@ -38,6 +38,11 @@ class StAdvancedBannerGroup extends ObjectModel
 	public $id_category;
     /** @var integer */
     public $id_manufacturer;
+    /** @var integer */
+    public $id_cms;
+    /** @var integer */
+	public $id_cms_category;
+    /** @var integer */
 	/** @var boolen */
 	public $hide_on_mobile;
 	/** @var boolen */
@@ -68,6 +73,8 @@ class StAdvancedBannerGroup extends ObjectModel
             'name'            => array('type' => self::TYPE_STRING, 'size' => 255, 'validate' => 'isGenericName', 'required' => true),
             'location'        => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
             'id_category'     => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_cms'          => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_cms_category' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_manufacturer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'hide_on_mobile'  => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'hover_effect'    => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
@@ -192,6 +199,8 @@ class StAdvancedBannerGroup extends ObjectModel
             $where .= ' AND smsg.`location` IN ('.implode(',',$identify).')';
         elseif($type==3)
             $where .= ' AND smsg.`id_manufacturer` IN ('.implode(',',$identify).')';
+        elseif($type==4)
+            $where .= ' AND smsg.`id_cms` IN ('.implode(',',$identify).')';            
         elseif($type==2)
         {
             if(self::categoryHasBanner($identify))
@@ -219,6 +228,7 @@ class StAdvancedBannerGroup extends ObjectModel
                     $where .= ' AND smsg.`id_category` = '.$id_has;
             }
         }
+        
         if(!$where)
             return false;
         return Db::getInstance()->executeS('

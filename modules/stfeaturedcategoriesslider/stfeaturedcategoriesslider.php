@@ -140,6 +140,11 @@ class StFeaturedCategoriesSlider extends Module
                     'name' => $this->l('displayFullWidthTop')
                 ),
                 array(
+                    'id' => 'displayFullWidthTop2',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop2')
+                ),
+                array(
                     'id' => 'displayHomeTertiaryLeft',
                     'val' => '1',
                     'name' => $this->l('displayHomeTertiaryLeft')
@@ -150,9 +155,9 @@ class StFeaturedCategoriesSlider extends Module
                     'name' => $this->l('displayHomeTertiaryRight')
                 ),
         		array(
-        			'id' => 'displayHomeSecondaryRight',
+        			'id' => 'displayHomeSecondaryLeft',
         			'val' => '1',
-        			'name' => $this->l('displayHomeSecondaryRight')
+        			'name' => $this->l('displayHomeSecondaryLeft')
         		)
             )
         );
@@ -234,6 +239,7 @@ class StFeaturedCategoriesSlider extends Module
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_DISABLED_BG', '')
 
             || !Configuration::updateValue($this->_prefix_st.'TITLE_ALIGNMENT', 0)
+            || !Configuration::updateValue($this->_prefix_st.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_FONT_SIZE', 0)
             || !Configuration::updateValue($this->_prefix_st.'DIRECTION_NAV', 0))
             return false;
@@ -839,6 +845,25 @@ class StFeaturedCategoriesSlider extends Module
                     'validation' => 'isBool',
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
+                    'validation' => 'isBool',
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->l('Heading font size:'),
                     'name' => 'title_font_size',
@@ -943,7 +968,7 @@ class StFeaturedCategoriesSlider extends Module
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -1239,6 +1264,12 @@ class StFeaturedCategoriesSlider extends Module
             return false;
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__), 2);
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__), 2);
+    }
     public function hookDisplayFullWidthBottom($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -1303,6 +1334,7 @@ class StFeaturedCategoriesSlider extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
+            $title_block_no_bg = '.fc_slider_block_container .title_block, .fc_slider_block_container .nav_top_right .flex-direction-nav,.fc_slider_block_container .title_block a, .fc_slider_block_container .title_block span{background:none;}';
             
             $group_css = '';
             if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
@@ -1319,7 +1351,7 @@ class StFeaturedCategoriesSlider extends Module
                 $group_css .= 'background-image: url('.$img.');';
             }
             if($group_css)
-                $custom_css .= '.fc_slider_block_container{background-attachment:fixed;'.$group_css.'}.fc_slider_block_container .section .title_block, .fc_slider_block_container .nav_top_right .flex-direction-nav,.fc_slider_block_container .section .title_block a, .fc_slider_block_container .section .title_block span{background:none;}';
+                $custom_css .= '.fc_slider_block_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                 $custom_css .= '.fc_slider_block_container{padding-top:'.$top_padding.'px;}';
@@ -1334,7 +1366,9 @@ class StFeaturedCategoriesSlider extends Module
                 $custom_css .= '.fc_slider_block_container{margin-bottom:'.$bottom_margin.'px;}';
 
             if (Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'))
-                $custom_css .= '.fc_slider_block_container .title_block{text-align:center;}';
+                $custom_css .= '.fc_slider_block_container .title_block{text-align:center;}'.$title_block_no_bg;
+            if (Configuration::get($this->_prefix_st.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
             if ($title_font_size = (int)Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'))
             {
                  $custom_css .= '.fc_slider_block_container .title_block{font-size:'.$title_font_size.'px;}';
@@ -1409,7 +1443,7 @@ class StFeaturedCategoriesSlider extends Module
         $this->_clearCache('*');
     }
     
-	public function hookDisplayHomeSecondaryRight($params)
+	public function hookDisplayHomeSecondaryLeft($params)
 	{
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__)); 
     }
@@ -1514,6 +1548,7 @@ class StFeaturedCategoriesSlider extends Module
             'direction_disabled_bg' => Configuration::get($this->_prefix_st.'DIRECTION_DISABLED_BG'),
             
             'title_alignment'       => Configuration::get($this->_prefix_st.'TITLE_ALIGNMENT'),
+            'title_no_bg'           => Configuration::get($this->_prefix_st.'TITLE_NO_BG'),
             'title_font_size'       => Configuration::get($this->_prefix_st.'TITLE_FONT_SIZE'),
             'direction_nav'         => Configuration::get($this->_prefix_st.'DIRECTION_NAV'),
         );

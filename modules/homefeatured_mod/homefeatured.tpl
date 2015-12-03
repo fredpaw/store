@@ -53,6 +53,7 @@
                             </span>
                             {/if}
                         {/if}
+                        {hook h="displayProductPriceBlock" product=$product type="price"}
                     </div>
                 {else}
                     <!--<div style="height:21px;"></div>-->

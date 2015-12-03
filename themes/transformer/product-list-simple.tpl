@@ -25,6 +25,7 @@
 {if isset($products) AND $products}
     {assign var='discount_percentage' value=Configuration::get('STSN_DISCOUNT_PERCENTAGE')}
     {assign var='st_display_add_to_cart' value=Configuration::get('STSN_DISPLAY_ADD_TO_CART')}
+    {assign var='use_view_more_instead' value=Configuration::get('STSN_USE_VIEW_MORE_INSTEAD')}
     {capture name="nbItemsPerLineDesktop"}{hook h='displayAnywhere' function='getProductsPerRow' for_w=$for_f devices='lg' mod='stthemeeditor' caller='stthemeeditor'}{/capture}
     {capture name="nbItemsPerLine"}{hook h='displayAnywhere' function='getProductsPerRow' for_w=$for_f devices='md' mod='stthemeeditor' caller='stthemeeditor'}{/capture}
     {capture name="nbItemsPerLineTablet"}{hook h='displayAnywhere' function='getProductsPerRow' for_w=$for_f devices='sm' mod='stthemeeditor' caller='stthemeeditor'}{/capture}
@@ -54,20 +55,25 @@
                             </span>
                             {/if}
                         {/if}
+                        {hook h="displayProductPriceBlock" product=$product type="price"}
                     </div>
                 {else}
                     <!--<div style="height:21px;"></div>-->
                 {/if}  
                 {if $st_display_add_to_cart!=3}
                 <div class="itemlist_action">
-                    {if ($product.id_product_attribute == 0 OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product.available_for_order AND !isset($restricted_country_mode) AND $product.minimal_quantity <= 1 AND $product.customizable != 2 AND !$PS_CATALOG_MODE}          
-                        {if ($product.quantity > 0 OR $product.allow_oosp)}
-                        <a class="exclusive ajax_add_to_cart_button" href="{$link->getPageLink('cart')|escape:'html'}?qty=1&amp;id_product={$product.id_product}&amp;token={$static_token}&amp;add" rel="nofollow" title="{l s='Add to Cart'}" data-id-product="{$product.id_product|intval}" ><i class="icon-basket icon-1x icon_btn icon-mar-lr2"></i><span>{l s='Add to Cart'}</span></a>
-                        {else}
-                        <a class="button exclusive view_button" href="{$product.link|escape:'html'}" title="{l s='View'}" rel="nofollow"><i class="icon-eye-2 icon-1x icon_btn icon-mar-lr2"></i><span>{l s='View'}</span></a>
-                        {/if}
+                    {if isset($use_view_more_instead) && $use_view_more_instead}
+                         <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View more'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more'}</span></div></a>
                     {else}
-                        <!--<div style="height:23px;"></div>-->
+                        {if ($product.id_product_attribute == 0 OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product.available_for_order AND !isset($restricted_country_mode) AND $product.minimal_quantity <= 1 AND $product.customizable != 2 AND !$PS_CATALOG_MODE}          
+                            {if ($product.quantity > 0 OR $product.allow_oosp)}
+                            <a class="exclusive ajax_add_to_cart_button" href="{$link->getPageLink('cart')|escape:'html'}?qty=1&amp;id_product={$product.id_product}&amp;token={$static_token}&amp;add" rel="nofollow" title="{l s='Add to Cart'}" data-id-product="{$product.id_product|intval}" ><i class="icon-basket icon-1x icon_btn icon-mar-lr2"></i><span>{l s='Add to Cart'}</span></a>
+                            {else}
+                            <a class="view_button btn btn-default" href="{$product.link|escape:'html'}" title="{l s='View'}" rel="nofollow"><i class="icon-eye-2 icon-1x icon_btn icon-mar-lr2"></i><span>{l s='View'}</span></a>
+                            {/if}
+                        {else}
+                            <!--<div style="height:23px;"></div>-->
+                        {/if}
                     {/if}
                 </div>
                 {/if}

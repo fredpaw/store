@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:51
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:08
          compiled from "D:\xampp\htdocs\store\modules\stadvancedbanner\views\templates\hook\stadvancedbanner-column.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:7530564ebf0b065578-94204009%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:3737565e951866c0b4-44749195%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '4754c935f9575b892f811815e593c7c1757f48ac' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\stadvancedbanner\\views\\templates\\hook\\stadvancedbanner-column.tpl',
-      1 => 1447993230,
+      1 => 1449038239,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '7530564ebf0b065578-94204009',
+  'nocache_hash' => '3737565e951866c0b4-44749195',
   'function' => 
   array (
   ),
@@ -22,9 +22,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0b0d9830_23919027',
+  'unifunc' => 'content_565e95186dd6d3_28950659',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0b0d9830_23919027')) {function content_564ebf0b0d9830_23919027($_smarty_tpl) {?><!-- MODULE st banner column -->
+<?php if ($_valid && !is_callable('content_565e95186dd6d3_28950659')) {function content_565e95186dd6d3_28950659($_smarty_tpl) {?><!-- MODULE st banner column -->
 <?php if (isset($_smarty_tpl->tpl_vars['columns_data']->value)) {?>
     <div class="row">
         <?php  $_smarty_tpl->tpl_vars['column'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['column']->_loop = false;

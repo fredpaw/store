@@ -1,22 +1,23 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:47
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:05
          compiled from "D:\xampp\htdocs\store\modules\blocksearch_mod\views\templates\hook\blocksearch-top.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:8933564ebf078a11f4-10254736%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:26288565e9515418aa8-91558006%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'f6aa3f417d81a5677355b4c5bac04b1baf3669f6' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\blocksearch_mod\\views\\templates\\hook\\blocksearch-top.tpl',
-      1 => 1447993229,
+      1 => 1449038238,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '8933564ebf078a11f4-10254736',
+  'nocache_hash' => '26288565e9515418aa8-91558006',
   'function' => 
   array (
   ),
   'variables' => 
   array (
+    'search_main_menu' => 0,
     'quick_search_simple' => 0,
     'link' => 0,
     'sttheme' => 0,
@@ -24,10 +25,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf078fca79_05246307',
+  'unifunc' => 'content_565e9515454206_46607903',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf078fca79_05246307')) {function content_564ebf078fca79_05246307($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e9515454206_46607903')) {function content_565e9515454206_46607903($_smarty_tpl) {?>
 <!-- Block search module TOP -->
+<?php if (isset($_smarty_tpl->tpl_vars['search_main_menu']->value)) {?><div id="search_block_main_menu"><div class="container"><?php }?>
 <div id="search_block_top" class="search_block_mod <?php if ($_smarty_tpl->tpl_vars['quick_search_simple']->value) {?> quick_search_simple <?php }?> clearfix">
 	<form id="searchbox" method="get" action="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['link']->value->getPageLink('search',true,null,null,false,null,true), ENT_QUOTES, 'UTF-8', true);?>
 " >
@@ -73,4 +75,5 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     //]]>
     </script>
 </div>
+<?php if (isset($_smarty_tpl->tpl_vars['search_main_menu']->value)) {?></div></div><?php }?>
 <!-- /Block search module TOP --><?php }} ?>

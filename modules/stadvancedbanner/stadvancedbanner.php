@@ -38,6 +38,8 @@ class StAdvancedBanner extends Module
     public static $location = array(
         23 => array('id' =>23 , 'name' => 'Full width top boxed', 'full_width' => 1, 'auto_height' => 1),
         26 => array('id' =>26 , 'name' => 'Full width top', 'stretched' => 1, 'full_width' => 1, 'auto_height' => 1),
+        28 => array('id' =>28 , 'name' => 'Full width top 2 boxed', 'full_width' => 1, 'auto_height' => 1),
+        29 => array('id' =>29 , 'name' => 'Full width top 2', 'stretched' => 1, 'full_width' => 1, 'auto_height' => 1),
         22 => array('id' =>22 , 'name' => 'Top column', 'auto_height' => 1),
         1 => array('id' =>1 , 'name' => 'Homepage', 'auto_height' => 2),
         2 => array('id' =>2 , 'name' => 'Homepage top', 'auto_height' => 2),
@@ -85,7 +87,7 @@ class StAdvancedBanner extends Module
 	{
 		$this->name          = 'stadvancedbanner';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.7.6';
+		$this->version       = '1.8.2';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
@@ -127,6 +129,7 @@ class StAdvancedBanner extends Module
 			$this->registerHook('displayBanner') && 
             $this->registerHook('displayTopColumn') && 
             $this->registerHook('displayFullWidthTop') && 
+            $this->registerHook('displayFullWidthTop2') && 
             $this->registerHook('displayBottomColumn') && 
             $this->registerHook('displayFooterProduct') && 
             $this->registerHook('displayProductSecondaryColumn');
@@ -192,7 +195,9 @@ class StAdvancedBanner extends Module
                 `name` varchar(255) DEFAULT NULL, 
                 `location` int(10) unsigned NOT NULL DEFAULT 0,
                 `id_category` int(10) unsigned NOT NULL DEFAULT 0,
-                `id_manufacturer` int(10) unsigned NOT NULL DEFAULT 0, 
+                `id_manufacturer` int(10) unsigned NOT NULL DEFAULT 0,
+                `id_cms` int(10) unsigned NOT NULL DEFAULT 0,
+                `id_cms_category` int(10) unsigned NOT NULL DEFAULT 0, 
                 `hide_on_mobile` tinyint(1) unsigned NOT NULL DEFAULT 0, 
                 `hover_effect` tinyint(2) unsigned NOT NULL DEFAULT 1,  
                 `active` tinyint(1) unsigned NOT NULL DEFAULT 1, 
@@ -494,6 +499,16 @@ class StAdvancedBanner extends Module
             else
                 $this->_html .= $this->displayError($this->l('An error occurred while delete banner.'));
         }
+        if (Tools::isSubmit('copystadvancedbanner'))
+        {
+            if($this->processCopyAdvancedBannerGroup($id_st_advanced_banner_group))
+            {
+                $this->clearBannerCache();
+                Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&conf=19&token='.Tools::getAdminTokenLite('AdminModules'));
+            }
+            else
+                $this->_html .= $this->displayError($this->l('An error occurred while copy banner.'));
+        }
         if (Tools::isSubmit('way') && Tools::isSubmit('id_st_advanced_banner') && (Tools::isSubmit('position')))
 		{
 		    $banner = new StAdvancedBannerClass((int)$id_st_advanced_banner);
@@ -531,12 +546,15 @@ class StAdvancedBanner extends Module
                     $group->id_category = 0;
                     $group->location = 0;
                     $group->id_manufacturer = 0;
+                    $group->id_cms = 0;
                     if($item_arr[0]==1)
                         $group->location = (int)$item_arr[1];
                     elseif($item_arr[0]==2)
                         $group->id_category = (int)$item_arr[1];
                     elseif($item_arr[0]==3)
                         $group->id_manufacturer = (int)$item_arr[1];
+                    elseif($item_arr[0]==4)
+                        $group->id_cms = (int)$item_arr[1];
                 }
             }  
             
@@ -822,6 +840,9 @@ class StAdvancedBanner extends Module
         if(isset($category_arr[$root_category->id]))
             unset($category_arr[$root_category->id]);
             
+        $cms_arr = array();
+		$module->getCMSOptions($cms_arr, 0, 1);
+            
         $manufacturer_arr = array();
 		$manufacturers = Manufacturer::getManufacturers(false, Context::getContext()->language->id);
 		foreach ($manufacturers as $manufacturer)
@@ -830,6 +851,7 @@ class StAdvancedBanner extends Module
         return array(
             array('name'=>$module->l('Hook'),'query'=>$location),
             array('name'=>$module->l('Categories'),'query'=>$category_arr),
+            array('name'=>$module->l('CMS'),'query'=>$cms_arr),
             array('name'=>$module->l('Manufacturers'),'query'=>$manufacturer_arr),
         );
     }
@@ -859,6 +881,109 @@ class StAdvancedBanner extends Module
 			{
 				$this->getCategoryOption($category_arr,(int)$child['id_category'], (int)$id_lang, (int)$child['id_shop'],$recursive);
 			}
+	}
+    
+    private function getCMSOptions(&$cms_arr, $parent = 0, $depth = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+
+		//$categories = $this->getCMSCategories(false, (int)$parent, (int)$id_lang);
+		$pages = $this->getCMSPages((int)$parent, false, (int)$id_lang);
+
+		$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
+
+		/*foreach ($categories as $category)
+		{
+            $cms_arr[] = array('id'=>'5-'.$category['id_cms_category'],'name'=>$spacer.$category['name']);
+			$this->getCMSOptions($cms_arr, $category['id_cms_category'], (int)$depth + 1, (int)$id_lang);
+		}*/
+
+		foreach ($pages as $page)
+            $cms_arr[] = array('id'=>'4-'.$page['id_cms'],'name'=>$spacer.$page['meta_title']);
+	}
+
+    private function getCMSCategories($recursive = false, $parent = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+        $id_shop = (int)Context::getContext()->shop->id;
+
+		if ($recursive === false)
+        {
+            if(version_compare(_PS_VERSION_, '1.6.0.12', '>='))
+                $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+                FROM `'._DB_PREFIX_.'cms_category` bcp
+                INNER JOIN `'._DB_PREFIX_.'cms_category_shop` cs
+                ON (bcp.`id_cms_category` = cs.`id_cms_category`)
+                INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
+                ON (bcp.`id_cms_category` = cl.`id_cms_category`)
+                WHERE cl.`id_lang` = '.(int)$id_lang.'
+                AND cs.`id_shop` = '.(int)$id_shop.'
+                AND cl.`id_shop` = '.(int)$id_shop.'
+                AND bcp.`id_parent` = '.(int)$parent;
+            else
+                $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+                FROM `'._DB_PREFIX_.'cms_category` bcp
+                INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
+                ON (bcp.`id_cms_category` = cl.`id_cms_category`)
+                WHERE cl.`id_lang` = '.(int)$id_lang.'
+                AND bcp.`id_parent` = '.(int)$parent;
+
+            return Db::getInstance()->executeS($sql);
+        }
+        else
+        {
+            if(version_compare(_PS_VERSION_, '1.6.0.12', '>='))
+                $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+                FROM `'._DB_PREFIX_.'cms_category` bcp
+                INNER JOIN `'._DB_PREFIX_.'cms_category_shop` cs
+                ON (bcp.`id_cms_category` = cs.`id_cms_category`)
+                INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
+                ON (bcp.`id_cms_category` = cl.`id_cms_category`)
+                WHERE cl.`id_lang` = '.(int)$id_lang.'
+                AND cs.`id_shop` = '.(int)$id_shop.'
+                AND cl.`id_shop` = '.(int)$id_shop.'
+                AND bcp.`id_parent` = '.(int)$parent;
+            else
+                $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+                FROM `'._DB_PREFIX_.'cms_category` bcp
+                INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
+                ON (bcp.`id_cms_category` = cl.`id_cms_category`)
+                WHERE cl.`id_lang` = '.(int)$id_lang.'
+                AND bcp.`id_parent` = '.(int)$parent;
+
+			$results = Db::getInstance()->executeS($sql);
+			foreach ($results as $result)
+			{
+				$sub_categories = $this->getCMSCategories(true, $result['id_cms_category'], (int)$id_lang);
+				if ($sub_categories && count($sub_categories) > 0)
+					$result['sub_categories'] = $sub_categories;
+				$categories[] = $result;
+			}
+
+			return isset($categories) ? $categories : false;
+		}
+
+	}
+
+	private function getCMSPages($id_cms_category, $id_shop = false, $id_lang = false)
+	{
+		$id_shop = ($id_shop !== false) ? (int)$id_shop : (int)Context::getContext()->shop->id;
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+
+		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
+			FROM `'._DB_PREFIX_.'cms` c
+			INNER JOIN `'._DB_PREFIX_.'cms_shop` cs
+			ON (c.`id_cms` = cs.`id_cms`)
+			INNER JOIN `'._DB_PREFIX_.'cms_lang` cl
+			ON (c.`id_cms` = cl.`id_cms`)
+			WHERE '.($id_cms_category?'c.`id_cms_category` = '.(int)$id_cms_category:'1').'
+            AND cs.`id_shop` = '.(int)$id_shop.
+            (version_compare(_PS_VERSION_, '1.6.0.12', '>=') ? ' AND cl.`id_shop` = '.(int)$id_shop : '' ).' 
+			AND cl.`id_lang` = '.(int)$id_lang.'
+			AND c.`active` = 1
+			ORDER BY `position`';
+
+		return Db::getInstance()->executeS($sql);
 	}
         
     protected function initForm()
@@ -899,7 +1024,7 @@ class StAdvancedBanner extends Module
                         )
                     ),
                     'desc' => '<div class="alert alert-info"><a href="javascript:;" onclick="$(\'#des_page_layout\').toggle();return false;">'.$this->l('Click here to see hook position').'</a>'.
-                        '<div id="des_page_layout" style="display:none;"><img src="'.$this->_path.'views/img/hook_into_hint.jpg" /></div></div>',
+                        '<div id="des_page_layout" style="display:none;"><img src="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" /></div></div>',
                 ),    
                 array(
                     'type' => 'text',
@@ -989,7 +1114,7 @@ class StAdvancedBanner extends Module
                             'value' => 0,
                             'label' => $this->l('No')),
                     ),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
                 ), 
                 array(
                     'type' => 'switch',
@@ -1077,7 +1202,9 @@ class StAdvancedBanner extends Module
         );
 
         if($group->id)
-            $helper->tpl_vars['fields_value']['location'] = $group->location ? '1-'.$group->location : ($group->id_category ? '2-'.$group->id_category : '3-'.$group->id_manufacturer);
+            $helper->tpl_vars['fields_value']['location'] = $group->location ? '1-'.$group->location : 
+                ($group->id_category ? '2-'.$group->id_category : 
+                    ($group->id_cms ? '4-'.$group->id_cms : '3-'.$group->id_manufacturer));
 
         return $helper;
     }
@@ -1178,7 +1305,7 @@ class StAdvancedBanner extends Module
                             'value' => 0,
                             'label' => $this->l('No')),
                     ),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
                 ), 
 				array(
 					'type' => 'switch',
@@ -1528,7 +1655,7 @@ class StAdvancedBanner extends Module
                             'value' => 0,
                             'label' => $this->l('No')),
                     ),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
                 ),
                 array(
                     'type' => 'radio',
@@ -1666,6 +1793,15 @@ class StAdvancedBanner extends Module
             $manufacturer = Manufacturer::getNameById((int)$row['id_manufacturer']);
     		$result = (string)$manufacturer;
         }
+        elseif($row['id_cms'])
+        {
+            $cms = new CMS((int)$row['id_cms'], (int)Context::getContext()->language->id);
+            if ($cms->id)
+            {
+                $module = new StAdvancedBanner();
+                $result = $cms->meta_title.'('.$module->l('CMS').')';
+            }
+        }
         else
         {
             $module = new StAdvancedBanner();
@@ -1729,8 +1865,9 @@ class StAdvancedBanner extends Module
         $helper = new HelperList();
         $helper->shopLinkType = '';
         $helper->simple_header = false;
+        $helper->module = $this;
         $helper->identifier = 'id_st_advanced_banner_group';
-        $helper->actions = array('view', 'edit', 'delete');
+        $helper->actions = array('view', 'edit', 'delete','duplicate');
         $helper->show_toolbar = true;
         $helper->imageType = 'jpg';
         $helper->toolbar_btn['new'] =  array(
@@ -1743,6 +1880,10 @@ class StAdvancedBanner extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
         return $helper;
+    }
+    public function displayDuplicateLink($token, $id, $name)
+    {
+        return '<li class="divider"></li><li><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&copy'.$this->name.'&id_st_advanced_banner_group='.(int)$id.'&token='.$token.'"><i class="icon-copy"></i>'.$this->l(' Duplicate ').'</a></li>';
     }
 	protected function initListColumn()
 	{
@@ -2102,6 +2243,7 @@ class StAdvancedBanner extends Module
                     {
                         $custom_css .= '#st_advanced_banner_'.$v['id_st_advanced_banner_group'].'.st_advanced_banner_row .row{margin-left:-'.(int)$v['padding'].'px;margin-right:-'.(int)$v['padding'].'px;}';
                         $custom_css .= '#st_advanced_banner_'.$v['id_st_advanced_banner_group'].' .advanced_banner_col{padding-left:'.(int)$v['padding'].'px;padding-right:'.(int)$v['padding'].'px;}';
+                        $custom_css .= '#st_advanced_banner_'.$v['id_st_advanced_banner_group'].' .advanced_banner_col.advanced_banner_b .st_advanced_banner_block{margin-bottom:'.(int)$v['padding'].'px;}';
                     }
                     
                     $classname = (isset(self::$location[$v['location']]['full_width']) ? '#advanced_banner_container_'.$v['id_st_advanced_banner_group'].' ' : '#st_advanced_banner_'.$v['id_st_advanced_banner_group']);
@@ -2250,6 +2392,16 @@ class StAdvancedBanner extends Module
                 return false;
         return $this->display(__FILE__, 'stadvancedbanner.tpl', $this->stGetCacheId(23));
     }
+    public function hookDisplayFullWidthTop2($params)
+    {        
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        if (!$this->isCached('stadvancedbanner.tpl', $this->stGetCacheId(28)))
+            if(!$this->_prepareHook(array(28,29),1))
+                return false;
+        return $this->display(__FILE__, 'stadvancedbanner.tpl', $this->stGetCacheId(28));
+    }
     public function hookDisplayHomeVeryBottom($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -2269,10 +2421,32 @@ class StAdvancedBanner extends Module
         {
             if($params['function']=='displayByBannerId')
                 return call_user_func_array(array($this,$params['function']),array($params['identify']));
+            elseif($params['function']=='displayCmsMainSlide')
+                return call_user_func_array(array($this,$params['function']),array($params['identify']));
+            elseif($params['function']=='displayCmsCategoryMainSlide')
+                return call_user_func_array(array($this,$params['function']),array($params['identify']));
             else
                 return false;
         }
         return false;
+    }
+    public function displayCmsMainSlide($identify)
+    {
+        if (!$identify)
+            return false;
+        if (!$this->isCached('stadvancedbanner.tpl', $this->stGetCacheId($identify, 4)))
+            if(!$this->_prepareHook($identify, 4))
+                return false;
+        return $this->display(__FILE__, 'stadvancedbanner.tpl', $this->stGetCacheId($identify, 4));
+    }
+    public function displayCmsCategoryMainSlide($identify)
+    {
+        if (!$identify)
+            return false;
+        if (!$this->isCached('stadvancedbanner.tpl', $this->stGetCacheId($identify, 5)))
+            if(!$this->_prepareHook($identify, 5))
+                return false;
+        return $this->display(__FILE__, 'stadvancedbanner.tpl', $this->stGetCacheId($identify, 5));
     }
     public function displayByBannerId($identify)
     {
@@ -2479,6 +2653,73 @@ class StAdvancedBanner extends Module
 
 		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $default_value);
 	}
+    
+    public function processCopyAdvancedBannerGroup($id_st_advanced_banner_group = 0)
+    {
+        if (!$id_st_advanced_banner_group)
+            return false;
+            
+        $group = new StAdvancedBannerGroup($id_st_advanced_banner_group);
+        // Make sure it is root node.
+        if ($group->id_parent > 0)
+            return false;
+         
+        return $this->processCopySubs($group);
+    }
+    
+    public function processCopySubs($group, $id_parent = 0)
+    {
+        if (!is_object($group))
+            return false;
+            
+        $group2 = clone $group;
+        $group2->id = 0;
+        $group2->id_st_advanced_banner_group = 0;
+        if ($id_parent > 0)
+            $group2->id_parent = $id_parent;
+        $ret = $group2->add();
+        
+        if (!Shop::isFeatureActive())
+        {
+            Db::getInstance()->insert('st_advanced_banner_group_shop', array(
+                'id_st_advanced_banner_group' => (int)$group2->id,
+                'id_shop' => (int)Context::getContext()->shop->id,
+            ));
+        }
+        else
+        {
+            $assos_shop = Tools::getValue('checkBoxShopAsso_st_advanced_banner_group');
+            if (empty($assos_shop))
+                $assos_shop[(int)Context::getContext()->shop->id] = Context::getContext()->shop->id;
+            foreach ($assos_shop as $id_shop => $row)
+                Db::getInstance()->insert('st_advanced_banner_group_shop', array(
+                    'id_st_advanced_banner_group' => (int)$group2->id,
+                    'id_shop' => (int)$id_shop,
+                ));
+        }
+        
+        if ($group->hasBanner())
+        {
+            foreach(Db::getInstance()->executeS('SELECT id_st_advanced_banner FROM '._DB_PREFIX_.'st_advanced_banner WHERE id_st_advanced_banner_group='.(int)$group->id) AS $row)
+            {
+                $banner = new StAdvancedBannerClass($row['id_st_advanced_banner']);
+                $banner->id = 0;
+                $banner->id_st_advanced_banner = 0;
+                $banner->id_st_advanced_banner_group = (int)$group2->id;
+                $ret &= $banner->add();
+            }
+        }
+        
+        if ($group->hasColumn())
+        {
+            foreach(Db::getInstance()->executeS('SELECT id_st_advanced_banner_group FROM '._DB_PREFIX_.'st_advanced_banner_group WHERE id_parent='.(int)$group->id) AS $value)
+            {
+                $group3 = new StAdvancedBannerGroup($value['id_st_advanced_banner_group']);
+                $ret &= $this->processCopySubs($group3, $group2->id);
+            }
+        }
+        return $ret;
+    }
         
     public function processUpdatePositions()
 	{

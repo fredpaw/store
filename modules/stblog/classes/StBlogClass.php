@@ -391,7 +391,7 @@ class StBlogClass extends ObjectModel
         AND bpl.id_shop = '.(int)Shop::getContextShopID().')') : '').'
 		ORDER BY p.`id_product`');
         if(!$related_products)
-            return false;
+            return array();
 		$taxCalc = Product::getTaxCalculationMethod();
 		foreach ($related_products AS &$product)
 		{
@@ -522,6 +522,27 @@ class StBlogClass extends ObjectModel
 
         foreach($rs AS $v)
             $result[] = $v['name'];
+        
+        return $result;
+    }
+    
+    public function getBlogTagsAll()
+    {
+                
+        $result = array();
+        foreach (Language::getLanguages(false) as $lang)
+            $result[$lang['id_lang']] = '';
+        if (!$this->id)
+            return $result;
+        $rs = Db::getInstance()->executeS('
+        SELECT t.`id_lang`,t.`name` FROM '._DB_PREFIX_.'st_blog_tag t
+        LEFT JOIN '._DB_PREFIX_.'st_blog_tag_map tm
+        ON t.`id_st_blog_tag` = tm.`id_st_blog_tag`
+        WHERE tm.`id_st_blog` = '.(int)$this->id.'
+        ');
+
+        foreach($rs AS $v)
+            $result[$v['id_lang']] = !isset($result[$v['id_lang']]) || !$result[$v['id_lang']]? $v['name'] : $result[$v['id_lang']].','.$v['name'];
         
         return $result;
     }
@@ -845,7 +866,7 @@ class StBlogClass extends ObjectModel
         ON(b.id_st_blog = bl.id_st_blog
         AND bl.id_lang = '.(int)Context::getContext()->language->id.')
         '.Shop::addSqlAssociation('st_blog', 'b').'
-        WHERE '.($id_blog ? 'id_st_blog IN('.$id_blog.')' : '1').'
+        WHERE b.`active` = 1'.($id_blog ? ' AND b.`id_st_blog` IN('.$id_blog.')' : '').'
         ORDER BY date_add DESC
         LIMIT '.$limit.'
         ');

@@ -37,6 +37,8 @@ class StIosSlider extends Module
     public static $location = array(
         1 => array('id' =>1 , 'name' => 'Full width top', 'templates' => array(0,1,2,3)),
         14 => array('id' =>14 , 'name' => 'Full width top(boxed)', 'templates' => array(0,1,2,3)),
+        22 => array('id' =>22 , 'name' => 'Full width top 2', 'templates' => array(0,1,2,3)),
+        23 => array('id' =>23 , 'name' => 'Full width top 2(boxed)', 'templates' => array(0,1,2,3)),
         21 => array('id' =>21 , 'name' => 'Top column', 'templates' => array(0,2)),
         4 => array('id' =>4 , 'name' => 'Homepage top', 'templates' => array(0,2)),
         3 => array('id' =>3 , 'name' => 'Homepage', 'templates' => array(0,2)),
@@ -130,7 +132,7 @@ class StIosSlider extends Module
 	{
 		$this->name          = 'stiosslider';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.5.7';
+		$this->version       = '1.5.8';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
@@ -215,6 +217,7 @@ class StIosSlider extends Module
             $this->registerHook('displayStBlogRightColumn') && 
             $this->registerHook('displayHomeVeryBottom') && 
             $this->registerHook('displayFullWidthTop') && 
+            $this->registerHook('displayFullWidthTop2') && 
             $this->registerHook('displayTopColumn') && 
             $this->registerHook('displayBottomColumn');
                     
@@ -446,6 +449,16 @@ class StIosSlider extends Module
         if (Tools::getValue('action') == 'updatePositions')
         {
             $this->processUpdatePositions();
+        }
+        if (Tools::isSubmit('copystiosslider'))
+        {
+            if($this->processCopyIosSlider($id_st_iosslider_group))
+            {
+                $this->clearIosSliderCache();
+                Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&conf=19&token='.Tools::getAdminTokenLite('AdminModules'));
+            } 
+            else
+                $this->_html .= $this->displayError($this->l('An error occurred while copy IosSlider.'));
         }
 		if (isset($_POST['savestiosslidergroup']) || isset($_POST['savestiosslidergroupAndStay']))
 		{
@@ -1313,11 +1326,11 @@ class StIosSlider extends Module
 						array(
 							'id' => 'pag_nav_on_circle',
 							'value' => 1,
-							'label' => $this->l('Cicle')),
+							'label' => $this->l('Round')),
 						array(
 							'id' => 'pag_nav_on_circle_hide_on_mobile',
 							'value' => 2,
-							'label' => $this->l('Cicle(hide on mobile devices)')),
+							'label' => $this->l('Round(hide on mobile devices)')),
 						array(
 							'id' => 'pag_nav_on_square',
 							'value' => 3,
@@ -2280,8 +2293,9 @@ class StIosSlider extends Module
 		$helper = new HelperList();
 		$helper->shopLinkType = '';
 		$helper->simple_header = false;
+        $helper->module = $this;
 		$helper->identifier = 'id_st_iosslider_group';
-		$helper->actions = array('view', 'edit', 'delete');
+		$helper->actions = array('view', 'edit', 'delete','duplicate');
 		$helper->show_toolbar = true;
 		$helper->imageType = 'jpg';
 		$helper->toolbar_btn['new'] =  array(
@@ -2295,6 +2309,10 @@ class StIosSlider extends Module
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 		return $helper;
 	}
+    public function displayDuplicateLink($token, $id, $name)
+    {
+        return '<li class="divider"></li><li><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&copy'.$this->name.'&id_st_iosslider_group='.(int)$id.'&token='.$token.'"><i class="icon-copy"></i>'.$this->l(' Duplicate ').'</a></li>';
+    }
     public static function showSlideGroupName($value,$row)
     {
         $slide_group = new StIosSliderGroup((int)$value);
@@ -2644,6 +2662,17 @@ class StIosSlider extends Module
             return $this->display(__FILE__, 'stiosslider.tpl');
         }
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        $page_name = Context::getContext()->smarty->getTemplateVars('page_name');
+        if($page_name=='index')
+        {
+            if(!$this->_prepareHook(array(22,23),1))
+                return false;
+        
+            return $this->display(__FILE__, 'stiosslider.tpl');
+        }
+    }
     
     public function displayBlogMainSlide()
 	{
@@ -2844,6 +2873,48 @@ class StIosSlider extends Module
 
 		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $default_value);
 	}
+    
+    public function processCopyIosSlider($id_st_iosslider_group = 0)
+    {
+        if (!$id_st_iosslider_group)
+            return false;
+            
+        $group = new StIosSliderGroup($id_st_iosslider_group);
+        
+        $group2 = clone $group;
+        $group2->id = 0;
+        $group2->id_st_iosslider_group = 0;
+        $ret = $group2->add();
+        
+        if (!Shop::isFeatureActive())
+        {
+            Db::getInstance()->insert('st_iosslider_group_shop', array(
+                'id_st_iosslider_group' => (int)$group2->id,
+                'id_shop' => (int)Context::getContext()->shop->id,
+            ));
+        }
+        else
+        {
+            $assos_shop = Tools::getValue('checkBoxShopAsso_st_advanced_banner_group');
+            if (empty($assos_shop))
+                $assos_shop[(int)Context::getContext()->shop->id] = Context::getContext()->shop->id;
+            foreach ($assos_shop as $id_shop => $row)
+                Db::getInstance()->insert('st_iosslider_group_shop', array(
+                    'id_st_iosslider_group' => (int)$group2->id,
+                    'id_shop' => (int)$id_shop,
+                ));
+        }
+        
+        foreach(Db::getInstance()->executeS('SELECT id_st_iosslider FROM '._DB_PREFIX_.'st_iosslider WHERE id_st_iosslider_group='.(int)$group->id) AS $row)
+        {
+            $slider = new StIosSliderClass($row['id_st_iosslider']);
+            $slider->id = 0;
+            $slider->id_st_iosslider = 0;
+            $slider->id_st_iosslider_group = (int)$group2->id;
+            $ret &= $slider->add();
+        }
+        return $ret;
+    }
             
     public function processUpdatePositions()
 	{

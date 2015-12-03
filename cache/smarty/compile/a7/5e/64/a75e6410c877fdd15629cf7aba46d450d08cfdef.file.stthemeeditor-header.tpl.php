@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:46
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:03
          compiled from "D:\xampp\htdocs\store\modules\stthemeeditor\views\templates\hook\stthemeeditor-header.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:32259564ebf0655a620-89259402%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:24961565e9513ad4d00-64399915%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'a75e6410c877fdd15629cf7aba46d450d08cfdef' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\stthemeeditor\\views\\templates\\hook\\stthemeeditor-header.tpl',
-      1 => 1447993233,
+      1 => 1449038242,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '32259564ebf0655a620-89259402',
+  'nocache_hash' => '24961565e9513ad4d00-64399915',
   'function' => 
   array (
   ),
@@ -21,9 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf066220a8_58743909',
+  'unifunc' => 'content_565e9513c141e8_41089308',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf066220a8_58743909')) {function content_564ebf066220a8_58743909($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e9513c141e8_41089308')) {function content_565e9513c141e8_41089308($_smarty_tpl) {?>
 <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value)) {?>
 <script type="text/javascript">
 // <![CDATA[
@@ -37,9 +37,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <?php } else { ?>0<?php }?>;
 	var st_sticky_adv = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['sticky_adv'])&&$_smarty_tpl->tpl_vars['sttheme']->value['sticky_adv']) {?><?php echo $_smarty_tpl->tpl_vars['sttheme']->value['sticky_adv'];?>
 <?php } else { ?>0<?php }?>;
+	var st_sticky_mobile_header = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['sticky_mobile_header'])&&$_smarty_tpl->tpl_vars['sttheme']->value['sticky_mobile_header']) {?><?php echo $_smarty_tpl->tpl_vars['sttheme']->value['sticky_mobile_header'];?>
+<?php } else { ?>0<?php }?>;
     var st_is_rtl = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['is_rtl'])&&$_smarty_tpl->tpl_vars['sttheme']->value['is_rtl']) {?>true<?php } else { ?>false<?php }?>;
-    var zoom_type = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['zoom_type'])&&$_smarty_tpl->tpl_vars['sttheme']->value['zoom_type']) {?>'innerzoom'<?php } else { ?>'standard'<?php }?>;
+    var zoom_type = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['zoom_type'])) {?><?php echo $_smarty_tpl->tpl_vars['sttheme']->value['zoom_type'];?>
+<?php } else { ?>2<?php }?>;
     var st_retina = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['retina'])&&$_smarty_tpl->tpl_vars['sttheme']->value['retina']) {?>true<?php } else { ?>false<?php }?>;
+    var st_sticky_mobile_header_height = <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['sticky_mobile_header_height'])&&$_smarty_tpl->tpl_vars['sttheme']->value['sticky_mobile_header_height']) {?><?php echo $_smarty_tpl->tpl_vars['sttheme']->value['sticky_mobile_header_height'];?>
+<?php } else { ?>60<?php }?>;
 //]]>
 </script>
 <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['version_switching'])&&$_smarty_tpl->tpl_vars['sttheme']->value['version_switching']==1) {?>

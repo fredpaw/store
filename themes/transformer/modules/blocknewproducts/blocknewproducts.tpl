@@ -46,6 +46,7 @@
                                     <div class="price-box">
                                         <span class="price">
                                         	{if !$priceDisplay}{convertPrice price=$newproduct.price}{else}{convertPrice price=$newproduct.price_tax_exc}{/if}
+                                            {hook h="displayProductPriceBlock" product=$newproduct type="price"}
                                         </span>
                                     </div>
                                 {/if}

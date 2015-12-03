@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>stfblikebox</name>
-	<displayName><![CDATA[Facebook Like Box]]></displayName>
-	<version><![CDATA[1.0.2]]></version>
+	<displayName><![CDATA[Facebook page plugin]]></displayName>
+	<version><![CDATA[1.0.7]]></version>
 	<description><![CDATA[Adds a Facebook social plugin Like Box]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

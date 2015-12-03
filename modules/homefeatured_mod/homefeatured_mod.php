@@ -76,9 +76,15 @@ class HomeFeatured_mod extends Module
         $this->_hooks = array(
             'Hooks' => array(
                 array(
-        			'id' => 'displayFullWidthTop',
+                    'id' => 'displayFullWidthTop',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop'),
+                    'full_width' => 1,
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
         			'val' => '1',
-        			'name' => $this->l('displayFullWidthTop'),
+        			'name' => $this->l('displayFullWidthTop2'),
                     'full_width' => 1,
         		),
         		array(
@@ -186,6 +192,7 @@ class HomeFeatured_mod extends Module
             || !Configuration::updateValue($this->_prefix_st.'SPEED', 0)
             || !Configuration::updateValue($this->_prefix_st.'TITLE_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'TITLE_HOVER_COLOR', '')
+            || !Configuration::updateValue($this->_prefix_st.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_prefix_st.'TEXT_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'PRICE_COLOR', '')
             || !Configuration::updateValue($this->_prefix_st.'LINK_HOVER_COLOR', '')
@@ -376,7 +383,7 @@ class HomeFeatured_mod extends Module
                 array(
                     'type' => 'text',
                     'label' => $this->l('Define the number of products to be displayed:'),
-                    'name' => 'nbr',
+                    'name' => 'nbr_mod',
                     'default_value' => 10,
                     'desc' => array(
                         $this->l('To add products to your homepage, simply add them to the corresponding product category (default: "Home").'),
@@ -388,7 +395,7 @@ class HomeFeatured_mod extends Module
                 array(
                     'type' => 'text',
                     'label' => $this->l('Category from which to pick products to be displayed'),
-                    'name' => 'cat',
+                    'name' => 'cat_mod',
                     'class' => 'fixed-width-xs',
                     'desc' => $this->l('Choose the category ID of the products that you would like to display on homepage (default: 2 for "Home").'),
                     'validation' => 'isAnything',
@@ -503,6 +510,25 @@ class HomeFeatured_mod extends Module
                     'validation' => 'isColor',
                  ),
                  array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
+                    'validation' => 'isBool',
+                ),
+                 array(
                     'type' => 'color',
                     'label' => $this->l('Text color:'),
                     'name' => 'text_color',
@@ -537,7 +563,7 @@ class HomeFeatured_mod extends Module
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -549,7 +575,7 @@ class HomeFeatured_mod extends Module
         {
             if (!is_array($values) || !count($values))
                 continue;
-            $this->fields_form[3]['form']['input'][] = array(
+            $this->fields_form[1]['form']['input'][] = array(
 					'type' => 'checkbox',
 					'label' => $this->l($key),
 					'name' => $key,
@@ -591,8 +617,9 @@ class HomeFeatured_mod extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
-            
-            $group_css = '';
+            $title_block_no_bg = '.featured-products_block_center_container .title_block,.featured-products_block_center_container .title_block a,.featured-products_block_center_container .title_block span{background:none;}';            
+                        
+            $group_css = '';            
             if ($bg_color = Configuration::get($this->_prefix_st.'BG_COLOR'))
                 $group_css .= 'background-color:'.$bg_color.';';
             if ($bg_img = Configuration::get($this->_prefix_st.'BG_IMG'))
@@ -607,7 +634,7 @@ class HomeFeatured_mod extends Module
                 $group_css .= 'background-image: url("'.$img.'");';
             }
             if($group_css)
-                $custom_css .= '.featured-products_block_center_container{background-attachment:fixed;'.$group_css.'}.featured-products_block_center.section .title_block,.featured-products_block_center.section .title_block a, .featured-products_block_center .section .title_block span{background:none;}';
+                $custom_css .= '.featured-products_block_center_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_prefix_st.'TOP_PADDING'))
                 $custom_css .= '.featured-products_block_center_container{padding-top:'.$top_padding.'px;}';
@@ -625,6 +652,8 @@ class HomeFeatured_mod extends Module
                 $custom_css .= '.featured-products_block_center_container.block .title_block a, .featured-products_block_center_container.block .title_block span{color:'.$title_color.';}';
             if ($title_hover_color = Configuration::get($this->_prefix_st.'TITLE_HOVER_COLOR'))
                 $custom_css .= '.featured-products_block_center_container.block .title_block a:hover{color:'.$title_hover_color.';}';
+            if (Configuration::get($this->_prefix_st.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
 
             if ($text_color = Configuration::get($this->_prefix_st.'TEXT_COLOR'))
                 $custom_css .= '.featured-products_block_center_container .s_title_block a,
@@ -662,6 +691,14 @@ class HomeFeatured_mod extends Module
 	}
     
     public function hookDisplayFullWidthTop($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__) ,2);
+    }
+
+    public function hookDisplayFullWidthTop2($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
             return false;
@@ -823,9 +860,9 @@ class HomeFeatured_mod extends Module
     private function getConfigFieldsValues()
     {
         $fields_values = array( 
-            'nbr' => Configuration::get('HOME_FEATURED_NBR_MOD'),
+            'nbr_mod' => Configuration::get('HOME_FEATURED_NBR_MOD'),
             'soby' => Configuration::get('HOME_FEATURED_SOBY'),
-            'cat' => Configuration::get('HOME_FEATURED_CAT_MOD'), 
+            'cat_mod' => Configuration::get('HOME_FEATURED_CAT_MOD'), 
             
             'top_padding'        => Configuration::get($this->_prefix_st.'TOP_PADDING'),
             'bottom_padding'     => Configuration::get($this->_prefix_st.'BOTTOM_PADDING'),
@@ -838,6 +875,7 @@ class HomeFeatured_mod extends Module
 
             'title_color'           => Configuration::get($this->_prefix_st.'TITLE_COLOR'),
             'title_hover_color'     => Configuration::get($this->_prefix_st.'TITLE_HOVER_COLOR'),
+            'title_no_bg'           => Configuration::get($this->_prefix_st.'TITLE_NO_BG'),
             'text_color'            => Configuration::get($this->_prefix_st.'TEXT_COLOR'),
             'price_color'           => Configuration::get($this->_prefix_st.'PRICE_COLOR'),
             'link_hover_color'      => Configuration::get($this->_prefix_st.'LINK_HOVER_COLOR'),

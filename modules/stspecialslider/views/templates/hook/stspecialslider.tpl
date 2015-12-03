@@ -26,7 +26,7 @@
 <!-- MODULE special slider -->
 {if $aw_display || (isset($products) && $products)}
 {capture name="column_slider"}{if isset($column_slider) && $column_slider}_column{/if}{/capture}
-<div id="special-products_block_center_container_{$hook_hash}" class="special-products_block_center_container {if $hide_mob} hidden-xs {/if} block">
+<div id="special-products_block_center_container_{$hook_hash}" class="special-products_block_center_container {if $hide_mob} hidden-xs {/if} block{if $countdown_on} s_countdown_block{/if}">
 {if isset($homeverybottom) && $homeverybottom}<div class="wide_container"><div class="container">{/if}
 <section id="special-products_block_center_{$hook_hash}{$smarty.capture.column_slider}" class="special-products_block_center{$smarty.capture.column_slider} products_block section {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">
 	<h4 class="title_block"><a href="{$link->getPageLink('prices-drop')|escape:'html'}" title="{l s='Price drops' mod='stspecialslider'}">{l s='Specials' mod='stspecialslider'}</a></h4>

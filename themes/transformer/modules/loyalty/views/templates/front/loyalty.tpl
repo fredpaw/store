@@ -94,7 +94,7 @@
 		{/if}
 		{if $orders|@count > $page * $nbpagination}
 			{assign var='p_next' value=$page+1}
-			<li id="pagination_next"><a href="{summarypaginationlink p=$p_next n=$nbpagination}" title="Next" rel="nofollow">{l s='Next' mod='loyalty'}&nbsp;&raquo;</a></li>
+			<li id="pagination_next"><a href="{summarypaginationlink p=$p_next n=$nbpagination}" title="{l s='Next' mod='loyalty'}" rel="nofollow">{l s='Next' mod='loyalty'}&nbsp;&raquo;</a></li>
 		{else}
 			<li id="pagination_next" class="disabled"><span>{l s='Next' mod='loyalty'}&nbsp;&raquo;</span></li>
 		{/if}
@@ -178,7 +178,6 @@
 	</table>
 	<div id="block-order-detail" class="unvisible">&nbsp;</div>
 </div>
-	
 {if $minimalLoyalty > 0}<p>{l s='The minimum order amount in order to use these vouchers is:' mod='loyalty'} {convertPrice price=$minimalLoyalty}</p>{/if}
 
 {else}
@@ -195,7 +194,7 @@
 		</a>
 	</li>
 	<li class="pull-right">
-		<a href="{$base_dir}" title="{l s='Home' mod='loyalty'}" rel="nofollow">
+		<a href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Home' mod='loyalty'}" rel="nofollow">
 			<i class="icon-home icon-mar-lr2"></i>{l s='Home' mod='loyalty'}
 		</a>
 	</li>

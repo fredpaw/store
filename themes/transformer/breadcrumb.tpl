@@ -27,7 +27,7 @@
 {if isset($smarty.capture.path)}{assign var='path' value=$smarty.capture.path}{/if}
 <section class="breadcrumb"  xmlns:v="http://rdf.data-vocabulary.org/#">
     <ul itemprop="breadcrumb">
-	<li typeof="v:Breadcrumb"><a class="home" href="{$base_dir}" title="{l s='Return to Home'}" rel="v:url" property="v:title">{l s='Home'}</a></li>{if isset($path) AND $path}<li class="navigation-pipe"{if isset($category) && isset($category->id_category) && $category->id_category == 1} style="display:none;"{/if}>{$navigationPipe}</li>
+	<li typeof="v:Breadcrumb"><a class="home" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Return to Home'}" rel="v:url" property="v:title">{l s='Home'}</a></li>{if isset($path) AND $path}<li class="navigation-pipe"{if isset($category) && isset($category->id_category) && $category->id_category == (int)Configuration::get('PS_ROOT_CATEGORY')} style="display:none;"{/if}>{$navigationPipe}</li>
 		{if !$path|strpos:'li>' !== false}
 			<li typeof="v:Breadcrumb" class="navigation_page">{$path}</li>
 		{else}

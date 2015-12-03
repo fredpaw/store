@@ -79,7 +79,7 @@ class StBlogComments extends Module
 			return false;
 		return true;
 	}
-public function installDb()
+    public function installDb()
 	{
 		$return = true;
 		$return &= Db::getInstance()->execute('

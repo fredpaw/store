@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:51
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:09
          compiled from "D:\xampp\htdocs\store\modules\stnewsletter\views\templates\hook\stnewsletter-footer.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:16036564ebf0bc80630-32051575%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:18168565e95193abf10-99786274%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '6fa8670dabfee762744f716ece5de581a870bee1' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\stnewsletter\\views\\templates\\hook\\stnewsletter-footer.tpl',
-      1 => 1447993232,
+      1 => 1449038241,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '16036564ebf0bc80630-32051575',
+  'nocache_hash' => '18168565e95193abf10-99786274',
   'function' => 
   array (
   ),
@@ -19,14 +19,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     'news_letter_array' => 0,
     'ec' => 0,
-    'base_uri' => 0,
+    'content_dir' => 0,
     'value' => 0,
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0bcf4422_38020864',
+  'unifunc' => 'content_565e9519420ad9_37361778',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0bcf4422_38020864')) {function content_564ebf0bcf4422_38020864($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e9519420ad9_37361778')) {function content_565e9519420ad9_37361778($_smarty_tpl) {?>
 <!-- Block Newsletter module-->
 <?php if (isset($_smarty_tpl->tpl_vars['news_letter_array']->value)&&count($_smarty_tpl->tpl_vars['news_letter_array']->value)>0) {?>
     <?php  $_smarty_tpl->tpl_vars['ec'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['ec']->_loop = false;
@@ -50,8 +50,8 @@ $_smarty_tpl->tpl_vars['ec']->_loop = true;
             	<?php if ($_smarty_tpl->tpl_vars['ec']->value['show_newsletter']) {?>
             	<div class="alert alert-danger hidden"></div>
                 <div class="alert alert-success hidden"></div>
-            	<form action="<?php echo $_smarty_tpl->tpl_vars['base_uri']->value;?>
-modules/stnewsletter/stnewsletter-ajax.php" method="post" class="st_news_letter_form">
+            	<form action="<?php echo $_smarty_tpl->tpl_vars['content_dir']->value;?>
+/modules/stnewsletter/stnewsletter-ajax.php" method="post" class="st_news_letter_form">
 					<div class="form-group st_news_letter_form_inner" >
 						<input class="inputNew form-control st_news_letter_input" type="text" name="email" size="18" value="<?php if (isset($_smarty_tpl->tpl_vars['value']->value)&&$_smarty_tpl->tpl_vars['value']->value) {?><?php echo $_smarty_tpl->tpl_vars['value']->value;?>
 <?php }?>" placeholder="<?php echo smartyTranslate(array('s'=>'Your e-mail','mod'=>'stnewsletter'),$_smarty_tpl);?>

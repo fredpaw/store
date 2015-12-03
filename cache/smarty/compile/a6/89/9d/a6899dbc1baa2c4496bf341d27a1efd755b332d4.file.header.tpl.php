@@ -1,24 +1,23 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:52
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:09
          compiled from "D:\xampp\htdocs\store\themes\transformer\header.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:8464564ebf0c212748-57532266%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:23204565e95197ccea0-25735217%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'a6899dbc1baa2c4496bf341d27a1efd755b332d4' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\themes\\transformer\\header.tpl',
-      1 => 1447993228,
+      1 => 1449038237,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '8464564ebf0c212748-57532266',
+  'nocache_hash' => '23204565e95197ccea0-25735217',
   'function' => 
   array (
   ),
   'variables' => 
   array (
     'language_code' => 0,
-    'lang_iso' => 0,
     'meta_title' => 0,
     'meta_description' => 0,
     'meta_keywords' => 0,
@@ -40,21 +39,24 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'hide_left_column' => 0,
     'hide_right_column' => 0,
     'content_only' => 0,
+    'lang_iso' => 0,
     'languages' => 0,
     'language' => 0,
+    'slide_lr_column' => 0,
     'restricted_country_mode' => 0,
     'geolocation_country' => 0,
-    'logo_left_center' => 0,
-    'HOOK_TOP_LEFT' => 0,
+    'sticky_mobile_header' => 0,
+    'HOOK_MOBILE_MENU' => 0,
     'force_ssl' => 0,
     'base_dir_ssl' => 0,
     'base_dir' => 0,
     'shop_name' => 0,
     'logo_url' => 0,
     'link' => 0,
-    'HOOK_TOP' => 0,
     'HOOK_MOBILE_BAR' => 0,
-    'HOOK_MOBILE_MENU' => 0,
+    'logo_left_center' => 0,
+    'HOOK_TOP_LEFT' => 0,
+    'HOOK_TOP' => 0,
     'HOOK_TOP_SECONDARY' => 0,
     'left_column_size' => 0,
     'HOOK_LEFT_COLUMN' => 0,
@@ -63,38 +65,34 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0c53d951_98864424',
+  'unifunc' => 'content_565e9519bc08b7_91448870',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0c53d951_98864424')) {function content_564ebf0c53d951_98864424($_smarty_tpl) {?><?php if (!is_callable('smarty_function_implode')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\function.implode.php';
+<?php if ($_valid && !is_callable('content_565e9519bc08b7_91448870')) {function content_565e9519bc08b7_91448870($_smarty_tpl) {?><?php if (!is_callable('smarty_function_implode')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\function.implode.php';
 ?>
+<?php $_smarty_tpl->tpl_vars['slide_lr_column'] = new Smarty_variable(Configuration::get('STSN_SLIDE_LR_COLUMN'), null, 0);?>
 <!DOCTYPE HTML>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)) {?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php } else { ?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['lang_iso']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php }?>"><![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7" lang="<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)) {?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php } else { ?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['lang_iso']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php }?>"><![endif]-->
-<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)) {?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php } else { ?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['lang_iso']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php }?>"><![endif]-->
-<!--[if gt IE 8]> <html class="no-js ie9" lang="<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)) {?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php } else { ?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['lang_iso']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php }?>"><![endif]-->
-<html lang="<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)) {?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php } else { ?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['lang_iso']->value, ENT_QUOTES, 'UTF-8', true);?>
-<?php }?>">
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)&&$_smarty_tpl->tpl_vars['language_code']->value) {?> lang="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
+"<?php }?>><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7"<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)&&$_smarty_tpl->tpl_vars['language_code']->value) {?> lang="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
+"<?php }?>><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9 ie8"<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)&&$_smarty_tpl->tpl_vars['language_code']->value) {?> lang="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
+"<?php }?>><![endif]-->
+<!--[if gt IE 8]> <html class="no-js ie9"<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)&&$_smarty_tpl->tpl_vars['language_code']->value) {?> lang="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
+"<?php }?>><![endif]-->
+<html<?php if (isset($_smarty_tpl->tpl_vars['language_code']->value)&&$_smarty_tpl->tpl_vars['language_code']->value) {?> lang="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['language_code']->value, ENT_QUOTES, 'UTF-8', true);?>
+"<?php }?>>
 	<head>
 		<meta charset="utf-8" />
 		<title><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_title']->value, ENT_QUOTES, 'UTF-8', true);?>
 </title>
-<?php if (isset($_smarty_tpl->tpl_vars['meta_description']->value)&&$_smarty_tpl->tpl_vars['meta_description']->value) {?>
-		<meta name="description" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_description']->value, ENT_QUOTES, 'UTF-8', true);?>
+		<?php if (isset($_smarty_tpl->tpl_vars['meta_description']->value)&&$_smarty_tpl->tpl_vars['meta_description']->value) {?>
+			<meta name="description" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_description']->value, ENT_QUOTES, 'UTF-8', true);?>
 " />
-<?php }?>
-<?php if (isset($_smarty_tpl->tpl_vars['meta_keywords']->value)&&$_smarty_tpl->tpl_vars['meta_keywords']->value) {?>
-		<meta name="keywords" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_keywords']->value, ENT_QUOTES, 'UTF-8', true);?>
+		<?php }?>
+		<?php if (isset($_smarty_tpl->tpl_vars['meta_keywords']->value)&&$_smarty_tpl->tpl_vars['meta_keywords']->value) {?>
+			<meta name="keywords" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_keywords']->value, ENT_QUOTES, 'UTF-8', true);?>
 " />
-<?php }?>
+		<?php }?>
 		<meta name="robots" content="<?php if (isset($_smarty_tpl->tpl_vars['nobots']->value)) {?>no<?php }?>index,<?php if (isset($_smarty_tpl->tpl_vars['nofollow']->value)&&$_smarty_tpl->tpl_vars['nofollow']->value) {?>no<?php }?>follow" />
 		<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['responsive'])&&$_smarty_tpl->tpl_vars['sttheme']->value['responsive']&&(!$_smarty_tpl->tpl_vars['sttheme']->value['enabled_version_swithing']||$_smarty_tpl->tpl_vars['sttheme']->value['version_switching']==0)) {?>
 		<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" />
@@ -122,43 +120,43 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['icon_iphone_144'];?>
 " />
         <?php }?>
-<?php if (isset($_smarty_tpl->tpl_vars['css_files']->value)) {?>
-	<?php  $_smarty_tpl->tpl_vars['media'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['media']->_loop = false;
+		<?php if (isset($_smarty_tpl->tpl_vars['css_files']->value)) {?>
+			<?php  $_smarty_tpl->tpl_vars['media'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['media']->_loop = false;
  $_smarty_tpl->tpl_vars['css_uri'] = new Smarty_Variable;
  $_from = $_smarty_tpl->tpl_vars['css_files']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['media']->key => $_smarty_tpl->tpl_vars['media']->value) {
 $_smarty_tpl->tpl_vars['media']->_loop = true;
  $_smarty_tpl->tpl_vars['css_uri']->value = $_smarty_tpl->tpl_vars['media']->key;
 ?>
-		<link rel="stylesheet" href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['css_uri']->value, ENT_QUOTES, 'UTF-8', true);?>
+				<link rel="stylesheet" href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['css_uri']->value, ENT_QUOTES, 'UTF-8', true);?>
 " type="text/css" media="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['media']->value, ENT_QUOTES, 'UTF-8', true);?>
 " />
-	<?php } ?>
-<?php }?>
-<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['custom_css'])&&$_smarty_tpl->tpl_vars['sttheme']->value['custom_css']) {?>
-	<link href="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['custom_css'];?>
+			<?php } ?>
+		<?php }?>
+		<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['custom_css'])&&$_smarty_tpl->tpl_vars['sttheme']->value['custom_css']) {?>
+			<link href="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['custom_css'];?>
 " rel="stylesheet" type="text/css" media="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['custom_css_media'];?>
 " />
-<?php }?>
-<?php if (isset($_smarty_tpl->tpl_vars['js_defer']->value)&&!$_smarty_tpl->tpl_vars['js_defer']->value&&isset($_smarty_tpl->tpl_vars['js_files']->value)&&isset($_smarty_tpl->tpl_vars['js_def']->value)) {?>
-	<?php echo $_smarty_tpl->tpl_vars['js_def']->value;?>
+		<?php }?>
+		<?php if (isset($_smarty_tpl->tpl_vars['js_defer']->value)&&!$_smarty_tpl->tpl_vars['js_defer']->value&&isset($_smarty_tpl->tpl_vars['js_files']->value)&&isset($_smarty_tpl->tpl_vars['js_def']->value)) {?>
+			<?php echo $_smarty_tpl->tpl_vars['js_def']->value;?>
 
-	<?php  $_smarty_tpl->tpl_vars['js_uri'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['js_uri']->_loop = false;
+			<?php  $_smarty_tpl->tpl_vars['js_uri'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['js_uri']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['js_files']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['js_uri']->key => $_smarty_tpl->tpl_vars['js_uri']->value) {
 $_smarty_tpl->tpl_vars['js_uri']->_loop = true;
 ?>
-	<script type="text/javascript" src="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['js_uri']->value, ENT_QUOTES, 'UTF-8', true);?>
+			<script type="text/javascript" src="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['js_uri']->value, ENT_QUOTES, 'UTF-8', true);?>
 "></script>
-	<?php } ?>
-<?php }?>
+			<?php } ?>
+		<?php }?>
 		<?php echo $_smarty_tpl->tpl_vars['HOOK_HEADER']->value;?>
 
 	</head>
 	<body<?php if (isset($_smarty_tpl->tpl_vars['page_name']->value)) {?> id="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['page_name']->value, ENT_QUOTES, 'UTF-8', true);?>
 "<?php }?> class="<?php if (isset($_smarty_tpl->tpl_vars['page_name']->value)) {?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['page_name']->value, ENT_QUOTES, 'UTF-8', true);?>
 <?php }?><?php if (isset($_smarty_tpl->tpl_vars['body_classes']->value)&&count($_smarty_tpl->tpl_vars['body_classes']->value)) {?> <?php echo smarty_function_implode(array('value'=>$_smarty_tpl->tpl_vars['body_classes']->value,'separator'=>' '),$_smarty_tpl);?>
-<?php }?><?php if ($_smarty_tpl->tpl_vars['hide_left_column']->value) {?> hide-left-column<?php }?><?php if ($_smarty_tpl->tpl_vars['hide_right_column']->value) {?> hide-right-column<?php }?><?php if (isset($_smarty_tpl->tpl_vars['content_only']->value)&&$_smarty_tpl->tpl_vars['content_only']->value) {?> content_only<?php }?> lang_<?php echo $_smarty_tpl->tpl_vars['lang_iso']->value;?>
+<?php }?><?php if ($_smarty_tpl->tpl_vars['hide_left_column']->value) {?> hide-left-column<?php } else { ?> show-left-column<?php }?><?php if ($_smarty_tpl->tpl_vars['hide_right_column']->value) {?> hide-right-column<?php } else { ?> show-right-column<?php }?><?php if (isset($_smarty_tpl->tpl_vars['content_only']->value)&&$_smarty_tpl->tpl_vars['content_only']->value) {?> content_only<?php }?> lang_<?php echo $_smarty_tpl->tpl_vars['lang_iso']->value;?>
  
 	<?php  $_smarty_tpl->tpl_vars['language'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['language']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['languages']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
@@ -169,7 +167,7 @@ $_smarty_tpl->tpl_vars['language']->_loop = true;
 			is_rtl
 		<?php }?>
 	<?php } ?>
-	<?php if ($_smarty_tpl->tpl_vars['sttheme']->value['is_mobile_device']) {?> mobile_device <?php }?>
+	<?php if ($_smarty_tpl->tpl_vars['sttheme']->value['is_mobile_device']) {?> mobile_device <?php }?><?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value) {?> slide_lr_column <?php }?>
 	">
 	<?php if (!isset($_smarty_tpl->tpl_vars['content_only']->value)||!$_smarty_tpl->tpl_vars['content_only']->value) {?>
 		<?php if (isset($_smarty_tpl->tpl_vars['restricted_country_mode']->value)&&$_smarty_tpl->tpl_vars['restricted_country_mode']->value) {?>
@@ -221,12 +219,46 @@ if (!empty($_capture_buffer)) {
 					</div>
 				</div>
 				<?php }?>
+
+				<?php $_smarty_tpl->tpl_vars['sticky_mobile_header'] = new Smarty_variable(Configuration::get('STSN_STICKY_MOBILE_HEADER'), null, 0);?>
+	            <section id="mobile_bar" class="animated fast">
+	            	<div class="container">
+	                	<div id="mobile_bar_container" class="<?php if ($_smarty_tpl->tpl_vars['sticky_mobile_header']->value%2==0) {?> mobile_bar_center_layout<?php } else { ?> mobile_bar_left_layout<?php }?>">
+	                		<?php if ($_smarty_tpl->tpl_vars['sticky_mobile_header']->value%2==0) {?>
+	                		<div id="mobile_bar_left">
+	                			<div id="mobile_bar_left_inner"><?php if (isset($_smarty_tpl->tpl_vars['HOOK_MOBILE_MENU']->value)&&trim($_smarty_tpl->tpl_vars['HOOK_MOBILE_MENU']->value)) {?><?php echo $_smarty_tpl->tpl_vars['HOOK_MOBILE_MENU']->value;?>
+<?php } else { ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayMobileMenu'),$_smarty_tpl);?>
+<?php }?></div>
+	                		</div>
+	                		<?php }?>
+	                		<div id="mobile_bar_center">
+	                			<a id="mobile_header_logo" href="<?php if (isset($_smarty_tpl->tpl_vars['force_ssl']->value)&&$_smarty_tpl->tpl_vars['force_ssl']->value) {?><?php echo $_smarty_tpl->tpl_vars['base_dir_ssl']->value;?>
+<?php } else { ?><?php echo $_smarty_tpl->tpl_vars['base_dir']->value;?>
+<?php }?>" title="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['shop_name']->value, ENT_QUOTES, 'UTF-8', true);?>
+">
+									<img class="logo replace-2x" src="<?php echo $_smarty_tpl->tpl_vars['logo_url']->value;?>
+" <?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['retina_logo'])&&$_smarty_tpl->tpl_vars['sttheme']->value['retina_logo']) {?> data-2x="<?php echo $_smarty_tpl->tpl_vars['link']->value->getMediaLink(((string)@constant('_MODULE_DIR_'))."stthemeeditor/".((string)htmlspecialchars($_smarty_tpl->tpl_vars['sttheme']->value['retina_logo'], ENT_QUOTES, 'UTF-8', true)));?>
+"<?php }?> alt="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['shop_name']->value, ENT_QUOTES, 'UTF-8', true);?>
+"<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['st_logo_image_width'])&&$_smarty_tpl->tpl_vars['sttheme']->value['st_logo_image_width']) {?> width="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['st_logo_image_width'];?>
+"<?php }?><?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['st_logo_image_height'])&&$_smarty_tpl->tpl_vars['sttheme']->value['st_logo_image_height']) {?> height="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['st_logo_image_height'];?>
+"<?php }?>/>
+								</a>	                			
+	                		</div>
+	                		<div id="mobile_bar_right">
+	                			<div id="mobile_bar_right_inner"><?php if (isset($_smarty_tpl->tpl_vars['HOOK_MOBILE_BAR']->value)&&trim($_smarty_tpl->tpl_vars['HOOK_MOBILE_BAR']->value)) {?><?php echo $_smarty_tpl->tpl_vars['HOOK_MOBILE_BAR']->value;?>
+<?php } else { ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayMobileBar'),$_smarty_tpl);?>
+<?php }?></div>
+	                		</div>
+	                	</div>
+	                </div>
+	            </section>
+
 				<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['logo_position'])&&$_smarty_tpl->tpl_vars['sttheme']->value['logo_position']) {?>
 				    <?php $_smarty_tpl->tpl_vars["logo_left_center"] = new Smarty_variable(1, null, 0);?>
 				<?php } else { ?>
 				    <?php $_smarty_tpl->tpl_vars["logo_left_center"] = new Smarty_variable(0, null, 0);?>
 				<?php }?>
-				<section id="header" class="<?php if ($_smarty_tpl->tpl_vars['logo_left_center']->value) {?> logo_center <?php }?>">
+				<section id="header" class="<?php if ($_smarty_tpl->tpl_vars['logo_left_center']->value) {?> logo_center <?php }?> animated fast">
 				    <div class="wide_container">
 					    <div class="container header_container">
 					        <div class="row">
@@ -264,20 +296,7 @@ if (!empty($_capture_buffer)) {
 					    </div>
 				    </div>
 				</section>
-
-	            <section id="mobile_bar">
-	            	<div class="container">
-	                	<div id="mobile_bar_container" class="clearfix">
-	                		<?php if (isset($_smarty_tpl->tpl_vars['HOOK_MOBILE_BAR']->value)&&trim($_smarty_tpl->tpl_vars['HOOK_MOBILE_BAR']->value)) {?><div id="mobile_bar_center"><?php echo $_smarty_tpl->tpl_vars['HOOK_MOBILE_BAR']->value;?>
-</div><?php } else { ?><div id="mobile_bar_center"><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayMobileBar'),$_smarty_tpl);?>
-</div><?php }?>
-	                		<div id="mobile_bar_menu"><?php if (isset($_smarty_tpl->tpl_vars['HOOK_MOBILE_MENU']->value)&&trim($_smarty_tpl->tpl_vars['HOOK_MOBILE_MENU']->value)) {?><?php echo $_smarty_tpl->tpl_vars['HOOK_MOBILE_MENU']->value;?>
-<?php } else { ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayMobileMenu'),$_smarty_tpl);?>
-<?php }?></div>
-	                	</div>
-	                </div>
-	            </section>
-	            
+					            
 	            <?php if (isset($_smarty_tpl->tpl_vars['HOOK_TOP_SECONDARY']->value)&&$_smarty_tpl->tpl_vars['HOOK_TOP_SECONDARY']->value) {?>
 	            <section id="top_extra">
 	            	<?php echo $_smarty_tpl->tpl_vars['HOOK_TOP_SECONDARY']->value;?>
@@ -310,6 +329,8 @@ if (!empty($_capture_buffer)) {
 			<!--/ Main slideshow -->
             <?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>"displayFullWidthTop"),$_smarty_tpl);?>
 
+            <?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>"displayFullWidthTop2"),$_smarty_tpl);?>
+
 			<div class="columns-container wide_container">
 				<div id="columns" class="container">
 					<?php $_smarty_tpl->_capture_stack[0][] = array("displayTopColumn", null, null); ob_start(); ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>"displayTopColumn"),$_smarty_tpl);?>
@@ -327,7 +348,7 @@ if (!empty($_capture_buffer)) {
 					<?php }?>
 					<div class="row">
 						<?php if (isset($_smarty_tpl->tpl_vars['left_column_size']->value)&&!empty($_smarty_tpl->tpl_vars['left_column_size']->value)) {?>
-						<div id="left_column" class="column col-xxs-8 col-xs-6 col-sm-<?php echo intval($_smarty_tpl->tpl_vars['left_column_size']->value);?>
+						<div id="left_column" class="column <?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value) {?> col-xxs-8 col-xs-6<?php } else { ?> col-xs-12<?php }?> col-sm-<?php echo intval($_smarty_tpl->tpl_vars['left_column_size']->value);?>
  col-md-<?php echo intval($_smarty_tpl->tpl_vars['left_column_size']->value);?>
 "><?php echo $_smarty_tpl->tpl_vars['HOOK_LEFT_COLUMN']->value;?>
 </div>

@@ -22,15 +22,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+/*
 $(document).ready(function(){
 	resizeCatimg();
-
 });
 
 $(window).resize(function(){
 	resizeCatimg();
 });
-
+*/
 $(document).on('click', '.lnk_more', function(e){
 	e.preventDefault();
 	$('#category_description_short').hide(); 
@@ -40,17 +40,19 @@ $(document).on('click', '.lnk_more', function(e){
 
 function resizeCatimg()
 {
-	var div = $('.cat_desc').parent('div');
+	var div = $('.content_scene_cat div:first');
 	
 	if (div.css('background-image') == 'none')
 		return;
 
 	var image = new Image;
+
 	$(image).load(function(){
 	    var width  = image.width;
 	    var height = image.height;
 		var ratio = parseFloat(height / width);
 		var calc = Math.round(ratio * parseInt(div.outerWidth(false)));
+
 		div.css('min-height', calc);
 	});
 	if (div.length)

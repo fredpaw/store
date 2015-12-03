@@ -52,7 +52,8 @@
 								alt="{$product->name|escape:'html':'UTF-8'}" 
 								width="{$smarty.capture.home_default_width}" height="{$smarty.capture.home_default_height}" />
 							</a>
-							{if isset($product->new) && $product->new == 1}
+                            {assign var='new_sticker' value=Configuration::get('STSN_NEW_STYLE')}
+							{if $new_sticker!=2 && isset($product->new) && $product->new == 1}
 								<span class="new"><i>{l s='New'}</i></span>
 							{/if}
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
@@ -73,7 +74,7 @@
 								{if isset($product->specificPrice) && $product->specificPrice}
 									{if {$product->specificPrice.reduction_type == 'percentage'}}
 										<span class="old-price product-price">
-											{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}
+											{displayWtPrice p=($product->getPrice(true, null, 6, null, false, false))}
 										</span>
 										<span class="price-percent-reduction">
 											-{$product->specificPrice.reduction*100|floatval}%
@@ -125,7 +126,7 @@
 									</span>
 								{/if}
 							</p>
-							{hook h="displayProductDeliveryTime" product=$product}
+							{if !$product->is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 							{hook h="displayProductPriceBlock" product=$product type="weight"}
 							<div class="clearfix">
 								{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
@@ -178,7 +179,7 @@
 {/if}
 <ul class="footer_link">
 	<li>
-		<a class="btn btn-default" href="{$base_dir}">
+		<a class="btn btn-default" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}">
 			{l s='Continue Shopping'}
 		</a>
 	</li>

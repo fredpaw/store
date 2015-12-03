@@ -37,4 +37,46 @@ jQuery(function($){
         ); 
         return false;
     });
+    
+    $('#products').autocomplete('index.php?controller=AdminModules&configure=stspecialslider&act=gsp&ajax=1&token='+token, {
+        minChars: 1,
+        autoFill: true,
+        max:200,
+        matchContains: true,
+        mustMatch:true,
+        scroll:true,
+        cacheLength:0,
+        extraParams:{ excludeIds:getProductExcIds()},
+        formatItem: function(item) {
+            return item[1]+' - '+item[0];
+        }
+    }).result(function(event, data, formatted) {
+		if (data == null)
+			return false;
+		var id = data[1];
+		var name = data[0];        
+		$('#curr_products').append('<li>'+name+'<a href="javascript:;" class="del_product"><img src="../img/admin/delete.gif" /></a><input type="hidden" name="id_product[]" value="'+id+'" /></li>');
+        
+        $('#products').setOptions({
+        	extraParams: {
+        		excludeIds : getProductExcIds()
+        	}
+	    });
+    });
+    $('#curr_products').delegate('.del_product', 'click', function(){
+        $(this).closest('li').remove();
+        $('#products').setOptions({
+        	extraParams: {
+        		excludeIds : getProductExcIds()
+        	}
+	    });
+    });
 });
+var getProductExcIds = function()
+{
+    var excludeIds = '';
+    $(':hidden[name="id_product[]"]').each(function(){
+        excludeIds += $(this).val()+',';
+    });
+    return excludeIds.substr(0, excludeIds.length-1);  
+}

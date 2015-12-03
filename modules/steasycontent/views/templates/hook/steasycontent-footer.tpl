@@ -25,7 +25,7 @@
 <!-- MODULE st easy content -->
 {if $easy_content|@count > 0}
     {foreach $easy_content as $ec}
-    <section id="easycontent_{$ec.id_st_easy_content}" class="{if $ec.hide_on_mobile}hidden-xs{/if} easycontent col-xs-12 col-sm-{if $ec.span}{$ec.span}{else}3{/if} block">
+    <section id="easycontent_{$ec.id_st_easy_content}" class="{if $ec.hide_on_mobile == 1}hidden-xs{elseif $ec.hide_on_mobile == 2}visible-xs visible-xs-block{/if} easycontent col-xs-12 col-sm-{if $ec.span}{$ec.span}{else}3{/if} block">
         {if $ec.title}
         <a href="javascript:;" class="opener visible-xs">&nbsp;</a>
         <h3 class="title_block">

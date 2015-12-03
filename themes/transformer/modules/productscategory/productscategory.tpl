@@ -28,9 +28,18 @@
 {assign var='new_sticker' value=Configuration::get('STSN_NEW_STYLE')}
 {assign var='sale_sticker' value=Configuration::get('STSN_SALE_STYLE')}
 {assign var='st_display_add_to_cart' value=Configuration::get('STSN_DISPLAY_ADD_TO_CART')}
+{assign var='use_view_more_instead' value=Configuration::get('STSN_USE_VIEW_MORE_INSTEAD')}
 {assign var='flyout_buttons' value=Configuration::get('STSN_FLYOUT_BUTTONS')}
 <section id="productscategory-products_block_center" class="page-product-box blockproductscategory products_block block section">
-	<h4 class="title_block"><span>{$categoryProducts|@count} {l s='Other products in the same category' mod='productscategory'}</span></h4>
+    <h4 class="title_block">
+        <span>
+        {if $categoryProducts|@count == 1}
+            {l s='%s other product in the same category:' sprintf=[$categoryProducts|@count] mod='productscategory'}
+        {else}
+            {l s='%s other products in the same category:' sprintf=[$categoryProducts|@count] mod='productscategory'}
+        {/if}
+        </span>
+    </h4>
 	<div id="productscategory-itemslider" class="flexslider">  
 		<div class="nav_top_right"></div>
         <div class="sliderwrap products_slider">
@@ -41,15 +50,23 @@
                     {if $new_sticker!=2 && isset($product.new) && $product.new == 1}<span class="new"><i>{l s='New' mod='productscategory'}</i></span>{/if}{if $sale_sticker!=2 && isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}<span class="on_sale"><i>{l s='Sale' mod='productscategory'}</i></span>{/if}{if $product.show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0 && isset($sttheme.discount_percentage) && $sttheme.discount_percentage==2}<span class="sale_percentage_sticker img-circle">{if $product.specific_prices && $product.specific_prices.reduction_type=='percentage'}{$product.specific_prices.reduction*100|floatval}%<br />{l s='Off' mod='productscategory'}{elseif $product.specific_prices && $product.specific_prices.reduction_type=='amount' && $product.specific_prices.reduction|floatval !=0}{l s='Save' mod='productscategory'}<br />{convertPrice price=$product.price_without_reduction-$product.price|floatval}{/if}</span>{/if}{/if}
                 {/capture}
                 {capture name="pro_link"}{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, $product.ean13)}{/capture}
+                {assign var="fly_i" value=0}
                 {capture name="pro_a_cart"}
-                    {if !$PS_CATALOG_MODE && ($product.allow_oosp || $product.quantity > 0)}
-                        <a class="ajax_add_to_cart_button btn btn-default btn_primary" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart' mod='productscategory'}" data-id-product="{$product.id_product|intval}"><div><i class="icon-basket icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to cart' mod='productscategory'}</span></div></a>
+                    {if isset($use_view_more_instead) && $use_view_more_instead==1}
+                         <a class="view_button btn btn-default" href="{$smarty.capture.pro_link}" title="{l s='View more' mod='productscategory'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more' mod='productscategory'}</span></div></a>
+                    {else}
+                        {if !$PS_CATALOG_MODE && ($product.allow_oosp || $product.quantity > 0)}
+                            <a class="ajax_add_to_cart_button btn btn-default btn_primary" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart' mod='productscategory'}" data-id-product="{$product.id_product|intval}"><div><i class="icon-basket icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to cart' mod='productscategory'}</span></div></a>
+                            {if isset($use_view_more_instead) && $use_view_more_instead==2}
+                                <a class="view_button btn btn-default" href="{$smarty.capture.pro_link}" title="{l s='View more' mod='productscategory'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more' mod='productscategory'}</span></div></a>
+                                {if !$st_display_add_to_cart}{assign var="fly_i" value=$fly_i+1}{/if}
+                            {/if}
+                        {/if}
                     {/if}
                 {/capture}
                 <div class="pro_outer_box">
                 <div class="pro_first_box">
                     <a href="{$smarty.capture.pro_link}" title="{$product.name|escape:html:'UTF-8'}" class="product_image"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')}" alt="{$product.name|escape:html:'UTF-8'}" class="replace-2x img-responsive front-image" width="{$smarty.capture.home_default_width}" height="{$smarty.capture.home_default_height}" />{$smarty.capture.new_on_sale}</a>
-                    {assign var="fly_i" value=0}
                     {if !$st_display_add_to_cart && trim($smarty.capture.pro_a_cart)}{assign var="fly_i" value=$fly_i+1}{/if}
                     <div class="hover_fly {if $flyout_buttons}hover_fly_static{/if} fly_{$fly_i} clearfix">
                         {if !$st_display_add_to_cart}{$smarty.capture.pro_a_cart}{/if}

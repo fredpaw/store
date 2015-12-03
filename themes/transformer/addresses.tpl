@@ -47,10 +47,10 @@
                 {/foreach}
                 <li class="address_update">
                 <a class="btn btn-default" href="{$link->getPageLink('address', true, null, "id_address={$address.object.id|intval}")|escape:'html':'UTF-8'}" title="{l s='Update'}">{l s='Update'}</a>
-                <a class="btn btn-default" href="{$link->getPageLink('address', true, null, "id_address={$address.object.id|intval}&delete")|escape:'html':'UTF-8'}" onclick="return confirm('{l s='Are you sure?' js=1}');" title="{l s='Delete'}">{l s='Delete'}</a></li>
+                <a class="btn btn-default" href="{$link->getPageLink('address', true, null, "id_address={$address.object.id|intval}&delete")|escape:'html':'UTF-8'}" data-id="addresses_confirm" title="{l s='Delete'}">{l s='Delete'}</a></li>
             </ul>
         </div>
-        {if $smarty.foreach.myLoop.index % 2 && !$smarty.foreach.myLoop.last} 
+        {if $smarty.foreach.myLoop.index % 2 && !$smarty.foreach.myLoop.last}
         </div>
         <div class="bloc_adresses row">
         {/if}
@@ -70,8 +70,9 @@
         </a>
     </li>
     <li class="pull-right">
-        <a href="{$base_dir}" title="{l s='Home'}" rel="nofollow">
+        <a href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Home'}" rel="nofollow">
             <i class="icon-home icon-mar-lr2"></i>{l s='Home'}
         </a>
     </li>
 </ul>
+{addJsDefL name=addressesConfirm}{l s='Are you sure?' js=1}{/addJsDefL}

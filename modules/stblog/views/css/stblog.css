@@ -1,9 +1,9 @@
 .blog_list_grid .block_blog{padding-bottom: 2em;}
 
-#blog_list_large .block_blog,#blog_list_medium .block_blog{padding:0 0 2em 0;margin:0 0 2em 0;border-bottom:1px solid #E5E5E5;}
-#blog_list_large .block_blog:last-child,#blog_list_medium .block_blog:last-child{border-bottom:none;margin-bottom:0;}
+.blog_list_large .block_blog,#blog_list_medium .block_blog{padding:0 0 2em 0;margin:0 0 2em 0;border-bottom:1px solid #E5E5E5;}
+.blog_list_large .block_blog:last-child,#blog_list_medium .block_blog:last-child{border-bottom:none;margin-bottom:0;}
 
-#blog_list_large .blog_image,#blog_list_large .blog_gallery,#blog_list_large .blog_video,
+.blog_list_large .blog_image,.blog_list_large .blog_gallery,.blog_list_large .blog_video,
 .blog_list_grid .blog_image,.blog_list_grid .blog_gallery,.blog_list_grid .blog_video,
 #blog_primary_block .blog_image,#blog_primary_block .blog_gallery,#blog_primary_block .blog_video{margin-bottom: 1em;}
 
@@ -29,7 +29,7 @@
 .blog_medium_list .blog_image{float: left;width: 260px;margin-bottom: 1em;}
 .blog_medium_list .s_title_block, .blog_medium_list .blok_blog_short_content, .blog_medium_list .blog_info{margin-left: 272px;}
 
-.blog_row_list li, .blog_medium_list li{
+.blog_medium_list li{
 	margin-bottom: 1.333em;
 }
 

@@ -110,7 +110,7 @@
 				</div>
 				{* if customer hasn't update his layout address, country has to be verified but it's deprecated *}
 			{/if}
-			{if $field_name eq 'Country:name' || $field_name eq 'country'}
+			{if $field_name eq 'Country:name' || $field_name eq 'country' || $field_name eq 'Country:iso_code'}
 				<div class="required form-group">
 					<label for="id_country">{l s='Country'} <sup>*</sup></label>
 					<select id="id_country" class="form-control" name="id_country">{$countries_list}</select>
@@ -131,10 +131,6 @@
 					<label for="phone">{l s='Home phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 					<input class="{if isset($one_phone_at_least) && $one_phone_at_least}is_required{/if} validate form-control" data-validate="{$address_validation.phone.validate}" type="tel" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'html':'UTF-8'}{/if}{/if}"  />
 				</div>
-				{if isset($one_phone_at_least) && $one_phone_at_least}
-					{assign var="atLeastOneExists" value=true}
-					<p class="inline-infos required">* {l s='You must register at least one phone number.'}</p>
-				{/if}
 				<div class="clearfix"></div>
 			{/if}
 			{if $field_name eq 'phone_mobile'}
@@ -143,6 +139,10 @@
 					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
 					<input class="validate form-control" data-validate="{$address_validation.phone_mobile.validate}" type="tel" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'html':'UTF-8'}{/if}{/if}" />
 				</div>
+			{/if}
+			{if ($field_name eq 'phone_mobile') || ($field_name eq 'phone_mobile') && !isset($atLeastOneExists) && isset($one_phone_at_least) && $one_phone_at_least}
+				{assign var="atLeastOneExists" value=true}
+				<p class="inline-infos required">** {l s='You must register at least one phone number.'}</p>
 			{/if}
 		{/foreach}
 		{if !$postCodeExist}
@@ -176,9 +176,6 @@
 				<input class="{if isset($one_phone_at_least) && $one_phone_at_least}is_required{/if} validate form-control" data-validate="{$address_validation.phone.validate}" type="tel" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'html':'UTF-8'}{/if}{/if}"  />
 			</div>
 		{/if}
-		{if isset($one_phone_at_least) && $one_phone_at_least && !$atLeastOneExists}
-			<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
-		{/if}
 		<div class="clearfix"></div>
 		{if !$mobilePhoneExist}
 			<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
@@ -186,9 +183,12 @@
 				<input class="validate form-control" data-validate="{$address_validation.phone_mobile.validate}" type="tel" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'html':'UTF-8'}{/if}{/if}" />
 			</div>
 		{/if}
+		{if isset($one_phone_at_least) && $one_phone_at_least && !$atLeastOneExists}
+			<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
+		{/if}
 		<div class="required form-group" id="adress_alias">
 			<label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
-			<input type="text" id="alias" class="is_required validate form-control" data-validate="{$address_validation.alias.validate}" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias|escape:'html':'UTF-8'}{elseif !$select_address}{l s='My address'}{/if}" />
+			<input type="text" id="alias" class="is_required validate form-control" data-validate="{$address_validation.alias.validate}" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{elseif isset($address->alias)}{$address->alias|escape:'html':'UTF-8'}{elseif !$select_address}{l s='My address'}{/if}" />
 		</div>
 		<p class="submit2">
 			{if isset($id_address)}<input type="hidden" name="id_address" value="{$id_address|intval}" />{/if}
@@ -217,14 +217,14 @@
 {strip}
 {if isset($smarty.post.id_state) && $smarty.post.id_state}
 	{addJsDef idSelectedState=$smarty.post.id_state|intval}
-{else if isset($address->id_state) && $address->id_state}
+{elseif isset($address->id_state) && $address->id_state}
 	{addJsDef idSelectedState=$address->id_state|intval}
 {else}
 	{addJsDef idSelectedState=false}
 {/if}
 {if isset($smarty.post.id_country) && $smarty.post.id_country}
 	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
-{else if isset($address->id_country) && $address->id_country}
+{elseif isset($address->id_country) && $address->id_country}
 	{addJsDef idSelectedCountry=$address->id_country|intval}
 {else}
 	{addJsDef idSelectedCountry=false}

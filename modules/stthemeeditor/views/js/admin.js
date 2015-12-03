@@ -203,7 +203,20 @@ var handle_font_change = function(that)
     }
     else
     {
-        selected_font = 'initial';
+        selected_font = 'inherit';
+        variant_dom.append($('<option>', {
+                value: selected_font,
+                text: 'Normal'
+            })).append($('<option>', {
+                value: selected_font+':700',
+                text: 'Bold'
+            })).append($('<option>', {
+                value: selected_font+':italic',
+                text: 'Italic'
+            })).append($('<option>', {
+                value: selected_font+':700italic',
+                text: 'Bold & Italic'
+            }));
     }
     $('#'+identi+'_example').css({'font-family':selected_font,'font-weight':font_weight,'font-style':font_style});
 };
@@ -223,7 +236,7 @@ var handle_font_style = function(that){
         if (font_style == 'regular')
             font_style = 'normal';
     }
-    if($.inArray(selected_arr[0], systemFontsArr)<0)
+    if($.inArray(selected_arr[0], systemFontsArr)<0 && selected_arr[0] != 'inherit')
     {
         if(!$('#'+identi+'_list_link').size())
             $('head').append('<link id="'+identi+'_list_link" rel="stylesheet" type="text/css" href="" />');

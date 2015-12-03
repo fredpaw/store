@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:48
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:09
          compiled from "D:\xampp\htdocs\store\modules\steasycontent\views\templates\hook\steasycontent-footer.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:2145564ebf0884f248-92607886%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:20059565e95192e0627-90112839%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'c2df4fb8a70107c09b7c018ae252306da854fd25' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\steasycontent\\views\\templates\\hook\\steasycontent-footer.tpl',
-      1 => 1447993231,
+      1 => 1449038240,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '2145564ebf0884f248-92607886',
+  'nocache_hash' => '20059565e95192e0627-90112839',
   'function' => 
   array (
   ),
@@ -22,9 +22,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf088b0729_47883893',
+  'unifunc' => 'content_565e9519348902_07097877',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf088b0729_47883893')) {function content_564ebf088b0729_47883893($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e9519348902_07097877')) {function content_565e9519348902_07097877($_smarty_tpl) {?>
 <!-- MODULE st easy content -->
 <?php if (count($_smarty_tpl->tpl_vars['easy_content']->value)>0) {?>
     <?php  $_smarty_tpl->tpl_vars['ec'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['ec']->_loop = false;
@@ -33,7 +33,7 @@ foreach ($_from as $_smarty_tpl->tpl_vars['ec']->key => $_smarty_tpl->tpl_vars['
 $_smarty_tpl->tpl_vars['ec']->_loop = true;
 ?>
     <section id="easycontent_<?php echo $_smarty_tpl->tpl_vars['ec']->value['id_st_easy_content'];?>
-" class="<?php if ($_smarty_tpl->tpl_vars['ec']->value['hide_on_mobile']) {?>hidden-xs<?php }?> easycontent col-xs-12 col-sm-<?php if ($_smarty_tpl->tpl_vars['ec']->value['span']) {?><?php echo $_smarty_tpl->tpl_vars['ec']->value['span'];?>
+" class="<?php if ($_smarty_tpl->tpl_vars['ec']->value['hide_on_mobile']==1) {?>hidden-xs<?php } elseif ($_smarty_tpl->tpl_vars['ec']->value['hide_on_mobile']==2) {?>visible-xs visible-xs-block<?php }?> easycontent col-xs-12 col-sm-<?php if ($_smarty_tpl->tpl_vars['ec']->value['span']) {?><?php echo $_smarty_tpl->tpl_vars['ec']->value['span'];?>
 <?php } else { ?>3<?php }?> block">
         <?php if ($_smarty_tpl->tpl_vars['ec']->value['title']) {?>
         <a href="javascript:;" class="opener visible-xs">&nbsp;</a>

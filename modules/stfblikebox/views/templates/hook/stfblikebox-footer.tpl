@@ -27,7 +27,7 @@
     <a href="javascript:;" class="opener visible-xs">&nbsp;</a>
     <h4 class="title_block">{l s='Facebook' mod='stfblikebox'}</h4>
     <div class="footer_block_content fb_like_box_warp">
-        <div class="fb-like-box" data-href="http://www.facebook.com/{$st_lb_url}" data-width="" {if $st_lb_height}data-height="{$st_lb_height}"{/if} data-show-faces="{if $st_lb_face}true{else}false{/if}" data-stream="{if $st_lb_stream}true{else}false{/if}"  data-header="{if $st_lb_header}true{else}false{/if}" {if $st_lb_connections}connections={$st_lb_connections}{/if}  data-show-border="false" data-colorscheme="{if isset($st_lb_colorscheme)}{$st_lb_colorscheme}{else}light{/if}"></div>
+        <div class="fb-page" data-href="{$st_lb_url}"{if $st_lb_height} data-height="{$st_lb_height}"{/if} data-small-header="{if $st_lb_small_header}true{else}false{/if}" data-adapt-container-width="true" data-hide-cover="{if $st_lb_hide_cover}true{else}false{/if}" data-show-facepile="{if $st_lb_face}true{else}false{/if}" data-show-posts="{if $st_lb_stream}true{else}false{/if}"></div>
         <div id="fb-root"></div>
         <script>
         //<![CDATA[
@@ -36,7 +36,7 @@
           var js, fjs = d.getElementsByTagName(s)[0];
           if (d.getElementById(id)) return;
           js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/{/literal}{$st_lb_locale}{literal}/all.js#xfbml=1";
+          js.src = "//connect.facebook.net/{/literal}{$st_lb_locale}{literal}/sdk.js#xfbml=1&version=v2.4";
           fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
         {/literal} 

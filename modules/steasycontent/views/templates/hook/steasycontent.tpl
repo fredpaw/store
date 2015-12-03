@@ -25,8 +25,8 @@
 <!-- MODULE st easy content -->
 {if $easy_content|@count > 0}
     {foreach $easy_content as $ec}
-        {if isset($ec.is_full_width) && $ec.is_full_width}<div id="easycontent_container_{$ec.id_st_easy_content}" class="easycontent_container full_container {if $ec.hide_on_mobile}hidden-xs{/if} {if !isset($is_inline_content)}block{/if}">{if !$ec.stretched}<div class="container">{/if}<div class="row"><div class="col-xs-12">{/if}
-            <aside id="easycontent_{$ec.id_st_easy_content}" class="easycontent_{$ec.id_st_easy_content} {if $ec.hide_on_mobile}hidden-xs{/if} {if !isset($is_inline_content) && (!isset($ec.is_full_width) || !$ec.is_full_width)}block{/if} easycontent {if isset($is_column) && $is_column} column_block {/if}">
+        {if isset($ec.is_full_width) && $ec.is_full_width}<div id="easycontent_container_{$ec.id_st_easy_content}" class="easycontent_container full_container {if $ec.hide_on_mobile == 1}hidden-xs{elseif $ec.hide_on_mobile == 2}visible-xs visible-xs-block{/if} {if !isset($is_inline_content)}block{/if}">{if !$ec.stretched}<div class="container">{/if}<div class="row"><div class="col-xs-12">{/if}
+            <aside id="easycontent_{$ec.id_st_easy_content}" class="easycontent_{$ec.id_st_easy_content} {if $ec.hide_on_mobile == 1}hidden-xs{elseif $ec.hide_on_mobile == 2}visible-xs visible-xs-block{/if} {if !isset($is_inline_content) && (!isset($ec.is_full_width) || !$ec.is_full_width)}block{/if} easycontent {if isset($is_column) && $is_column} column_block {/if} section">
                 {if $ec.title}
                 <h3 class="title_block">
                     {if $ec.url}<a href="{$ec.url|escape:html}" title="{$ec.title|escape:html:'UTF-8'}">{else}<span>{/if}

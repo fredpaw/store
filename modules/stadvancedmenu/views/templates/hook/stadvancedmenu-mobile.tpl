@@ -24,11 +24,7 @@
 *}
 {if isset($stmenu) && is_array($stmenu) && count($stmenu)}
 <!-- Mobile Menu -->
-<div id="stmobileadvancedmenu">
-	<a id="stmobileadvancedmenu_tri" href="javascript:;">
-	    <i class="icon-menu icon-1x"></i>
-	    <span>{l s="Menu" mod='stadvancedmenu'}</span>
-	</a>
+<div id="stmobileadvancedmenu" class="st-side-content">
 	{include file="./stmobilemenu-ul.tpl"}
 </div>
 <!--/ Mobile Menu -->

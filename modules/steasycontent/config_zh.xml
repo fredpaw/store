@@ -2,7 +2,7 @@
 <module>
 	<name>steasycontent</name>
 	<displayName><![CDATA[Custom Content Block]]></displayName>
-	<version><![CDATA[1.6.5]]></version>
+	<version><![CDATA[1.7.4]]></version>
 	<description><![CDATA[Create content blocks and place them everywhere in your shop.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

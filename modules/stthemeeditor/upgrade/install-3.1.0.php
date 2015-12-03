@@ -7,59 +7,59 @@ function upgrade_module_3_1_0($object)
 {
     $result = true;
     
-    $result &= Configuration::updateValue('STSN_OLD_PRICE_COLOR', '');
-    $result &= Configuration::updateValue('STSN_BODY_BG_COVER', 0);
-    $result &= Configuration::updateValue('STSN_TOP_SPACING', 0);
-    $result &= Configuration::updateValue('STSN_BOTTOM_SPACING', 0);
-    $result &= Configuration::updateValue('STSN_DISPLAY_PRO_CONDITION', 1);
-    $result &= Configuration::updateValue('STSN_DISPLAY_PRO_REFERENCE', 1);
-    $result &= Configuration::updateValue('STSN_TOPBAR_HEIGHT', 0);
-    $result &= Configuration::updateValue('STSN_MAIL_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_OLD_PRICE_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_BODY_BG_COVER', 0);
+    $result &= Configuration::updateGlobalValue('STSN_TOP_SPACING', 0);
+    $result &= Configuration::updateGlobalValue('STSN_BOTTOM_SPACING', 0);
+    $result &= Configuration::updateGlobalValue('STSN_DISPLAY_PRO_CONDITION', 1);
+    $result &= Configuration::updateGlobalValue('STSN_DISPLAY_PRO_REFERENCE', 1);
+    $result &= Configuration::updateGlobalValue('STSN_TOPBAR_HEIGHT', 0);
+    $result &= Configuration::updateGlobalValue('STSN_MAIL_COLOR', '');
 
-    $result &= Configuration::updateValue('STSN_ADV_MEGAMENU_POSITION', 0);
-    $result &= Configuration::updateValue('STSN_ADV_MENU_STICKY', 1);
-    $result &= Configuration::updateValue('STSN_ADV_ST_MENU_HEIGHT', 0);
-    $result &= Configuration::updateValue('STSN_ADV_FONT_MENU', 'Fjalla One');
-    $result &= Configuration::updateValue('STSN_ADV_FONT_MENU_SIZE', 0);
-    $result &= Configuration::updateValue('STSN_ADV_FONT_MENU_TRANS', 1);
-    $result &= Configuration::updateValue('STSN_ADV_MEGAMENU_WIDTH', 1);
-    $result &= Configuration::updateValue('STSN_ADV_MENU_BG_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_BOTTOM_BORDER', 0);
-    $result &= Configuration::updateValue('STSN_ADV_MENU_BOTTOM_BORDER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_BOTTOM_BORDER_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_HOVER_BG', '');
-    $result &= Configuration::updateValue('STSN_ADV_SECOND_MENU_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_SECOND_MENU_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_THIRD_MENU_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_THIRD_MENU_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_BG', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_HOVER_BG', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_ITEMS1_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_ITEMS2_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_ITEMS3_COLOR', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_ITEMS1_BG', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_ITEMS2_BG', '');
-    $result &= Configuration::updateValue('STSN_ADV_MENU_MOB_ITEMS3_BG', '');
-    $result &= Configuration::updateValue('STSN_C_MENU_COLOR', '');
-    $result &= Configuration::updateValue('STSN_C_MENU_BG_COLOR', '');
-    $result &= Configuration::updateValue('STSN_C_MENU_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_C_MENU_HOVER_BG', '');
-    $result &= Configuration::updateValue('STSN_C_MENU_BORDER_COLOR', '');
-    $result &= Configuration::updateValue('STSN_C_MENU_BORDER_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MEGAMENU_POSITION', 0);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_STICKY', 1);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_ST_MENU_HEIGHT', 0);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_FONT_MENU', 'Fjalla One');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_FONT_MENU_SIZE', 0);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_FONT_MENU_TRANS', 1);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MEGAMENU_WIDTH', 1);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_BG_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_BOTTOM_BORDER', 0);
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_BOTTOM_BORDER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_BOTTOM_BORDER_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_HOVER_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_SECOND_MENU_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_SECOND_MENU_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_THIRD_MENU_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_THIRD_MENU_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_HOVER_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_ITEMS1_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_ITEMS2_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_ITEMS3_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_ITEMS1_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_ITEMS2_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_ADV_MENU_MOB_ITEMS3_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_C_MENU_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_C_MENU_BG_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_C_MENU_HOVER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_C_MENU_HOVER_BG', '');
+    $result &= Configuration::updateGlobalValue('STSN_C_MENU_BORDER_COLOR', '');
+    $result &= Configuration::updateGlobalValue('STSN_C_MENU_BORDER_HOVER_COLOR', '');
 
-    $result &= Configuration::updateValue('STSN_HEADER_BOTTOM_SPACING', 10);
-    $result &= Configuration::updateValue('STSN_HEADER_PADDING', 0);
+    $result &= Configuration::updateGlobalValue('STSN_HEADER_BOTTOM_SPACING', 10);
+    $result &= Configuration::updateGlobalValue('STSN_HEADER_PADDING', 0);
     
     if(Configuration::get('STSN_CART_ICON'))
-        Configuration::updateValue('STSN_CART_ICON', 59452);
+        Configuration::updateGlobalValue('STSN_CART_ICON', 59452);
     if(Configuration::get('STSN_WISHLIST_ICON'))
-        Configuration::updateValue('STSN_WISHLIST_ICON', 59392);
+        Configuration::updateGlobalValue('STSN_WISHLIST_ICON', 59392);
     if(Configuration::get('STSN_COMPARE_ICON'))
-        Configuration::updateValue('STSN_COMPARE_ICON', 59400);
+        Configuration::updateGlobalValue('STSN_COMPARE_ICON', 59400);
 
     $_hooks = array(
         array('displayFullWidthTop','displayFullWidthTop','Full width top',1),

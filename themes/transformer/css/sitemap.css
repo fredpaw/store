@@ -11,6 +11,9 @@
     display: inline-block;
     font-family: "fontello";
     padding-right: 4px; }
+  #sitemap .sitemap_block li ul {
+    margin-top: 12px;
+    padding-left: 12px; }
 
 #listpage_content div.tree_top {
   padding: 5px 0 0 27px; }

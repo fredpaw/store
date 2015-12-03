@@ -37,7 +37,7 @@
 					<input type="hidden" name="orderby" value="position" />
 					<input type="hidden" name="orderway" value="desc" />
 					<input class="search_query form-control" type="text" id="search_query_top" name="search_query" placeholder="{if isset($sttheme.search_label) && $sttheme.search_label}{$sttheme.search_label}{else}{l s='Search' mod='blocksearch_mod'}{/if}" value="{$search_query|escape:'htmlall':'UTF-8'|stripslashes}" autocomplete="off" /><a href="javascript:;" title="{l s='Search' mod='blocksearch_mod'}" rel="nofollow" id="submit_searchbox" class="submit_searchbox icon_wrap"><i class="icon-search-1 icon-0x"></i><span class="icon_text">{l s='Search' mod='blocksearch_mod'}</span></a>
-					<div class="hidden" class="more_prod_string">{l s='More products »' mod='blocksearch_mod'}</div>
+					<div class="hidden" id="more_prod_string">{l s='More products »' mod='blocksearch_mod'}</div>
 				</div>
 			</form>
 			<script type="text/javascript">

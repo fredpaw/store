@@ -4,36 +4,34 @@ jQuery(function($){
         $(this).addClass('current');
         if($(this).find('.stadvancedmenu_sub').children().size())
         {
-		    var stmenu_sub_dom = $(this).find(".stadvancedmenu_sub");
+            var stmenu_sub_dom = $(this).find(".stadvancedmenu_sub");
             stmenu_sub_dom.stop();
             stadvancedmenu_down_timer = setTimeout(function(){
-                stmenu_sub_dom.fadeIn('fast',function(){
-    		      stmenu_sub_dom.css('overflow','visible');
-    		    });
+                if(typeof(st_adv_submemus_animation) !== 'undefined' && st_adv_submemus_animation)
+                    stmenu_sub_dom.slideDown('fast',function(){
+                      stmenu_sub_dom.css('overflow','visible');
+                    });
+                else
+                    stmenu_sub_dom.fadeIn('fast',function(){
+                      stmenu_sub_dom.css('overflow','visible');
+                    });
             },100);
         }
-	}
+    }
     function advancedMegaHoverOut(){ 
         clearTimeout(stadvancedmenu_down_timer);
         $(this).removeClass('current');
         $(this).find(".stadvancedmenu_sub").stop().hide(); 
     }
     $(".advanced_ml_level_0").hoverIntent({    
-		 sensitivity: 7, 
-		 interval: 0, 
-		 over: advancedMegaHoverOver,
-		 timeout: 0,
-		 out: advancedMegaHoverOut
-	});
-    
-    $('#stmobileadvancedmenu_tri').toggle(function() {
-        $(this).addClass('active');     
-        $('#stmobileadvancedmenu .mo_advanced_mu_level_0').addClass('show');        
-    }, function() {
-        $(this).removeClass('active');      
-        $('#stmobileadvancedmenu .mo_advanced_mu_level_0').removeClass('show'); 
+         sensitivity: 7, 
+         interval: 0, 
+         over: advancedMegaHoverOver,
+         timeout: 0,
+         out: advancedMegaHoverOut
     });
-    $('#stmobileadvancedmenu .mo_advanced_mu_level_0,#st_advanced_menu_column_mobile .mo_advanced_mu_level_0').accordion();
+    
+    $('#stmobileadvancedmenu .mo_advanced_mu_level_0,#st_advanced_menu_column_mobile .mo_advanced_mu_level_0').staccordion();
 
     if(('ontouchstart' in document.documentElement || window.navigator.msMaxTouchPoints))
     {
@@ -62,4 +60,8 @@ jQuery(function($){
                 $(this).removeClass('item_touched');
         });
     }
+    $("#stmobileadvancedmenu_tri").click(function(){
+        stSidebar('st_mobile_advanced_menu');
+        return false;
+    });
 });

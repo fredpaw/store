@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- Block search module TOP -->
+{if isset($search_main_menu)}<div id="search_block_main_menu"><div class="container">{/if}
 <div id="search_block_top" class="search_block_mod {if $quick_search_simple} quick_search_simple {/if} clearfix">
 	<form id="searchbox" method="get" action="{$link->getPageLink('search', true, null, null, false, null, true)|escape:'html':'UTF-8'}" >
 		<div class="searchbox_inner">
@@ -61,4 +62,5 @@
     //]]>
     </script>
 </div>
+{if isset($search_main_menu)}</div></div>{/if}
 <!-- /Block search module TOP -->

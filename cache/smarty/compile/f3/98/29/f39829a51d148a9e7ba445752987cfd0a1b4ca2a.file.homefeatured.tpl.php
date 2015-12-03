@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:50
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:08
          compiled from "D:\xampp\htdocs\store\modules\homefeatured_mod\homefeatured.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:14860564ebf0acca5b3-09291537%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1507565e951834c107-35904215%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'f39829a51d148a9e7ba445752987cfd0a1b4ca2a' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\homefeatured_mod\\homefeatured.tpl',
-      1 => 1447993229,
+      1 => 1449038238,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '14860564ebf0acca5b3-09291537',
+  'nocache_hash' => '1507565e951834c107-35904215',
   'function' => 
   array (
   ),
@@ -39,9 +39,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0ae3fca1_35773582',
+  'unifunc' => 'content_565e95184cfd82_64837258',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0ae3fca1_35773582')) {function content_564ebf0ae3fca1_35773582($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
+<?php if ($_valid && !is_callable('content_565e95184cfd82_64837258')) {function content_565e95184cfd82_64837258($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
 ?>
 
 <!-- MODULE Home Featured Products -->
@@ -103,6 +103,8 @@ $_smarty_tpl->tpl_vars['product']->_loop = true;
                             </span>
                             <?php }?>
                         <?php }?>
+                        <?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>"displayProductPriceBlock",'product'=>$_smarty_tpl->tpl_vars['product']->value,'type'=>"price"),$_smarty_tpl);?>
+
                     </div>
                 <?php } else { ?>
                     <!--<div style="height:21px;"></div>-->

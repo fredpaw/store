@@ -176,7 +176,7 @@ class StBlog extends Module
 	{
 		$this->name          = 'stblog';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.6.8';
+		$this->version       = '1.6.9';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
 		 $this->bootstrap	 = true;
@@ -202,7 +202,11 @@ class StBlog extends Module
             Configuration::updateValue('ST_BLOG_META_KEYWORDS', array('1'=>'Blog')) &&
             Configuration::updateValue('ST_BLOG_META_DESCRIPTION', array('1'=>'Blog')) &&
             Configuration::updateValue('ST_BLOG_CATE_LAYOUTS', 1) &&
-            Configuration::updateValue('ST_BLOG_CATE_ROW_BLOG_NBR', 2) &&
+            Configuration::updateValue('STSN_BLOG_GRID_PER_LG_0', 3) &&
+            Configuration::updateValue('STSN_BLOG_GRID_PER_MD_0', 2) &&
+            Configuration::updateValue('STSN_BLOG_GRID_PER_SM_0', 2) &&
+            Configuration::updateValue('STSN_BLOG_GRID_PER_XS_0', 2) &&
+            Configuration::updateValue('STSN_BLOG_GRID_PER_XXS_0', 1) &&
             Configuration::updateValue('ST_BLOG_COLUMN_HOMEPAGE', 2) &&
             Configuration::updateValue('ST_BLOG_COLUMN_CATEGORY', 2) &&
             Configuration::updateValue('ST_BLOG_COLUMN_ARTICLE', 2) &&

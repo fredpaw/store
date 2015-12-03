@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="rating_box">
+<div class="rating_box" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 	<span class="rating_box_inner">
 		{for $foo=1 to round($ratingAverage)}
 		    <i class="icon-star-1 icon-small light"></i>
@@ -33,5 +33,8 @@
 		    {/for}
 		{/if}
 	</span>
+	<meta itemprop="worstRating" content = "0" />
+	<meta itemprop="ratingValue" content = "{if isset($ratings.avg)}{$ratings.avg|round:1|escape:'html':'UTF-8'}{else}{$ratingAverage|round:1|escape:'html':'UTF-8'}{/if}" />
+	<meta itemprop="bestRating" content = "5" />
 	{if isset($commentNbr) && $commentNbr}<span class="comment_nbr">{$commentNbr} {if $commentNbr>1}{l s='Reviews' mod='stthemeeditor'}{else}{l s='Review' mod='stthemeeditor'}{/if}</span>{/if}
 </div>

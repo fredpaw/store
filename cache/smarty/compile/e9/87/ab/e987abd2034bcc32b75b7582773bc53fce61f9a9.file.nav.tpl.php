@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:52
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:09
          compiled from "D:\xampp\htdocs\store\modules\blockuserinfo_mod\views\templates\hook\nav.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:18479564ebf0c7a91a8-66862967%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:11731565e9519e067a3-35797754%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'e987abd2034bcc32b75b7582773bc53fce61f9a9' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\blockuserinfo_mod\\views\\templates\\hook\\nav.tpl',
-      1 => 1447993229,
+      1 => 1449038238,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '18479564ebf0c7a91a8-66862967',
+  'nocache_hash' => '11731565e9519e067a3-35797754',
   'function' => 
   array (
   ),
@@ -25,9 +25,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0c85a597_66972826',
+  'unifunc' => 'content_565e9519ee7c85_70331093',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0c85a597_66972826')) {function content_564ebf0c85a597_66972826($_smarty_tpl) {?><!-- Block user information module NAV  -->
+<?php if ($_valid && !is_callable('content_565e9519ee7c85_70331093')) {function content_565e9519ee7c85_70331093($_smarty_tpl) {?><!-- Block user information module NAV  -->
 <div id="header_user_info" class="header_user_info <?php if (isset($_smarty_tpl->tpl_vars['userinfo_position']->value)) {?><?php if ($_smarty_tpl->tpl_vars['userinfo_position']->value) {?> pull-left<?php } else { ?> pull-right<?php }?><?php }?> clearfix">
 	<?php if ($_smarty_tpl->tpl_vars['is_logged']->value) {?>
 		<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['welcome_logged'])&&trim($_smarty_tpl->tpl_vars['sttheme']->value['welcome_logged'])) {?><?php if ($_smarty_tpl->tpl_vars['sttheme']->value['welcome_link']) {?><a href="<?php echo $_smarty_tpl->tpl_vars['sttheme']->value['welcome_link'];?>

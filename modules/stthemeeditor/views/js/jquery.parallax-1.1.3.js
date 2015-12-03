@@ -14,9 +14,11 @@ http://www.gnu.org/licenses/gpl.html
 (function( $ ){
 	var $window = $(window);
 	var windowHeight = $window.height();
+	var windowWidth = $window.width();
 
 	$window.resize(function () {
 		windowHeight = $window.height();
+		windowWidth = $window.width();
 	});
 
 	$.fn.parallax = function(xpos, speedFactor, outerHeight) {
@@ -47,6 +49,8 @@ http://www.gnu.org/licenses/gpl.html
 		
 		// function to be called whenever the window is scrolled or resized
 		function update(){
+			if(windowWidth<768)
+				return false;
 			var pos = $window.scrollTop();				
 
 			$this.each(function(){

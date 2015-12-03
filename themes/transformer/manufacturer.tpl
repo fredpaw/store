@@ -40,9 +40,11 @@
 				<div class="hide_desc">
 					{$manufacturer->description}
 				</div>
-				<a href="#" class="lnk_more go" onclick="$(this).prev().slideDown('slow'); $(this).hide();$(this).prev().prev().hide(); return false;">
-					{l s='More'}
-				</a>
+				{if !empty($manufacturer->description)}
+					<a href="#" class="lnk_more go" onclick="$(this).prev().slideDown('slow'); $(this).hide();$(this).prev().prev().hide(); return false;">
+						{l s='More'}
+					</a>
+				{/if}
 			{else}
 				<div>
 					{$manufacturer->description}

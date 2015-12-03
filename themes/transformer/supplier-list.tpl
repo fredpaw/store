@@ -83,11 +83,11 @@
 		            	<div class="left-side col-xs-12 col-sm-3 col-md-3">
 							<!-- logo -->
 							<div class="logo">
-								{if $supplier.nb_products > 0}
+								{if isset($supplier.nb_products) && $supplier.nb_products > 0}
 									<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}" title="{$supplier.name|escape:'html':'UTF-8'}">
 								{/if}
 								<img src="{$img_sup_dir}{$supplier.image|escape:'html':'UTF-8'}-medium_default.jpg" class="replace-2x" alt="{$supplier.name|escape:'html':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
-								{if $supplier.nb_products > 0}
+								{if isset($supplier.nb_products) && $supplier.nb_products > 0}
 									</a>
 								{/if}
 							</div> <!-- .logo -->
@@ -95,11 +95,11 @@
 
 						<div class="middle-side col-xs-12 col-sm-9 col-md-9">
 							<h3 class="s_title_block">
-								{if $supplier.nb_products > 0}
+								{if isset($supplier.nb_products) && $supplier.nb_products > 0}
 									<a class="product-name" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">
 								{/if}
 								{$supplier.name|truncate:60:'...'|escape:'html':'UTF-8'}
-								{if $supplier.nb_products > 0}
+								{if isset($supplier.nb_products) && $supplier.nb_products > 0}
 									</a>
 								{/if}
 							</h3>
@@ -108,14 +108,14 @@
 							</div>
 
 			            	<div class="right-side-content">
-		                        {if $supplier.nb_products > 0}
+		                        {if isset($supplier.nb_products) && $supplier.nb_products > 0}
 		                            <a class="product-counter" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">
 		                        {/if}
-		                        {if $supplier.nb_products == 1}{l s='%d product' sprintf=$supplier.nb_products|intval}{else}{l s='%d products' sprintf=$supplier.nb_products|intval}{/if}
-		                    	{if $supplier.nb_products > 0}
+		                        {if isset($supplier.nb_products) && $supplier.nb_products == 1}{l s='%d product' sprintf=$supplier.nb_products|intval}{else}{l s='%d products' sprintf=$supplier.nb_products|intval}{/if}
+		                    	{if isset($supplier.nb_products) && $supplier.nb_products > 0}
 		                        	</a>
 		                    	{/if}
-			                    {if $supplier.nb_products > 0}
+			                    {if isset($supplier.nb_products) && $supplier.nb_products > 0}
 			                        <a class="go" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'html':'UTF-8'}">{l s='View products'}</a>
 			                    {/if}
 			                </div>

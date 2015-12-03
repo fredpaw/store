@@ -80,7 +80,7 @@
         </a>
     </li>
     <li class="pull-right">
-        <a href="{$base_dir}" title="{l s='Home'}" rel="nofollow">
+        <a href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Home'}" rel="nofollow">
             <i class="icon-home icon-mar-lr2"></i>{l s='Home'}
         </a>
     </li>

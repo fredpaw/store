@@ -42,6 +42,8 @@ class StEasyContent extends Module
     public static $location = array(
         36 => array('id' =>36 , 'name' => 'Full width top boxed', 'full_width' => 1),
         98 => array('id' =>98 , 'name' => 'Full width top', 'stretched' => 1, 'full_width' => 1),
+        86 => array('id' =>86 , 'name' => 'Full width top 2 boxed', 'full_width' => 1),
+        87 => array('id' =>87 , 'name' => 'Full width top 2', 'stretched' => 1, 'full_width' => 1),
         18 => array('id' =>18 , 'name' => 'Page top secondary'),
         38 => array('id' =>38 , 'name' => 'Top column'),
         1 => array('id' =>1 , 'name' => 'Homepage'),
@@ -158,7 +160,7 @@ class StEasyContent extends Module
 	{
 		$this->name          = 'steasycontent';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.6.5';
+		$this->version       = '1.7.4';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
@@ -186,6 +188,7 @@ class StEasyContent extends Module
 			$this->registerHook('displayHomeTop') &&
 			$this->registerHook('displayHomeBottom') &&
             $this->registerHook('displayFullWidthTop') && 
+            $this->registerHook('displayFullWidthTop2') && 
 			$this->registerHook('displayHomeSecondaryLeft') &&
 			$this->registerHook('displayHomeSecondaryRight') &&
             $this->registerHook('displayProductSecondaryColumn') &&
@@ -578,7 +581,7 @@ class StEasyContent extends Module
 						)
 					),
                     'desc' => '<div class="alert alert-info"><a href="javascript:;" onclick="$(\'#des_page_layout\').toggle();return false;">'.$this->l('Click here to see hook position').'</a>'.
-                        '<div id="des_page_layout" style="display:none;"><img src="'.$this->_path.'views/img/hook_into_hint.jpg" /></div></div>',
+                        '<div id="des_page_layout" style="display:none;"><img src="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" /></div></div>',
 				),
                 array(
 					'type' => 'select',
@@ -711,22 +714,24 @@ class StEasyContent extends Module
                     'default_value' => '',
                 ),
                 array(
-					'type' => 'switch',
-					'label' => $this->l('Hide on mobile:'),
+					'type' => 'radio',
+					'label' => $this->l('Hide:'),
 					'name' => 'hide_on_mobile',
                     'default_value' => 0,
-					'is_bool' => true,
 					'values' => array(
 						array(
-							'id' => 'hide_on_mobile_on',
-							'value' => 1,
-							'label' => $this->l('Yes')),
-						array(
-							'id' => 'hide_on_mobile_off',
+							'id' => 'hide_on_mobile_0',
 							'value' => 0,
 							'label' => $this->l('No')),
+						array(
+							'id' => 'hide_on_mobile_1',
+							'value' => 1,
+							'label' => $this->l('Hide on mobile (screen width < 768px)')),
+                        array(
+							'id' => 'hide_on_mobile_2',
+							'value' => 2,
+							'label' => $this->l('Hide on PC (screen width > 768px)')),
 					),
-                    'desc' => $this->l('Screen width less than 768px.'),
 				),
 				array(
 					'type' => 'switch',
@@ -1321,6 +1326,15 @@ class StEasyContent extends Module
             return false;
         
         if(!$this->_prepareHook(array(36,98),1))
+                return false;
+        return $this->display(__FILE__, 'steasycontent.tpl');
+    }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+        
+        if(!$this->_prepareHook(array(86,87),1))
                 return false;
         return $this->display(__FILE__, 'steasycontent.tpl');
     }

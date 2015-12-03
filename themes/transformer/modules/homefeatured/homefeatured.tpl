@@ -23,7 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($products) && $products}
-	{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane' for_f='hometab' id='homefeatured'}
+	{if Configuration::get('ST_COUNTDOWN_BLKFEATURED')}
+		{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane s_countdown_block' for_f='hometab' id='homefeatured'}
+	{else}
+		{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane' for_f='hometab' id='homefeatured'}
+	{/if}
 {else}
 <ul id="homefeatured" class="homefeatured tab-pane">
 	<li class="warning">{l s='No featured products at this time.' mod='homefeatured'}</li>

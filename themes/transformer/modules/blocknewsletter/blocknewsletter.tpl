@@ -52,6 +52,7 @@
 			</div>
 		</form>
 	</div>
+	{hook h="displayBlockNewsletterBottom" from='blocknewsletter'}
 </section>
 <!-- /Block Newsletter module-->
 {strip}

@@ -75,7 +75,7 @@
 	{* eu-legal *}
 	{hook h="displayBeforeShoppingCartBlock"}
 	{if !isset($empty) && !$PS_CATALOG_MODE}
-		<p class="color_666">{l s='Your shopping cart contains:'}
+		<p>{l s='Your shopping cart contains:'}
 			<span id="summary_products_quantity">{$productNumber} {if $productNumber == 1}{l s='product'}{else}{l s='products'}{/if}</span>
 		</p>
 	{/if}
@@ -112,13 +112,14 @@
 					{* Display the product line *}
 					{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 					{* Then the customized datas ones*}
-					{if isset($customizedDatas.$productId.$productAttributeId)}
+					{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
 						{foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
 							<tr
 								id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
 								class="product_customization_for_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}{if $odd} odd{else} even{/if} customization alternate_item {if $product@last && $customization@last && !count($gift_products)}last_item{/if}">
 								<td></td>
-								<td colspan="3">
+								<td colspan="3" data-title="{l s='Description'}">
+									<div class="mobile_table_content">
 									{foreach $customization.datas as $type => $custom_data}
 										{if $type == $CUSTOMIZE_FILE}
 											<div class="customizationUploaded">
@@ -143,46 +144,45 @@
 											</ul>
 										{/if}
 									{/foreach}
+									</div>
 								</td>
-								<td class="cart_quantity" colspan="1">
+								<td class="cart_quantity text-center" colspan="1" data-title="{l s='Qty'}">
+									<div class="mobile_table_content">
 									{if isset($cannotModify) AND $cannotModify == 1}
 										<span>{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
 									{else}
 										<input type="hidden" value="{$customization.quantity}" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}_hidden"/>
-										<input type="text" value="{$customization.quantity}" class="cart_quantity_input form-control grey" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"/>
 										<div class="cart_quantity_button clearfix">
 											{if $product.minimal_quantity < ($customization.quantity -$quantityDisplayed) OR $product.minimal_quantity <= 1}
 												<a
 													id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
-													class="cart_quantity_down btn btn-default button-minus"
+													class="cart_quantity_down"
 													href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 													rel="nofollow"
-													title="{l s='Subtract'}">
-													<span><i class="icon-minus"></i></span>
-												</a>
+													title="{l s='Subtract'}">-</a>
 											{else}
 												<a
 													id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}"
-													class="cart_quantity_down btn btn-default button-minus disabled"
+													class="cart_quantity_down disabled"
 													href="#"
-													title="{l s='Subtract'}">
-													<span><i class="icon-minus"></i></span>
-												</a>
+													title="{l s='Subtract'}">-</a>
 											{/if}
+											<input type="text" value="{$customization.quantity}" class="cart_quantity_input form-control grey" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"/>
 											<a
 												id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
-												class="cart_quantity_up btn btn-default button-plus"
+												class="cart_quantity_up"
 												href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 												rel="nofollow"
-												title="{l s='Add'}">
-												<span><i class="icon-plus"></i></span>
-											</a>
+												title="{l s='Add'}">+</a>
 										</div>
 									{/if}
+									</div>
 								</td>
-								<td class="cart_delete text-center">
+								<td class="cart_delete text-center" data-title="{l s='Delete'}">
+									<div class="mobile_table_content">
 									{if isset($cannotModify) AND $cannotModify == 1}
 									{else}
+										<div>
 										<a
 											id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
 											class="cart_quantity_delete"
@@ -191,7 +191,9 @@
 											title="{l s='Delete'}">
 											<i class="icon-cancel icon-small"></i>
 										</a>
+										</div>
 									{/if}
+									</div>
 								</td>
 								<td>
 								</td>
@@ -218,7 +220,7 @@
 			{if sizeof($discounts)}
 				<tbody>
 					{foreach $discounts as $discount}
-					{if (float)$discount.value_real == 0}
+					{if ((float)$discount.value_real == 0 && $discount.free_shipping != 1) || ((float)$discount.value_real == 0 && $discount.code == '')}
 						{continue}
 					{/if}
 						<tr class="cart_discount {if $discount@last}last_item{elseif $discount@first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
@@ -280,23 +282,23 @@
 				{if $use_taxes}
 					{if $priceDisplay}
 						<tr class="cart_total_price">
-							<td class="color_666">{if $display_tax_label}{l s='Total products (tax excl.)'}{else}{l s='Total products'}{/if}</td>
+							<td>{if $display_tax_label}{l s='Total products (tax excl.)'}{else}{l s='Total products'}{/if}</td>
 							<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 						</tr>
 					{else}
 						<tr class="cart_total_price">
-							<td class="color_666">{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</td>
+							<td>{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</td>
 							<td class="price" id="total_product">{displayPrice price=$total_products_wt}</td>
 						</tr>
 					{/if}
 				{else}
 					<tr class="cart_total_price">
-						<td class="color_666">{l s='Total products'}</td>
+						<td>{l s='Total products'}</td>
 						<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 					</tr>
 				{/if}
 				<tr{if $total_wrapping == 0} style="display: none;"{/if}>
-					<td class="color_666">
+					<td>
 						{if $use_taxes}
 							{if $display_tax_label}{l s='Total gift wrapping (tax incl.)'}{else}{l s='Total gift-wrapping cost'}{/if}
 						{else}
@@ -315,33 +317,33 @@
 						{/if}
 					</td>
 				</tr>
-				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+				{if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart) && $free_ship}
 					<tr class="cart_total_delivery{if !$opc && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
-						<td class="color_666">{l s='Total shipping'}</td>
-						<td class="price" id="total_shipping">{l s='Free Shipping!'}</td>
+						<td>{l s='Total shipping'}</td>
+						<td class="price" id="total_shipping">{l s='Free shipping!'}</td>
 					</tr>
 				{else}
 					{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
 						{if $priceDisplay}
 							<tr class="cart_total_delivery" {if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-								<td class="color_666">{if $display_tax_label}{l s='Total shipping (tax excl.)'}{else}{l s='Total shipping'}{/if}</td>
+								<td>{if $display_tax_label}{l s='Total shipping (tax excl.)'}{else}{l s='Total shipping'}{/if}</td>
 								<td class="price" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</td>
 							</tr>
 						{else}
 							<tr class="cart_total_delivery"{if $total_shipping <= 0} style="display:none;"{/if}>
-								<td class="color_666">{if $display_tax_label}{l s='Total shipping (tax incl.)'}{else}{l s='Total shipping'}{/if}</td>
+								<td>{if $display_tax_label}{l s='Total shipping (tax incl.)'}{else}{l s='Total shipping'}{/if}</td>
 								<td class="price" id="total_shipping" >{displayPrice price=$total_shipping}</td>
 							</tr>
 						{/if}
 					{else}
 						<tr class="cart_total_delivery"{if $total_shipping_tax_exc <= 0} style="display:none;"{/if}>
-							<td class="color_666">{l s='Total shipping'}</td>
+							<td>{l s='Total shipping'}</td>
 							<td class="price" id="total_shipping" >{displayPrice price=$total_shipping_tax_exc}</td>
 						</tr>
 					{/if}
 				{/if}
 				<tr class="cart_total_voucher" {if $total_discounts == 0}style="display:none"{/if}>
-					<td class="color_666">
+					<td>
 						{if $display_tax_label}
 							{if $use_taxes && $priceDisplay == 0}
 								{l s='Total vouchers (tax incl.)'}
@@ -364,18 +366,21 @@
 				{if $use_taxes && $show_taxes && $total_tax != 0 }
 					{if $priceDisplay != 0}
 					<tr class="cart_total_price">
-						<td class="color_666">{if $display_tax_label}{l s='Total (tax excl.)'}{else}{l s='Total'}{/if}</td>
+						<td>{if $display_tax_label}{l s='Total (tax excl.)'}{else}{l s='Total'}{/if}</td>
 						<td class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
 					</tr>
 					{/if}
 					<tr class="cart_total_tax">
-						<td class="color_666">{l s='Tax'}</td>
+						<td>{l s='Tax'}</td>
 						<td class="price" id="total_tax">{displayPrice price=$total_tax}</td>
 					</tr>
 				{/if}
 				<tr class="cart_total_price">
-					<td class="total_price_container color_666">
+					<td class="total_price_container">
 						<span>{l s='Total'}</span>
+						<div class="hookDisplayProductPriceBlock-price">
+                            {hook h="displayCartTotalPriceLabel"}
+                        </div>
 					</td>
 					{if $use_taxes}
 						<td class="price" id="total_price_container">
@@ -417,7 +422,7 @@
 		{$addresses_style.alias = 'address_title'}
 	{/if}
 
-	{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
+	{if ((isset($advanced_payment_api) && !$advanced_payment_api) || !isset($advanced_payment_api)) && ((!empty($delivery_option) && (!isset($isVirtualCart) || !$isVirtualCart)) OR $delivery->id || $invoice->id) && !$opc}
 		<div class="order_delivery clearfix row">
 			{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 				{if $delivery->id}
@@ -496,16 +501,11 @@
 			{l s='Continue shopping'}
 		</a>
 	</p>
-	{if !empty($HOOK_SHOPPING_CART_EXTRA)}
-		<div class="cart_navigation_extra">
-			<div id="HOOK_SHOPPING_CART_EXTRA">{$HOOK_SHOPPING_CART_EXTRA}</div>
-		</div>
-	{/if}
+	<div class="clear"></div>
+	<div class="cart_navigation_extra">
+		<div id="HOOK_SHOPPING_CART_EXTRA">{if isset($HOOK_SHOPPING_CART_EXTRA)}{$HOOK_SHOPPING_CART_EXTRA}{/if}</div>
+	</div>
 {strip}
-{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRate=$currencyRate|floatval}
-{addJsDef currencyFormat=$currencyFormat|intval}
-{addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef deliveryAddress=$cart->id_address_delivery|intval}
 {addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
 {addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}

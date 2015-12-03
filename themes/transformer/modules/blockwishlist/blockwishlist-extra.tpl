@@ -22,23 +22,20 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<div class="buttons_bottom_block no-print">
 {if $wishlists|count == 1}
-<p class="buttons_bottom_block no-print">
 	<a id="wishlist_button_nopop" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), $('#quantity_wanted').val(), this); return false;" rel="nofollow" data-pid="{$id_product|intval}"  title="{l s='Add to my wishlist' mod='blockwishlist'}" class="addToWishlist wishlistProd_{$id_product|intval}"><i class="icon-heart icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to wishlist' mod='blockwishlist'}</span></a>
-</p>
 {else}
 	{foreach name=wl from=$wishlists item=wishlist}
 		{if $smarty.foreach.wl.first}
-			<p class="buttons_bottom_block no-print">
-				<a class="addToWishlist wishlist_popover" rel="nofollow" data-pid="{$id_product|intval}" tabindex="0" data-toggle="popover" data-trigger="focus" title="Wishlist" data-placement="bottom" id="wishlist_button"><i class="icon-heart icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to wishlist' mod='blockwishlist'}</span></a>
-			</p>
+			<a class="addToWishlist wishlist_popover wishlistProd_{$id_product|intval}" id="wishlist_button" tabindex="0" data-pid="{$id_product|intval}" data-toggle="popover" data-trigger="focus" title="{l s='Wishlist' mod='blockwishlist'}" data-placement="bottom"><i class="icon-heart icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to wishlist' mod='blockwishlist'}</span></a>
 				<div class="hidden" id="popover-content">
 					<table class="table" border="1">
 						<tbody>
 		{/if}
 							<tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), $('#quantity_wanted').val(), document.getElementById('wishlist_button'), '{$wishlist.id_wishlist}');">
 								<td>
-									{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
+									{l s='Add to %s' sprintf=[$wishlist.name] mod='blockwishlist'}
 								</td>
 							</tr>
 		{if $smarty.foreach.wl.last}
@@ -47,10 +44,9 @@
 			</div>
 		{/if}
 	{foreachelse}
-		<p class="buttons_bottom_block no-print">
-			<a href="#" id="wishlist_button_nopop" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), $('#quantity_wanted').val()); return false;" rel="nofollow" data-pid="{$id_product|intval}"  title="{l s='Add to my wishlist' mod='blockwishlist'}" class="addToWishlist wishlistProd_{$id_product|intval}">
-				<i class="icon-heart icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to wishlist' mod='blockwishlist'}</span>
-			</a>
-		</p>
+		<a href="#" id="wishlist_button_nopop" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), $('#quantity_wanted').val(), this); return false;" rel="nofollow" data-pid="{$id_product|intval}"  title="{l s='Add to my wishlist' mod='blockwishlist'}" class="addToWishlist wishlistProd_{$id_product|intval}">
+			<i class="icon-heart icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to wishlist' mod='blockwishlist'}</span>
+		</a>
 	{/foreach}
 {/if}
+</div>

@@ -14,6 +14,8 @@ class FrontController extends FrontControllerCore
             'HOOK_FOOTER_BOTTOM_RIGHT' => Hook::exec('displayFooterBottomRight'),
             'HOOK_MOBILE_BAR'          => Hook::exec('displayMobileBar'),
             'HOOK_MOBILE_MENU'         => Hook::exec('displayMobileMenu'),
+            'HOOK_MOBILE_CENTER'       => Hook::exec('displayMobileCenter'),
+            'HOOK_SIDE_BAR'            => Hook::exec('displaySideBar'),
             'isIntalledBlockWishlist'  => Module::isInstalled('blockwishlist'),
         ));
         

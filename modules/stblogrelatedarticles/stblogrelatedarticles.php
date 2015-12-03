@@ -99,7 +99,7 @@ class StBlogRelatedArticles extends Module
         
         Shop::addTableAssociation('st_blog', array('type' => 'shop'));
 
-		$this->displayName = $this->l('Blog Module - Related articels');
+		$this->displayName = $this->l('Blog Module - Related articles');
 		$this->description = $this->l('Add related articles on blog artice pages.');
 	}
 
@@ -646,7 +646,7 @@ class StBlogRelatedArticles extends Module
         if (!$id_st_blog && !$id_product)
             return false;
         
-        $order_by = 'id_st_bog';
+        $order_by = 'id_st_blog';
         $order_way = 'DESC';
         $soby = (int)Configuration::get($this->_prefix_st.'SOBY'.$ext);
         switch($soby)
@@ -676,7 +676,7 @@ class StBlogRelatedArticles extends Module
                 $order_way = 'DESC';
             break;
             case 7:
-                $order_by = 'id_st_bog';
+                $order_by = 'id_st_blog';
                 $order_way = 'ASC';
             break;
             case 8:
@@ -831,6 +831,14 @@ class StBlogRelatedArticles extends Module
                 return false;
         if(!$this->_prepareHook(0))
             return false;
+        $this->smarty->assign(array(
+            'column_slider'         => false,
+            'pro_per_lg'       => (int)Configuration::get('STSN_BRA_PRO_PER_LG'),
+            'pro_per_md'       => (int)Configuration::get('STSN_BRA_PRO_PER_MD'),
+            'pro_per_sm'       => (int)Configuration::get('STSN_BRA_PRO_PER_SM'),
+            'pro_per_xs'       => (int)Configuration::get('STSN_BRA_PRO_PER_XS'),
+            'pro_per_xxs'      => (int)Configuration::get('STSN_BRA_PRO_PER_XXS'),
+        ));
 		return $this->display(__FILE__, 'stblogrelatedarticles.tpl');
     }
     public function hookDisplayFooterProduct($params)

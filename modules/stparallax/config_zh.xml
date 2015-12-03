@@ -2,7 +2,7 @@
 <module>
 	<name>stparallax</name>
 	<displayName><![CDATA[Parallax block]]></displayName>
-	<version><![CDATA[1.1.6]]></version>
+	<version><![CDATA[1.1.7]]></version>
 	<description><![CDATA[This module allows you to create a Parallax effect.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

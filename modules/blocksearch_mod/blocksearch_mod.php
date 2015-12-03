@@ -36,14 +36,15 @@ class BlockSearch_mod extends Module
     public  $hooks = array(
         array('id' =>'0-1', 'hook' => 'displayNav'),
         array('id' =>'2',   'hook' => 'displayTop'),
-        array('id' =>'3',   'hook' => 'displayTopLeft')
+        array('id' =>'3',   'hook' => 'displayTopLeft'),
+        array('id' =>'4',   'hook' => 'displayTopSecondary')
     );
 
 	public function __construct()
 	{
 		$this->name = 'blocksearch_mod';
 		$this->tab = 'search_filter';
-		$this->version = '1.5.3';
+		$this->version = '1.5.6';
 		$this->author = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
 		$this->bootstrap     = true;
@@ -60,7 +61,7 @@ class BlockSearch_mod extends Module
 		if (!parent::install() 
 			|| !$this->registerHook('displayTop') 
 			|| !$this->registerHook('displayHeader') 
-			|| !$this->registerHook('displayMobileBar') 
+			|| !$this->registerHook('displaySideBar') 
 			|| !Configuration::updateValue('ST_QUICK_SEARCH_SIMPLE', 0)
 			|| !Configuration::updateValue('ST_QUICK_SEARCH_POSITION', 0))
 				return false;
@@ -181,6 +182,10 @@ class BlockSearch_mod extends Module
                             'id' => 'quick_search_position_top_left',
                             'value' => 3,
                             'label' => $this->l('Left side of the top')),
+                        array(
+                            'id' => 'quick_search_position_main_menu',
+                            'value' => 4,
+                            'label' => $this->l('Main menu')),
                     ),
                     'validation' => 'isUnsignedInt',
                 ),
@@ -269,6 +274,11 @@ class BlockSearch_mod extends Module
 		return $this->display(__FILE__, 'blocksearch.tpl', Tools::getValue('search_query') ? null : $this->getCacheId());
 	}
 
+    public function hookDisplaySearch($params)
+    {
+        return $this->hookRightColumn($params);
+    }
+    
 	public function hookDisplayTop($params)
 	{
 		$key = $this->getCacheId($this->name.((!isset($params['hook_mobile']) || !$params['hook_mobile']) ? '' : '-hook_mobile'));
@@ -285,6 +295,12 @@ class BlockSearch_mod extends Module
 		Media::addJsDef(array('blocksearch_type' => 'top'));
 		return $this->display(__FILE__, 'blocksearch-top.tpl', Tools::getValue('search_query') ? null : $key);
 	}
+
+    public function hookDisplayTopSecondary($params)
+    {
+        $this->smarty->assign('search_main_menu', true);
+        return $this->hookDisplayTop($params);
+    }
 
 	public function hookDisplayTopLeft($params)
 	{
@@ -306,6 +322,10 @@ class BlockSearch_mod extends Module
 	}
 	
     public function hookDisplayMobileBar($params)
+    {
+        return $this->display(__FILE__, 'blocksearch-mobilebar-tri.tpl');
+    }
+    public function hookDisplaySideBar($params)
     {
 		$this->smarty->assign(array(
 			'search_query' => (string)Tools::getValue('search_query'),

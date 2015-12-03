@@ -18,11 +18,6 @@ function upgrade_module_1_3_7($object)
     $result &= Configuration::updateValue('BRANDS_SLIDER_BG_COLOR', '');
     $result &= Configuration::updateValue('BRANDS_SLIDER_SPEED', 0);
     $result &= Configuration::updateValue('BRANDS_SLIDER_TITLE_COLOR', '');
-    $result &= Configuration::updateValue('BRANDS_SLIDER_TITLE_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('BRANDS_SLIDER_TEXT_COLOR', '');
-    $result &= Configuration::updateValue('BRANDS_SLIDER_PRICE_COLOR', '');
-    $result &= Configuration::updateValue('BRANDS_SLIDER_LINK_HOVER_COLOR', '');
-    $result &= Configuration::updateValue('BRANDS_SLIDER_GRID_HOVER_BG', '');
     $result &= Configuration::updateValue('BRANDS_SLIDER_DIRECTION_COLOR', '');
     $result &= Configuration::updateValue('BRANDS_SLIDER_DIRECTION_BG', '');
     $result &= Configuration::updateValue('BRANDS_SLIDER_DIRECTION_HOVER_BG', '');

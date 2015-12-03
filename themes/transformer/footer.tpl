@@ -22,10 +22,11 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{assign var='slide_lr_column' value=Configuration::get('STSN_SLIDE_LR_COLUMN')}
 {if !isset($content_only) || !$content_only}
 					</div><!-- #center_column -->
 					{if isset($right_column_size) && !empty($right_column_size)}
-						<div id="right_column" class="col-xxs-8 col-xs-6 col-sm-{$right_column_size|intval} column">{$HOOK_RIGHT_COLUMN}</div>
+						<div id="right_column" class="{if $slide_lr_column} col-xxs-8 col-xs-6{else} col-xs-12{/if} col-sm-{$right_column_size|intval} column">{$HOOK_RIGHT_COLUMN}</div>
 					{/if}
 					</div><!-- .row -->
 					{capture name="displayBottomColumn"}{hook h="displayBottomColumn"}{/capture}
@@ -115,7 +116,7 @@
 			</footer><!-- #footer -->
 			{if isset($sttheme.boxstyle) && $sttheme.boxstyle==2}</div>{/if}<!-- #page_wrapper -->
 		</div><!-- #page -->
-
+  
 		{capture name="rightbar_strightbarcart"}
 		    {hook h='displayAnywhere' mod='strightbarcart' caller='strightbarcart'} 
 		{/capture}
@@ -139,14 +140,13 @@
 		{/if}
 		{/capture}
 		{assign var="rightbar_i" value=0}
-		{if trim($smarty.capture.rightbar_strightbarcart)}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 		{if trim($smarty.capture.rightbar_stcompare)}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 		{if trim($smarty.capture.rightbar_productlinknav_prev)}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 		{if trim($smarty.capture.rightbar_productlinknav_next)}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 		{if trim($smarty.capture.rightbar_bloglinknav_prev)}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 		{if trim($smarty.capture.rightbar_bloglinknav_next)}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
-		{if isset($left_column_size) && $left_column_size}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
-		{if isset($right_column_size) && $right_column_size}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
+		{if $slide_lr_column && isset($left_column_size) && $left_column_size}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
+		{if $slide_lr_column && isset($right_column_size) && $right_column_size}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 		{if (!isset($sttheme.scroll_to_top) || (isset($sttheme.scroll_to_top) && $sttheme.scroll_to_top))}{assign var="rightbar_i" value=$rightbar_i+1}{/if}
 
 		<div id="rightbar" class="{if !$rightbar_i} hidden {/if}"> 
@@ -157,12 +157,12 @@
 		    {$smarty.capture.rightbar_productlinknav_next}
 		    {$smarty.capture.rightbar_bloglinknav_prev}
 		    {$smarty.capture.rightbar_bloglinknav_next}
-		    {if isset($left_column_size) && !empty($left_column_size)}
+		    {if $slide_lr_column && isset($left_column_size) && !empty($left_column_size)}
 		    <div id="switch_left_column_wrap" class="visible-xs">
 		        <a href="javascript:;" id="switch_left_column" data-column="left_column" class="icon_wrap" title="{l s="Display left column"}"><i class="icon-right-open-1 icon-0x"></i><span class="icon_text">{l s="Left"}</span></a>   
 		    </div>
 		    {/if}
-		    {if isset($right_column_size) && !empty($right_column_size)}
+		    {if $slide_lr_column && isset($right_column_size) && !empty($right_column_size)}
 		    <div id="switch_right_column_wrap" class="visible-xs">
 		        <a href="javascript:;" id="switch_right_column" data-column="right_column" class="icon_wrap" title="{l s="Display right column"}"><i class="icon-left-open-1 icon-0x"></i><span class="icon_text">{l s="Right"}</span></a>   
 		    </div>
@@ -177,6 +177,10 @@
 		{if $page_name == 'index'}
 		{hook h='displayAnywhere' mod='stnewsletter' caller='stnewsletter'}
 		{/if}
+		<div class="st-side">
+			{if isset($HOOK_SIDE_BAR) && $HOOK_SIDE_BAR|trim}{$HOOK_SIDE_BAR}{else}{hook h='displaySideBar'}{/if}
+		</div>
+		<div id="st-side-overlay"></div>
 {/if}
 {if $comparator_max_item}
     <div id="layer_compare" class="layer_box">

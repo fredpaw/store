@@ -101,7 +101,6 @@ class StblogSearchDefaultModuleFrontController extends ModuleFrontController
 			    'path' => $this->getPath(),
                 'imageSize' => StBlogImageClass::$imageTypeDef,
                 'module_dir' => _PS_MODULE_DIR_,
-                'cate_row_blog_nbr' => Configuration::get('ST_BLOG_CATE_ROW_BLOG_NBR'),
                 'display_viewcount' => Configuration::get('ST_BLOG_DISPLAY_VIEWCOUNT'),
                 'requestPage'    => $requestPage,
                 //

@@ -1,5 +1,5 @@
 {if isset($slide['slide']) && count($slide['slide'])}
-{if $slide['location']==14}<div class="iosslider_wide_container wide_container iosslider_wide_container {if $slide['hide_on_mobile']} hidden-xs {/if} "><div class="container">{/if}
+{if $slide['location']==14 || $slide['location']==23}<div class="iosslider_wide_container wide_container iosslider_wide_container {if $slide['hide_on_mobile']} hidden-xs {/if} "><div class="container">{/if}
 <div id="iosSlider_{$slide.id_st_iosslider_group}" class="iosSlider fullwidth_default mar_b2 {if $slide['location']!=14 && $slide['hide_on_mobile']} hidden-xs {/if} ">
     <div class="slider clearfix">
         {assign var="selectorsBlock" value=""}
@@ -41,7 +41,7 @@
     <div class="css3loader css3loader-3"></div>
 </div>
 
-{if $slide['location']==14}</div></div>{/if}
+{if $slide['location']==14 || $slide['location']==23}</div></div>{/if}
 <script type="text/javascript">
 //<![CDATA[
 {literal}

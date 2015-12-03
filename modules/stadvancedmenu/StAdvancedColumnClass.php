@@ -46,7 +46,7 @@ class StAdvancedColumnClass extends ObjectModel
             'width'       => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
             'position'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'active'          => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'hide_on_mobile'  => array('type' => self::TYPE_INT, 'validate' => 'isBool'),
+            'hide_on_mobile'  => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'title'           => array('type' => self::TYPE_STRING, 'size' => 255, 'validate' => 'isGenericName'),
 		)
 	);

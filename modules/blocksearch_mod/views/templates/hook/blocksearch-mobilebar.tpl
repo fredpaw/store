@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- Block search module TOP -->
-<div id="search_block_mobile_bar" class="clearfix">
+<div id="search_block_mobile_bar" class="st-side-content clearfix">
 	<form id="searchbox_mobile_bar" method="get" action="{$link->getPageLink('search',true)|escape:'html':'UTF-8'}" >
         <div class="searchbox_inner">
     		<input type="hidden" name="controller" value="search" />

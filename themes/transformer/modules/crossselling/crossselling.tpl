@@ -28,6 +28,7 @@
 {assign var='new_sticker' value=Configuration::get('STSN_NEW_STYLE')}
 {assign var='sale_sticker' value=Configuration::get('STSN_SALE_STYLE')}
 {assign var='st_display_add_to_cart' value=Configuration::get('STSN_DISPLAY_ADD_TO_CART')}
+{assign var='use_view_more_instead' value=Configuration::get('STSN_USE_VIEW_MORE_INSTEAD')}
 {assign var='flyout_buttons' value=Configuration::get('STSN_FLYOUT_BUTTONS')}
 <section id="crossselling-products_block_center" class="block products_block section">
     <h4 class="title_block">
@@ -48,15 +49,23 @@
                         {capture name="new_on_sale"}
                             {if $new_sticker!=2 && isset($product.new) && $product.new == 1}<span class="new"><i>{l s='New' mod='crossselling'}</i></span>{/if}{if $sale_sticker!=2 && isset($product.on_sale) && $product.on_sale && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}<span class="on_sale"><i>{l s='Sale' mod='crossselling'}</i></span>{/if}
                         {/capture}
+                        {assign var="fly_i" value=0}
                         {capture name="pro_a_cart"}
-                            {if !$PS_CATALOG_MODE && ($product.allow_oosp || $product.quantity > 0)}
-                                <a class="ajax_add_to_cart_button btn btn-default btn_primary" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart' mod='crossselling'}" data-id-product="{$product.id_product|intval}"><div><i class="icon-basket icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to cart' mod='crossselling'}</span></div></a>
+                            {if isset($use_view_more_instead) && $use_view_more_instead==1}
+                                 <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View more' mod='crossselling'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more' mod='crossselling'}</span></div></a>
+                            {else}
+                                {if !$PS_CATALOG_MODE && ($product.allow_oosp || $product.quantity > 0)}
+                                    <a class="ajax_add_to_cart_button btn btn-default btn_primary" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart' mod='crossselling'}" data-id-product="{$product.id_product|intval}"><div><i class="icon-basket icon-0x icon_btn icon-mar-lr2"></i><span>{l s='Add to cart' mod='crossselling'}</span></div></a>
+                                    {if isset($use_view_more_instead) && $use_view_more_instead==2}
+                                        <a class="view_button btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View more' mod='crossselling'}" rel="nofollow"><div><i class="icon-eye-2 icon-0x icon_btn icon-mar-lr2"></i><span>{l s='View more' mod='crossselling'}</span></div></a>
+                                        {if !$st_display_add_to_cart}{assign var="fly_i" value=$fly_i+1}{/if}
+                                    {/if}
+                                {/if}
                             {/if}
                         {/capture}
                         <div class="pro_outer_box">
-                        <div class="pro_first_box" itemprop="isRelatedTo" itemscope itemtype="http://schema.org/Product">
+                        <div class="pro_first_box" itemprop="isRelatedTo" itemscope itemtype="https://schema.org/Product">
                             <a href="{$product.link|escape:'html':'UTF-8'}" title="{$product.name|escape:html:'UTF-8'}" class="product_image"><img itemprop="image" src="{$product.image}" alt="{$product.name|escape:html:'UTF-8'}" class="replace-2x img-responsive front-image" width="{$smarty.capture.home_default_width}" height="{$smarty.capture.home_default_height}" />{$smarty.capture.new_on_sale}</a>
-                            {assign var="fly_i" value=0}
                             {if !$st_display_add_to_cart && trim($smarty.capture.pro_a_cart)}{assign var="fly_i" value=$fly_i+1}{/if}
                             <div class="hover_fly {if $flyout_buttons}hover_fly_static{/if} fly_{$fly_i} clearfix">
                                 {if !$st_display_add_to_cart}{$smarty.capture.pro_a_cart}{/if}

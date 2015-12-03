@@ -78,5 +78,11 @@ class StAdvancedProductClass
 
         return Db::getInstance()->executeS($sql);
     }
+    public static function deleteByIdProduct($id_product = 0)
+    {
+        if (!$id_product)
+            return false;
+        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'st_advanced_menu_product` WHERE `id_product` = '.(int)$id_product);
+    }
 
 }

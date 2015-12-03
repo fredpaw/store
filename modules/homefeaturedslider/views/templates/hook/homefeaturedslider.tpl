@@ -25,7 +25,7 @@
 
 <!-- MODULE Featured Products slider -->
 {capture name="column_slider"}{if isset($column_slider) && $column_slider}_column{/if}{/capture}
-<div id="featured_products_sldier_block_center_container_{$hook_hash}" class="featured_products_sldier_block_center_container {if $hide_mob} hidden-xs {/if} block">
+<div id="featured_products_sldier_block_center_container_{$hook_hash}" class="featured_products_sldier_block_center_container {if $hide_mob} hidden-xs {/if}{if $countdown_on} s_countdown_block {/if} block">
 {if isset($homeverybottom) && $homeverybottom}<div class="wide_container"><div class="container">{/if}
 <section id="featured_products_sldier_block_center_{$hook_hash}{$smarty.capture.column_slider}" class="featured_products_sldier_block_center{$smarty.capture.column_slider} products_block section {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">
 	<h4 class="title_block mar_b1"><span>{l s='Featured Products' mod='homefeaturedslider'}</span></h4>

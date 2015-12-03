@@ -43,6 +43,7 @@
                     {/if}
                     </span>
                     {if isset($product.reduction) && $product.reduction}<span class="old_price">{convertPrice price=$product.price_without_reduction}</span>{/if}
+                    {hook h="displayProductPriceBlock" product=$product type="price"}
                 {/if}
 			</div>
             </div>

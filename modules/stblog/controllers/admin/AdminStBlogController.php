@@ -256,7 +256,11 @@ class AdminStBlogController extends ModuleAdminController
                 $this->errors[] = Tools::displayError('No permission to write for folder['._PS_ST_BLOG_IMG_DIR_.'].');
             }
             else
+            {
+                Tools::clearSmartyCache();
+    			Media::clearCache();
                 return $object;
+            }
 		}
 		/* Change object statuts (active, inactive) */
 		elseif (Tools::isSubmit('statusst_blog') && Tools::getValue($this->identifier))
@@ -311,7 +315,11 @@ class AdminStBlogController extends ModuleAdminController
 						{
 							$object->deleted = 1;
 							if ($object->update())
-								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').$identifier);
+                            {
+                                Tools::clearSmartyCache();
+                                Media::clearCache();
+                                Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').$identifier);
+                            }
 						}
 						elseif ($object->delete())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').$identifier);
@@ -527,7 +535,7 @@ class AdminStBlogController extends ModuleAdminController
 					'type' => 'text',
 					'label' => $this->l('Tags:'),
 					'name' => 'tags',
-                    'default_value' =>implode(',',$this->object->getBlogTags($this->context->language->id)),
+                    'default_value' =>$this->object->getBlogTagsAll(),
                     'lang' => true,
                     'size' => 40,
 					'desc' => $this->l('Tags separated by commas (e.g. dvd, dvd player, hifi).')
@@ -551,7 +559,7 @@ class AdminStBlogController extends ModuleAdminController
 							'label' => $this->l('No')
 						)
 					),
-                    'desc' => $this->l('Whether or not accept customer comment.')
+                    'desc' => $this->l('Whether or not accept comments.')
 				),
                 array(
 					'type' => 'text',
@@ -582,7 +590,7 @@ class AdminStBlogController extends ModuleAdminController
 				),
                 array(
                 	'type' => 'date',
-                	'label' => $this->l('Add date:'),
+                	'label' => $this->l('Created on:'),
                 	'name' => 'date_add',
                 	'default_value' => date('Y-m-d'),
                 	'size' => 9

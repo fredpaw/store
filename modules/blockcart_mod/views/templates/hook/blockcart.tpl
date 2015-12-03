@@ -23,6 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- MODULE Block cart -->
+{capture name="small_default_width"}{getWidthSize type='small_default'}{/capture}
+{capture name="small_default_height"}{getHeightSize type='small_default'}{/capture}
 {if isset($blockcart_top) && $blockcart_top}
 <div id="blockcart_top_wrap" class="blockcart_wrap blockcart_mod {if $PS_CATALOG_MODE} header_user_catalog{/if} {if $block_cart_style || (isset($is_displaynav) && $is_displaynav)} shopping_cart_style_1 {/if} {if isset($is_displaynav) && $is_displaynav}{if isset($block_cart_position) && $block_cart_position} pull-left{else} pull-right{/if}{/if}">
 {/if}
@@ -30,7 +32,7 @@
 			<div class="ajax_cart_left icon_wrap">
 				<i class="icon-basket icon-0x icon_btn"></i>
 				<span class="icon_text">{l s='Cart' mod='blockcart_mod'}</span>
-				<span class="ajax_cart_quantity amount_circle {if $cart_qties > 9} dozens {/if}">{$cart_qties}</span>
+				<span class="ajax_cart_quantity amount_circle {if $cart_qties > 9} dozens {/if} constantly_show">{$cart_qties}</span>
 			</div>
 			<span class="ajax_cart_quantity ajax_cart_middle">{$cart_qties}</span>
 			<span class="ajax_cart_product_txt ajax_cart_middle">{l s='item(s)' mod='blockcart_mod'}</span>
@@ -64,7 +66,7 @@
 									{assign var='productId' value=$product.id_product}
 									{assign var='productAttributeId' value=$product.id_product_attribute}
 									<dt data-id="cart_block_product_{$product.id_product|intval}_{if $product.id_product_attribute}{$product.id_product_attribute|intval}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery|intval}{else}0{/if}" class="clearfix {if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
-										<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" alt="{$product.name|escape:'html':'UTF-8'}" /></a>
+										<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" alt="{$product.name|escape:'html':'UTF-8'}" class="replace-2x" width="{$smarty.capture.small_default_width}" height="{$smarty.capture.small_default_height}" /></a>
 
 										<span class="quantity-formated"><span class="quantity">{$product.cart_quantity}</span>x</span><a class="cart_block_product_name" href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}">{$product.name|truncate:25:'...'|escape:'html':'UTF-8'}</a>
 										<span class="remove_link">
@@ -75,6 +77,9 @@
 										<span class="price">
 											{if !isset($product.is_gift) || !$product.is_gift}
 												{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}
+												<div class="hookDisplayProductPriceBlock-price">
+                                                    {hook h="displayProductPriceBlock" product=$product type="price" from="blockcart"}
+                                                </div>
 											{else}
 												{l s='Free!' mod='blockcart_mod'}
 											{/if}
@@ -97,7 +102,7 @@
 											{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization' name='customizations'}
 												<li name="customization">
 													<div data-id="deleteCustomizableProduct_{$id_customization|intval}_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}" class="deleteCustomizableProduct">
-														<a class="ajax_cart_block_remove_link" href="{$link->getPageLink("cart", true, NULL, "delete=1&id_product={$product.id_product|intval}&ipa={$product.id_product_attribute|intval}&id_customization={$id_customization|intval}&token={$static_token}")|escape:"html":"UTF-8"}" rel="nofollow">&nbsp;</a>
+														<a class="ajax_cart_block_remove_link" href="{$link->getPageLink("cart", true, NULL, "delete=1&id_product={$product.id_product|intval}&ipa={$product.id_product_attribute|intval}&id_customization={$id_customization|intval}&token={$static_token}")|escape:"html":"UTF-8"}" rel="nofollow"><i class="icon-cancel icon-small"></i></a>
 													</div>
 													{if isset($customization.datas.$CUSTOMIZE_TEXTFIELD.0)}
 														{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|replace:"<br />":" "|truncate:28:'...'|escape:'html':'UTF-8'}
@@ -140,16 +145,17 @@
 								{/foreach}
 							</table>
 						{/if}
+						{assign var='free_ship' value=count($cart->getDeliveryAddressesWithoutCarriers(true))}
 						<div class="cart-prices">
 							<div class="cart-prices-line first-line">
-								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
+								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery || $free_ship)} unvisible{/if}">
 									{if $shipping_cost_float == 0}
 										{if !($page_name == 'order-opc') && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart_mod'}{else}{l s='Free shipping!' mod='blockcart_mod'}{/if}
 									{else}
 										{$shipping_cost}
 									{/if}
 								</span>
-								<span{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} class="unvisible"{/if}>
+								<span{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery || $free_ship)} class="unvisible"{/if}>
 									{l s='Shipping' mod='blockcart_mod'}
 								</span>
 							</div>
@@ -176,7 +182,7 @@
 								<span class="price cart_block_total ajax_block_cart_total">{$total}</span>
 								<span>{l s='Total' mod='blockcart_mod'}</span>
 							</div>
-							{if $use_taxes && $display_tax_label == 1 && $show_tax}
+							{if $use_taxes && $display_tax_label && $show_tax}
 								<p>
 								{if $priceDisplay == 0}
 									{l s='Prices are tax included' mod='blockcart_mod'}
@@ -226,13 +232,13 @@
 					</span>
 					<!-- Singular Case [both cases are needed because page may be updated in Javascript] -->
 					<span class="ajax_cart_product_txt {if $cart_qties > 1} unvisible{/if}">
-						{l s='There is 1 item in your cart.' mod='blockcart_mod'}
+						{l s='There are [1]%d[/1] items in your cart.' mod='blockcart_mod' sprintf=[$cart_qties] tags=['<span class="ajax_cart_quantity">']}
 					</span>
 				</div>
 				<div id="layer_cart_ajax_block_products_total" class="layer_cart_row hidden">
 					<span class="layer_cart_label">
 						{l s='Total products' mod='blockcart_mod'}
-						{if $display_tax_label}
+						{if $use_taxes && $display_tax_label && $show_tax}
 							{if $priceDisplay == 1}
 								{l s='(tax excl.)' mod='blockcart_mod'}
 							{else}
@@ -250,7 +256,7 @@
 					<div id="layer_cart_cart_block_wrapping_cost" class="layer_cart_row hidden">
 						<span class="layer_cart_label">
 							{l s='Wrapping' mod='blockcart_mod'}
-							{if $display_tax_label}
+							{if $use_taxes && $display_tax_label && $show_tax}
 								{if $priceDisplay == 1}
 									{l s='(tax excl.)' mod='blockcart_mod'}
 								{else}
@@ -268,10 +274,10 @@
 					</div>
 				{/if}
 				<div id="layer_cart_ajax_cart_shipping_cost" class="layer_cart_row hidden">
-					<span class="layer_cart_label">
+					<span class="layer_cart_label{if $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						{l s='Total shipping' mod='blockcart_mod'}&nbsp;{if $display_tax_label}{if $priceDisplay == 1}{l s='(tax excl.)' mod='blockcart_mod'}{else}{l s='(tax incl.)' mod='blockcart_mod'}{/if}{/if}
 					</span>
-					<span class="ajax_cart_shipping_cost{if $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
+					<span class="ajax_cart_shipping_cost{if $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						{if $shipping_cost_float == 0}
 							{if (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart_mod'}{else}{l s='Free shipping!' mod='blockcart_mod'}{/if}
 						{else}
@@ -288,7 +294,7 @@
 				<div id="layer_cart_ajax_block_cart_total" class="layer_cart_row">
 					<span class="layer_cart_label">
 						{l s='Total' mod='blockcart_mod'}
-						{if $display_tax_label}
+						{if $use_taxes && $display_tax_label && $show_tax}
 							{if $priceDisplay == 1}
 								{l s='(tax excl.)' mod='blockcart_mod'}
 							{else}

@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:52
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:10
          compiled from "D:\xampp\htdocs\store\themes\transformer\footer.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:552564ebf0cbc95a5-55823438%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:23100565e951a6c6bd1-54932344%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '411ece9552cd5f03fe1e90eb28eb90383c477562' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\themes\\transformer\\footer.tpl',
-      1 => 1447993228,
+      1 => 1449038237,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '552564ebf0cbc95a5-55823438',
+  'nocache_hash' => '23100565e951a6c6bd1-54932344',
   'function' => 
   array (
   ),
@@ -19,6 +19,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     'content_only' => 0,
     'right_column_size' => 0,
+    'slide_lr_column' => 0,
     'HOOK_RIGHT_COLUMN' => 0,
     'HOOK_FOOTER_TOP' => 0,
     'HOOK_FOOTER' => 0,
@@ -29,19 +30,21 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'page_name' => 0,
     'rightbar_i' => 0,
     'left_column_size' => 0,
+    'HOOK_SIDE_BAR' => 0,
     'comparator_max_item' => 0,
     'link' => 0,
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0ce0b834_92463098',
+  'unifunc' => 'content_565e951ab7e873_77473217',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0ce0b834_92463098')) {function content_564ebf0ce0b834_92463098($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
+<?php if ($_valid && !is_callable('content_565e951ab7e873_77473217')) {function content_565e951ab7e873_77473217($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
 ?>
+<?php $_smarty_tpl->tpl_vars['slide_lr_column'] = new Smarty_variable(Configuration::get('STSN_SLIDE_LR_COLUMN'), null, 0);?>
 <?php if (!isset($_smarty_tpl->tpl_vars['content_only']->value)||!$_smarty_tpl->tpl_vars['content_only']->value) {?>
 					</div><!-- #center_column -->
 					<?php if (isset($_smarty_tpl->tpl_vars['right_column_size']->value)&&!empty($_smarty_tpl->tpl_vars['right_column_size']->value)) {?>
-						<div id="right_column" class="col-xxs-8 col-xs-6 col-sm-<?php echo intval($_smarty_tpl->tpl_vars['right_column_size']->value);?>
+						<div id="right_column" class="<?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value) {?> col-xxs-8 col-xs-6<?php } else { ?> col-xs-12<?php }?> col-sm-<?php echo intval($_smarty_tpl->tpl_vars['right_column_size']->value);?>
  column"><?php echo $_smarty_tpl->tpl_vars['HOOK_RIGHT_COLUMN']->value;?>
 </div>
 					<?php }?>
@@ -165,7 +168,7 @@ if (!empty($_capture_buffer)) {
 			</footer><!-- #footer -->
 			<?php if (isset($_smarty_tpl->tpl_vars['sttheme']->value['boxstyle'])&&$_smarty_tpl->tpl_vars['sttheme']->value['boxstyle']==2) {?></div><?php }?><!-- #page_wrapper -->
 		</div><!-- #page -->
-
+  
 		<?php $_smarty_tpl->_capture_stack[0][] = array("rightbar_strightbarcart", null, null); ob_start(); ?>
 		    <?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayAnywhere','mod'=>'strightbarcart','caller'=>'strightbarcart'),$_smarty_tpl);?>
  
@@ -225,14 +228,13 @@ if (!empty($_capture_buffer)) {
  Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
 } else $_smarty_tpl->capture_error();?>
 		<?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable(0, null, 0);?>
-		<?php if (trim(Smarty::$_smarty_vars['capture']['rightbar_strightbarcart'])) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 		<?php if (trim(Smarty::$_smarty_vars['capture']['rightbar_stcompare'])) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 		<?php if (trim(Smarty::$_smarty_vars['capture']['rightbar_productlinknav_prev'])) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 		<?php if (trim(Smarty::$_smarty_vars['capture']['rightbar_productlinknav_next'])) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 		<?php if (trim(Smarty::$_smarty_vars['capture']['rightbar_bloglinknav_prev'])) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 		<?php if (trim(Smarty::$_smarty_vars['capture']['rightbar_bloglinknav_next'])) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
-		<?php if (isset($_smarty_tpl->tpl_vars['left_column_size']->value)&&$_smarty_tpl->tpl_vars['left_column_size']->value) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
-		<?php if (isset($_smarty_tpl->tpl_vars['right_column_size']->value)&&$_smarty_tpl->tpl_vars['right_column_size']->value) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
+		<?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value&&isset($_smarty_tpl->tpl_vars['left_column_size']->value)&&$_smarty_tpl->tpl_vars['left_column_size']->value) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
+		<?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value&&isset($_smarty_tpl->tpl_vars['right_column_size']->value)&&$_smarty_tpl->tpl_vars['right_column_size']->value) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 		<?php if ((!isset($_smarty_tpl->tpl_vars['sttheme']->value['scroll_to_top'])||(isset($_smarty_tpl->tpl_vars['sttheme']->value['scroll_to_top'])&&$_smarty_tpl->tpl_vars['sttheme']->value['scroll_to_top']))) {?><?php $_smarty_tpl->tpl_vars["rightbar_i"] = new Smarty_variable($_smarty_tpl->tpl_vars['rightbar_i']->value+1, null, 0);?><?php }?>
 
 		<div id="rightbar" class="<?php if (!$_smarty_tpl->tpl_vars['rightbar_i']->value) {?> hidden <?php }?>"> 
@@ -250,14 +252,14 @@ if (!empty($_capture_buffer)) {
 
 		    <?php echo Smarty::$_smarty_vars['capture']['rightbar_bloglinknav_next'];?>
 
-		    <?php if (isset($_smarty_tpl->tpl_vars['left_column_size']->value)&&!empty($_smarty_tpl->tpl_vars['left_column_size']->value)) {?>
+		    <?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value&&isset($_smarty_tpl->tpl_vars['left_column_size']->value)&&!empty($_smarty_tpl->tpl_vars['left_column_size']->value)) {?>
 		    <div id="switch_left_column_wrap" class="visible-xs">
 		        <a href="javascript:;" id="switch_left_column" data-column="left_column" class="icon_wrap" title="<?php echo smartyTranslate(array('s'=>"Display left column"),$_smarty_tpl);?>
 "><i class="icon-right-open-1 icon-0x"></i><span class="icon_text"><?php echo smartyTranslate(array('s'=>"Left"),$_smarty_tpl);?>
 </span></a>   
 		    </div>
 		    <?php }?>
-		    <?php if (isset($_smarty_tpl->tpl_vars['right_column_size']->value)&&!empty($_smarty_tpl->tpl_vars['right_column_size']->value)) {?>
+		    <?php if ($_smarty_tpl->tpl_vars['slide_lr_column']->value&&isset($_smarty_tpl->tpl_vars['right_column_size']->value)&&!empty($_smarty_tpl->tpl_vars['right_column_size']->value)) {?>
 		    <div id="switch_right_column_wrap" class="visible-xs">
 		        <a href="javascript:;" id="switch_right_column" data-column="right_column" class="icon_wrap" title="<?php echo smartyTranslate(array('s'=>"Display right column"),$_smarty_tpl);?>
 "><i class="icon-left-open-1 icon-0x"></i><span class="icon_text"><?php echo smartyTranslate(array('s'=>"Right"),$_smarty_tpl);?>
@@ -277,6 +279,12 @@ if (!empty($_capture_buffer)) {
 		<?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayAnywhere','mod'=>'stnewsletter','caller'=>'stnewsletter'),$_smarty_tpl);?>
 
 		<?php }?>
+		<div class="st-side">
+			<?php if (isset($_smarty_tpl->tpl_vars['HOOK_SIDE_BAR']->value)&&trim($_smarty_tpl->tpl_vars['HOOK_SIDE_BAR']->value)) {?><?php echo $_smarty_tpl->tpl_vars['HOOK_SIDE_BAR']->value;?>
+<?php } else { ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displaySideBar'),$_smarty_tpl);?>
+<?php }?>
+		</div>
+		<div id="st-side-overlay"></div>
 <?php }?>
 <?php if ($_smarty_tpl->tpl_vars['comparator_max_item']->value) {?>
     <div id="layer_compare" class="layer_box">

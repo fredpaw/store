@@ -2,7 +2,7 @@
 <module>
 	<name>blocksearch_mod</name>
 	<displayName><![CDATA[Quick search block mod]]></displayName>
-	<version><![CDATA[1.5.3]]></version>
+	<version><![CDATA[1.5.6]]></version>
 	<description><![CDATA[Adds a quick search field to your website.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[search_filter]]></tab>

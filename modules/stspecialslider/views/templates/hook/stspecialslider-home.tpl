@@ -24,7 +24,9 @@
 *}
 {counter name=active_ul assign=active_ul}
 {if isset($speical_products) && $speical_products}
+<div {if $countdown_on}class="s_countdown_block"{/if}>
 {include file="$tpl_dir./product-list.tpl" products=$speical_products class='blockspecialslider-home tab-pane' for_f='hometab' id='blockspecialslider-home' active=$active_ul}
+</div>
 {else}
 <ul id="blockspecialslider-home" class="blockspecialslider-home tab-pane{if isset($active_ul) && $active_ul == 1} active{/if}">
 	<li class="alert alert-info">{l s='No special products at this time.' mod='stspecialslider'}</li>

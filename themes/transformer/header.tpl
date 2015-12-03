@@ -22,21 +22,22 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{assign var='slide_lr_column' value=Configuration::get('STSN_SLIDE_LR_COLUMN')}
 <!DOCTYPE HTML>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{if isset($language_code)}{$language_code|escape:'html':'UTF-8'}{else}{$lang_iso|escape:'html':'UTF-8'}{/if}"><![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7" lang="{if isset($language_code)}{$language_code|escape:'html':'UTF-8'}{else}{$lang_iso|escape:'html':'UTF-8'}{/if}"><![endif]-->
-<!--[if IE 8]><html class="no-js lt-ie9 ie8" lang="{if isset($language_code)}{$language_code|escape:'html':'UTF-8'}{else}{$lang_iso|escape:'html':'UTF-8'}{/if}"><![endif]-->
-<!--[if gt IE 8]> <html class="no-js ie9" lang="{if isset($language_code)}{$language_code|escape:'html':'UTF-8'}{else}{$lang_iso|escape:'html':'UTF-8'}{/if}"><![endif]-->
-<html lang="{if isset($language_code)}{$language_code|escape:'html':'UTF-8'}{else}{$lang_iso|escape:'html':'UTF-8'}{/if}">
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"{if isset($language_code) && $language_code} lang="{$language_code|escape:'html':'UTF-8'}"{/if}><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8 ie7"{if isset($language_code) && $language_code} lang="{$language_code|escape:'html':'UTF-8'}"{/if}><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9 ie8"{if isset($language_code) && $language_code} lang="{$language_code|escape:'html':'UTF-8'}"{/if}><![endif]-->
+<!--[if gt IE 8]> <html class="no-js ie9"{if isset($language_code) && $language_code} lang="{$language_code|escape:'html':'UTF-8'}"{/if}><![endif]-->
+<html{if isset($language_code) && $language_code} lang="{$language_code|escape:'html':'UTF-8'}"{/if}>
 	<head>
 		<meta charset="utf-8" />
 		<title>{$meta_title|escape:'html':'UTF-8'}</title>
-{if isset($meta_description) AND $meta_description}
-		<meta name="description" content="{$meta_description|escape:'html':'UTF-8'}" />
-{/if}
-{if isset($meta_keywords) AND $meta_keywords}
-		<meta name="keywords" content="{$meta_keywords|escape:'html':'UTF-8'}" />
-{/if}
+		{if isset($meta_description) AND $meta_description}
+			<meta name="description" content="{$meta_description|escape:'html':'UTF-8'}" />
+		{/if}
+		{if isset($meta_keywords) AND $meta_keywords}
+			<meta name="keywords" content="{$meta_keywords|escape:'html':'UTF-8'}" />
+		{/if}
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
 		{if isset($sttheme.responsive) && $sttheme.responsive && (!$sttheme.enabled_version_swithing || $sttheme.version_switching==0)}
 		<meta name="viewport" content="width=device-width, minimum-scale=0.25, maximum-scale=1.6, initial-scale=1.0" />
@@ -56,29 +57,29 @@
         {if isset($sttheme.icon_iphone_144) && $sttheme.icon_iphone_144}
         <link rel="apple-touch-icon" sizes="144x144" href="{$sttheme.icon_iphone_144}" />
         {/if}
-{if isset($css_files)}
-	{foreach from=$css_files key=css_uri item=media}
-		<link rel="stylesheet" href="{$css_uri|escape:'html':'UTF-8'}" type="text/css" media="{$media|escape:'html':'UTF-8'}" />
-	{/foreach}
-{/if}
-{if isset($sttheme.custom_css) && $sttheme.custom_css}
-	<link href="{$sttheme.custom_css}" rel="stylesheet" type="text/css" media="{$sttheme.custom_css_media}" />
-{/if}
-{if isset($js_defer) && !$js_defer && isset($js_files) && isset($js_def)}
-	{$js_def}
-	{foreach from=$js_files item=js_uri}
-	<script type="text/javascript" src="{$js_uri|escape:'html':'UTF-8'}"></script>
-	{/foreach}
-{/if}
+		{if isset($css_files)}
+			{foreach from=$css_files key=css_uri item=media}
+				<link rel="stylesheet" href="{$css_uri|escape:'html':'UTF-8'}" type="text/css" media="{$media|escape:'html':'UTF-8'}" />
+			{/foreach}
+		{/if}
+		{if isset($sttheme.custom_css) && $sttheme.custom_css}
+			<link href="{$sttheme.custom_css}" rel="stylesheet" type="text/css" media="{$sttheme.custom_css_media}" />
+		{/if}
+		{if isset($js_defer) && !$js_defer && isset($js_files) && isset($js_def)}
+			{$js_def}
+			{foreach from=$js_files item=js_uri}
+			<script type="text/javascript" src="{$js_uri|escape:'html':'UTF-8'}"></script>
+			{/foreach}
+		{/if}
 		{$HOOK_HEADER}
 	</head>
-	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{/if}{if $hide_right_column} hide-right-column{/if}{if isset($content_only) && $content_only} content_only{/if} lang_{$lang_iso} 
+	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{else} show-left-column{/if}{if $hide_right_column} hide-right-column{else} show-right-column{/if}{if isset($content_only) && $content_only} content_only{/if} lang_{$lang_iso} 
 	{foreach $languages as $language}
 		{if $language.iso_code == $lang_iso && $language.is_rtl}
 			is_rtl
 		{/if}
 	{/foreach}
-	{if $sttheme.is_mobile_device} mobile_device {/if}
+	{if $sttheme.is_mobile_device} mobile_device {/if}{if $slide_lr_column} slide_lr_column {/if}
 	">
 	{if !isset($content_only) || !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
@@ -114,12 +115,34 @@
 					</div>
 				</div>
 				{/if}
+
+				{assign var='sticky_mobile_header' value=Configuration::get('STSN_STICKY_MOBILE_HEADER')}
+	            <section id="mobile_bar" class="animated fast">
+	            	<div class="container">
+	                	<div id="mobile_bar_container" class="{if $sticky_mobile_header%2==0} mobile_bar_center_layout{else} mobile_bar_left_layout{/if}">
+	                		{if $sticky_mobile_header%2==0}
+	                		<div id="mobile_bar_left">
+	                			<div id="mobile_bar_left_inner">{if isset($HOOK_MOBILE_MENU) && $HOOK_MOBILE_MENU|trim}{$HOOK_MOBILE_MENU}{else}{hook h='displayMobileMenu'}{/if}</div>
+	                		</div>
+	                		{/if}
+	                		<div id="mobile_bar_center">
+	                			<a id="mobile_header_logo" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{$shop_name|escape:'html':'UTF-8'}">
+									<img class="logo replace-2x" src="{$logo_url}" {if isset($sttheme.retina_logo) && $sttheme.retina_logo} data-2x="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`stthemeeditor/`$sttheme.retina_logo|escape:'html':'UTF-8'`")}"{/if} alt="{$shop_name|escape:'html':'UTF-8'}"{if isset($sttheme.st_logo_image_width) && $sttheme.st_logo_image_width} width="{$sttheme.st_logo_image_width}"{/if}{if isset($sttheme.st_logo_image_height) && $sttheme.st_logo_image_height} height="{$sttheme.st_logo_image_height}"{/if}/>
+								</a>	                			
+	                		</div>
+	                		<div id="mobile_bar_right">
+	                			<div id="mobile_bar_right_inner">{if isset($HOOK_MOBILE_BAR) && $HOOK_MOBILE_BAR|trim}{$HOOK_MOBILE_BAR}{else}{hook h='displayMobileBar'}{/if}</div>
+	                		</div>
+	                	</div>
+	                </div>
+	            </section>
+
 				{if isset($sttheme.logo_position) && $sttheme.logo_position}
 				    {assign var="logo_left_center" value=1}
 				{else}
 				    {assign var="logo_left_center" value=0}
 				{/if}
-				<section id="header" class="{if $logo_left_center} logo_center {/if}">
+				<section id="header" class="{if $logo_left_center} logo_center {/if} animated fast">
 				    <div class="wide_container">
 					    <div class="container header_container">
 					        <div class="row">
@@ -142,16 +165,7 @@
 					    </div>
 				    </div>
 				</section>
-
-	            <section id="mobile_bar">
-	            	<div class="container">
-	                	<div id="mobile_bar_container" class="clearfix">
-	                		{if isset($HOOK_MOBILE_BAR) && $HOOK_MOBILE_BAR|trim}<div id="mobile_bar_center">{$HOOK_MOBILE_BAR}</div>{else}<div id="mobile_bar_center">{hook h='displayMobileBar'}</div>{/if}
-	                		<div id="mobile_bar_menu">{if isset($HOOK_MOBILE_MENU) && $HOOK_MOBILE_MENU|trim}{$HOOK_MOBILE_MENU}{else}{hook h='displayMobileMenu'}{/if}</div>
-	                	</div>
-	                </div>
-	            </section>
-	            
+					            
 	            {if isset($HOOK_TOP_SECONDARY) && $HOOK_TOP_SECONDARY}
 	            <section id="top_extra">
 	            	{$HOOK_TOP_SECONDARY}
@@ -182,6 +196,7 @@
             {/if}
 			<!--/ Main slideshow -->
             {hook h="displayFullWidthTop"}
+            {hook h="displayFullWidthTop2"}
 			<div class="columns-container wide_container">
 				<div id="columns" class="container">
 					{capture name="displayTopColumn"}{hook h="displayTopColumn"}{/capture}
@@ -192,7 +207,7 @@
 					{/if}
 					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
-						<div id="left_column" class="column col-xxs-8 col-xs-6 col-sm-{$left_column_size|intval} col-md-{$left_column_size|intval}">{$HOOK_LEFT_COLUMN}</div>
+						<div id="left_column" class="column {if $slide_lr_column} col-xxs-8 col-xs-6{else} col-xs-12{/if} col-sm-{$left_column_size|intval} col-md-{$left_column_size|intval}">{$HOOK_LEFT_COLUMN}</div>
 						{/if}
 						{if isset($left_column_size) && isset($right_column_size)}{assign var='cols' value=(12 - $left_column_size - $right_column_size)}{else}{assign var='cols' value=12}{/if}
 						<div id="center_column" class="center_column col-xs-12 col-sm-{$cols|intval} col-md-{$cols|intval}">

@@ -107,9 +107,14 @@ class StBlogRecentArticles extends Module
         $this->_hooks = array(
             'Hooks' => array(
                 array(
-        			'id' => 'displayFullWidthTop',
+                    'id' => 'displayFullWidthTop',
+                    'val' => '1',
+                    'name' => $this->l('displayFullWidthTop')
+                ),
+                array(
+        			'id' => 'displayFullWidthTop2',
         			'val' => '1',
-        			'name' => $this->l('displayFullWidthTop')
+        			'name' => $this->l('displayFullWidthTop2')
         		),
                 array(
         			'id' => 'displayTopColumn',
@@ -308,7 +313,6 @@ class StBlogRecentArticles extends Module
             || !Configuration::updateValue($this->_field_prefix.'BG_COLOR', '')
             || !Configuration::updateValue($this->_field_prefix.'SPEED', 0)
             || !Configuration::updateValue($this->_field_prefix.'TITLE_COLOR', '')
-            || !Configuration::updateValue($this->_field_prefix.'TITLE_HOVER_COLOR', '')
             || !Configuration::updateValue($this->_field_prefix.'TEXT_COLOR', '')
             || !Configuration::updateValue($this->_field_prefix.'LINK_HOVER_COLOR', '')
             || !Configuration::updateValue($this->_field_prefix.'DIRECTION_COLOR', '')
@@ -317,6 +321,7 @@ class StBlogRecentArticles extends Module
             || !Configuration::updateValue($this->_field_prefix.'DIRECTION_DISABLED_BG', '')
 
             || !Configuration::updateValue($this->_field_prefix.'TITLE_ALIGNMENT', 0)
+            || !Configuration::updateValue($this->_field_prefix.'TITLE_NO_BG', 0)
             || !Configuration::updateValue($this->_field_prefix.'TITLE_FONT_SIZE', 0)
             || !Configuration::updateValue($this->_field_prefix.'DIRECTION_NAV', 0)
         )
@@ -532,7 +537,15 @@ class StBlogRecentArticles extends Module
                         array(
                             'id' => 'grid_grid',
                             'value' => 1,
-                            'label' => $this->l('Grid view')),
+                            'label' => $this->l('Grid(Image on the left side)')),
+                        array(
+                            'id' => 'grid_top',
+                            'value' => 3,
+                            'label' => $this->l('Grid(Image on the top)')),
+                        array(
+                            'id' => 'grid_list',
+                            'value' => 2,
+                            'label' => $this->l('List view')),
                     ),
                     'validation' => 'isUnsignedInt',
                 ), 
@@ -625,6 +638,10 @@ class StBlogRecentArticles extends Module
                             'id' => 'grid_h_grid',
                             'value' => 1,
                             'label' => $this->l('Grid view')),
+                        array(
+                            'id' => 'grid_h_list',
+                            'value' => 2,
+                            'label' => $this->l('List view')),
                     ),
                     'validation' => 'isUnsignedInt',
                 ), 
@@ -764,6 +781,25 @@ class StBlogRecentArticles extends Module
                     'validation' => 'isBool',
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'title_no_bg',
+                    'default_value' => 1,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('If the heading is center aligned, heading background will be removed automatically.'),
+                    'validation' => 'isBool',
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->l('Heading font size:'),
                     'name' => 'title_font_size',
@@ -775,14 +811,6 @@ class StBlogRecentArticles extends Module
                     'type' => 'color',
                     'label' => $this->l('Heading color:'),
                     'name' => 'title_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Heading hover color:'),
-                    'name' => 'title_hover_color',
                     'class' => 'color',
                     'size' => 20,
                     'validation' => 'isColor',
@@ -1007,7 +1035,7 @@ class StBlogRecentArticles extends Module
 				'title' => $this->l('Hook manager'),
                 'icon' => 'icon-cogs'
 			),
-            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'.$this->_path.'views/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
+            'description' => $this->l('Check the hook that you would like this module to display on.').'<br/><a href="'._MODULE_DIR_.'stthemeeditor/img/hook_into_hint.jpg" target="_blank" >'.$this->l('Click here to see hook position').'</a>.',
 			'input' => array(
 			),
 			'submit' => array(
@@ -1064,7 +1092,8 @@ class StBlogRecentArticles extends Module
         if (!$this->isCached('header.tpl', $this->getCacheId()))
         {
             $custom_css = '';
-            
+            $title_block_no_bg = 'body#index .st_blog_recent_article_container .title_block, body#index .st_blog_recent_article_container .nav_top_right .flex-direction-nav,body#index .st_blog_recent_article_container .title_block a, body#index .st_blog_recent_article_container .title_block span{background:none;}';
+                        
             $group_css = '';
             if ($bg_color = Configuration::get($this->_field_prefix.'BG_COLOR'))
                 $group_css .= 'background-color:'.$bg_color.';';
@@ -1080,7 +1109,7 @@ class StBlogRecentArticles extends Module
                 $group_css .= 'background-image: url('.$img.');';
             }
             if($group_css)
-                $custom_css .= 'body#index .st_blog_recent_article_container{background-attachment:fixed;'.$group_css.'}body#index .st_blog_recent_article_container .section .title_block, body#index .st_blog_recent_article_container .nav_top_right .flex-direction-nav,body#index .st_blog_recent_article_container .section .title_block a, body#index .st_blog_recent_article_container .section .title_block span{background:none;}';
+                $custom_css .= 'body#index .st_blog_recent_article_container{background-attachment:fixed;'.$group_css.'}'.$title_block_no_bg;
 
             if ($top_padding = (int)Configuration::get($this->_field_prefix.'TOP_PADDING'))
                 $custom_css .= 'body#index .st_blog_recent_article_container{padding-top:'.$top_padding.'px;}';
@@ -1095,7 +1124,9 @@ class StBlogRecentArticles extends Module
                 $custom_css .= 'body#index .st_blog_recent_article_container{margin-bottom:'.$bottom_margin.'px;}';
 
             if (Configuration::get($this->_field_prefix.'TITLE_ALIGNMENT'))
-                $custom_css .= 'body#index .st_blog_recent_article_container .title_block{text-align:center;}';
+                $custom_css .= 'body#index .st_blog_recent_article_container .title_block{text-align:center;}'.$title_block_no_bg;
+            if (Configuration::get($this->_field_prefix.'TITLE_NO_BG'))
+                $custom_css .= $title_block_no_bg;
             if ($title_font_size = (int)Configuration::get($this->_field_prefix.'TITLE_FONT_SIZE'))
             {
                  $custom_css .= 'body#index .st_blog_recent_article_container .title_block{font-size:'.$title_font_size.'px;}';
@@ -1104,9 +1135,7 @@ class StBlogRecentArticles extends Module
 
             if ($title_color = Configuration::get($this->_field_prefix.'TITLE_COLOR'))
                 $custom_css .= 'body#index .st_blog_recent_article_container.block .title_block a, body#index .st_blog_recent_article_container.block .title_block span{color:'.$title_color.';}';
-            if ($title_hover_color = Configuration::get($this->_field_prefix.'TITLE_HOVER_COLOR'))
-                $custom_css .= 'body#index .st_blog_recent_article_container.block .title_block a:hover{color:'.$title_hover_color.';}';
-
+            
             if ($text_color = Configuration::get($this->_field_prefix.'TEXT_COLOR'))
                 $custom_css .= 'body#index .st_blog_recent_article_container .s_title_block a,
                 body#index .st_blog_recent_article_container .blog_info,
@@ -1337,6 +1366,13 @@ class StBlogRecentArticles extends Module
 
         return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__), 2); 
     }
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+
+        return $this->hookDisplayHome($params, $this->getHookHash(__FUNCTION__), 2); 
+    }
     public function hookDisplayHomeVeryBottom($params)
     {
         if(Dispatcher::getInstance()->getController()!='index')
@@ -1424,7 +1460,6 @@ class StBlogRecentArticles extends Module
             'speed'              => Configuration::get($this->_field_prefix.'SPEED'),
 
             'title_color'           => Configuration::get($this->_field_prefix.'TITLE_COLOR'),
-            'title_hover_color'     => Configuration::get($this->_field_prefix.'TITLE_HOVER_COLOR'),
             'text_color'            => Configuration::get($this->_field_prefix.'TEXT_COLOR'),
             'link_hover_color'      => Configuration::get($this->_field_prefix.'LINK_HOVER_COLOR'),
             'direction_color'       => Configuration::get($this->_field_prefix.'DIRECTION_COLOR'),
@@ -1433,6 +1468,7 @@ class StBlogRecentArticles extends Module
             'direction_disabled_bg' => Configuration::get($this->_field_prefix.'DIRECTION_DISABLED_BG'),
             
             'title_alignment'       => Configuration::get($this->_field_prefix.'TITLE_ALIGNMENT'),
+            'title_no_bg'           => Configuration::get($this->_field_prefix.'TITLE_NO_BG'),
             'title_font_size'       => Configuration::get($this->_field_prefix.'TITLE_FONT_SIZE'),
             'direction_nav'         => Configuration::get($this->_field_prefix.'DIRECTION_NAV'), 
         );

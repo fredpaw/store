@@ -69,13 +69,7 @@ class AdminStBlogConfigController extends AdminController
 		array('value' => 5, 'name' => '5'),
 		array('value' => 6, 'name' => '6'),
     );
-    
-    public static $articles_per_row_grid_view = array(
-		array('value' => 2, 'name' => '2'),
-		array('value' => 3, 'name' => '3'),
-		array('value' => 4, 'name' => '4'),
-    );
-    
+        
     public static $sort_by = array(
         array('value' =>1 , 'name' => 'Date add: Desc'),
         array('value' =>2 , 'name' => 'Date add: Asc'),
@@ -133,14 +127,46 @@ class AdminStBlogConfigController extends AdminController
 							3 => $this->l('Grid layout'),
 						),
 					),
-					'ST_BLOG_CATE_ROW_BLOG_NBR' => array(
-						'title' => $this->l('Articles per row in grid layout'),
+    				'STSN_BLOG_GRID_PER_LG_0' => array(
+    					'title' => $this->l('Articles per row in grid layout on large devices (>1200px)'),
     					'validation' => 'isInt',
     					'cast' => 'intval',
     					'type' => 'select',
-    					'list' => self::$articles_per_row_grid_view,
+    					'list' => self::$items,
     					'identifier' => 'value',
-					),
+    				),
+    				'STSN_BLOG_GRID_PER_MD_0' => array(
+    					'title' => $this->l('Articles per row in grid layout on medium devices (>992px)'),
+    					'validation' => 'isInt',
+    					'cast' => 'intval',
+    					'type' => 'select',
+    					'list' => self::$items,
+    					'identifier' => 'value',
+    				),
+    				'STSN_BLOG_GRID_PER_SM_0' => array(
+    					'title' => $this->l('Articles per row in grid layout on Small devices (>768px)'),
+    					'validation' => 'isInt',
+    					'cast' => 'intval',
+    					'type' => 'select',
+    					'list' => self::$items,
+    					'identifier' => 'value',
+    				),
+    				'STSN_BLOG_GRID_PER_XS_0' => array(
+    					'title' => $this->l('Articles per row in grid layout on Extra small devices (>480px)'),
+    					'validation' => 'isInt',
+    					'cast' => 'intval',
+    					'type' => 'select',
+    					'list' => self::$items,
+    					'identifier' => 'value',
+    				),
+    				'STSN_BLOG_GRID_PER_XXS_0' => array(
+    					'title' => $this->l('Articles per row in grid layout on Extremely small devices (<480px)'),
+    					'validation' => 'isInt',
+    					'cast' => 'intval',
+    					'type' => 'select',
+    					'list' => self::$items,
+    					'identifier' => 'value',
+    				),
 					'ST_BLOG_COLUMN_HOMEPAGE' => array(
 						'title' => $this->l('Homepage layout'),
 						'cast' => 'intval',

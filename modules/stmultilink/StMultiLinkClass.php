@@ -30,6 +30,7 @@ class StMultiLinkClass extends ObjectModel
 	public $new_window;
 	public $nofollow;
 	public $id_st_multi_link_group;
+    public $id_category;
 	public $id_cms;
 	public $id_cms_category;
 	public $id_supplier;
@@ -49,6 +50,7 @@ class StMultiLinkClass extends ObjectModel
 		'multilang' => true,
 		'fields'    => array(
 			'id_st_multi_link_group' => array('type' => self::TYPE_INT, 'validate' => 'isInt','required' => true),
+            'id_category'            => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'id_cms'          => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'id_cms_category' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'id_supplier'     => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
@@ -171,6 +173,16 @@ class StMultiLinkClass extends ObjectModel
             DELETE 
             FROM `'._DB_PREFIX_.'st_multi_link`
             WHERE `id_cms` ='.(int)$id
+        );
+    }
+    public static function deleteByCategoryId($id)
+    {
+        if(!$id)
+            return false;
+        return Db::getInstance()->execute('
+            DELETE 
+            FROM `'._DB_PREFIX_.'st_multi_link`
+            WHERE `id_category` ='.(int)$id
         );
     }
 }

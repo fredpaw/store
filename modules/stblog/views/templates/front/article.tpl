@@ -79,7 +79,7 @@
                 <div id="blog_tags">
                     {l s='Tag' mod='stblog'}:
                     {foreach $blog_tags as $tag}
-                        <a href="{$link->getPageLink('search', true, NULL, "search_query={$tag|urlencode}")|escape:'html'}" title="{l s='More about' mod='stblog'} {$tag|escape:html:'UTF-8'}">{$tag|escape:html:'UTF-8'}</a>{if !$tag@last},{/if}
+                        <a href="{$link->getPageLink('search', true, NULL, "stb_search_query={$tag|urlencode}")|escape:'html'}" title="{l s='More about' mod='stblog'} {$tag|escape:html:'UTF-8'}">{$tag|escape:html:'UTF-8'}</a>{if !$tag@last},{/if}
                     {/foreach}
                 </div>
             {/if}

@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:46
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:04
          compiled from "D:\xampp\htdocs\store\modules\staddthisbutton\views\templates\hook\staddthisbutton-header.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:10875564ebf06cb5872-94734469%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:16313565e95145bd143-59768747%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     '5f4610f27e5cd53efe87f6acae8ce41e6c53e43b' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\staddthisbutton\\views\\templates\\hook\\staddthisbutton-header.tpl',
-      1 => 1447993229,
+      1 => 1449038238,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '10875564ebf06cb5872-94734469',
+  'nocache_hash' => '16313565e95145bd143-59768747',
   'function' => 
   array (
   ),
@@ -19,12 +19,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   array (
     'shop_name' => 0,
     'page_name' => 0,
-    'meta_title' => 0,
-    'meta_description' => 0,
-    'id_lang' => 0,
     'product' => 0,
+    'id_lang' => 0,
     'cover' => 0,
     'link' => 0,
+    'meta_title' => 0,
+    'meta_description' => 0,
+    'category' => 0,
+    'img_manu_dir' => 0,
+    'img_sup_dir' => 0,
     'blog' => 0,
     'galleries' => 0,
     'gallery' => 0,
@@ -33,9 +36,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf06e6cde6_40934553',
+  'unifunc' => 'content_565e9514751033_11277413',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf06e6cde6_40934553')) {function content_564ebf06e6cde6_40934553($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_565e9514751033_11277413')) {function content_565e9514751033_11277413($_smarty_tpl) {?>
 <!-- AddThis Header BEGIN -->
 <meta property="og:site_name" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['shop_name']->value, ENT_QUOTES, 'UTF-8', true);?>
 " />
@@ -44,12 +47,38 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 " />
 <?php if ($_smarty_tpl->tpl_vars['page_name']->value=='product') {?>
 <meta property="og:type" content="product" />
+<meta property="og:title" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['product']->value->name, ENT_QUOTES, 'UTF-8', true);?>
+" />
+<meta property="og:description" content="<?php echo strip_tags($_smarty_tpl->tpl_vars['product']->value->description_short);?>
+" />
+<meta property="og:image" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['link']->value->getImageLink($_smarty_tpl->tpl_vars['product']->value->link_rewrite[$_smarty_tpl->tpl_vars['id_lang']->value],$_smarty_tpl->tpl_vars['cover']->value['id_image'],'thickbox_default'), ENT_QUOTES, 'UTF-8', true);?>
+" />
+<?php } elseif ($_smarty_tpl->tpl_vars['page_name']->value=='category') {?>
+<meta property="og:type" content="product" />
 <meta property="og:title" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_title']->value, ENT_QUOTES, 'UTF-8', true);?>
 " />
 <meta property="og:description" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_description']->value, ENT_QUOTES, 'UTF-8', true);?>
 " />
-<meta property="og:image" content="<?php echo $_smarty_tpl->tpl_vars['link']->value->getImageLink($_smarty_tpl->tpl_vars['product']->value->link_rewrite[$_smarty_tpl->tpl_vars['id_lang']->value],$_smarty_tpl->tpl_vars['cover']->value['id_image'],'thickbox_default');?>
+<meta property="og:image" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['link']->value->getCatImageLink($_smarty_tpl->tpl_vars['category']->value->link_rewrite,$_smarty_tpl->tpl_vars['category']->value->id_image,'category_default'), ENT_QUOTES, 'UTF-8', true);?>
 " />
+<?php } elseif ($_smarty_tpl->tpl_vars['page_name']->value=='manufacturer'&&isset($_GET['id_manufacturer'])&&$_GET['id_manufacturer']) {?>
+<meta property="og:type" content="product" />
+<meta property="og:title" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_title']->value, ENT_QUOTES, 'UTF-8', true);?>
+" />
+<meta property="og:description" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_description']->value, ENT_QUOTES, 'UTF-8', true);?>
+" />
+<meta property="og:image" content="<?php echo $_smarty_tpl->tpl_vars['img_manu_dir']->value;?>
+<?php echo mb_convert_encoding(htmlspecialchars($_GET['id_manufacturer'], ENT_QUOTES, 'UTF-8', true), "HTML-ENTITIES", 'UTF-8');?>
+-big_default.jpg" />
+<?php } elseif ($_smarty_tpl->tpl_vars['page_name']->value=='supplier'&&isset($_GET['id_supplier'])&&$_GET['id_supplier']) {?>
+<meta property="og:type" content="product" />
+<meta property="og:title" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_title']->value, ENT_QUOTES, 'UTF-8', true);?>
+" />
+<meta property="og:description" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_description']->value, ENT_QUOTES, 'UTF-8', true);?>
+" />
+<meta property="og:image" content="<?php echo $_smarty_tpl->tpl_vars['img_sup_dir']->value;?>
+<?php echo htmlspecialchars($_GET['id_supplier'], ENT_QUOTES, 'UTF-8', true);?>
+-big_default.jpg" />
 <?php } elseif ($_smarty_tpl->tpl_vars['page_name']->value=='module-stblog-article') {?>
 <meta property="og:type" content="article" />
 <meta property="og:title" content="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['meta_title']->value, ENT_QUOTES, 'UTF-8', true);?>

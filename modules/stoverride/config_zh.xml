@@ -2,7 +2,7 @@
 <module>
 	<name>stoverride</name>
 	<displayName><![CDATA[Overriding default behaviors]]></displayName>
-	<version><![CDATA[1.1.0]]></version>
+	<version><![CDATA[1.2.0]]></version>
 	<description><![CDATA[Overriding PrestaShops classes and controllers]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

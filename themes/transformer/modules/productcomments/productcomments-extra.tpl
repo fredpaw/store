@@ -25,7 +25,7 @@
 *}
 {if (!$content_only && (($nbComments == 0 && $too_early == false && ($is_logged || $allow_guests)) || ($nbComments != 0)))}
 {assign var='enable_reivew_aggregate' value=(!isset($sttheme.google_rich_snippets) || (isset($sttheme.google_rich_snippets) && $sttheme.google_rich_snippets==1))}
-<div id="product_comments_block_extra" class="no-print clearfix" {if $enable_reivew_aggregate}itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"{/if}>
+<div id="product_comments_block_extra" class="no-print clearfix" {if $enable_reivew_aggregate}itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"{/if}>
 	{if $nbComments != 0}
 		<div class="comments_note pull-left">
 			<div class="star_content clearfix">

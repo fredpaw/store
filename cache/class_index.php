@@ -805,7 +805,7 @@
   ),
   'AdminProductsController' => 
   array (
-    'path' => '',
+    'path' => 'override/controllers/admin/AdminProductsController.php',
     'type' => 'class',
     'override' => false,
   ),

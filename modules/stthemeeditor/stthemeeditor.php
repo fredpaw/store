@@ -35,6 +35,7 @@ class StThemeEditor extends Module
     private $_html;
     private $_config_folder;
     private $_hooks;
+    private $_font_inherit = 'inherit';
     public $fields_form; 
     public $fields_value;   
     public $validation_errors = array();
@@ -106,10 +107,11 @@ class StThemeEditor extends Module
         array('id'  => '0,23', 'name' => 'General'),
         array('id'  => '1', 'name' => 'Category pages'),
         array('id'  => '16', 'name' => 'Product pages'),
-        array('id'  => '2', 'name' => 'Colors'),
+        array('id'  => '2,26,27,28', 'name' => 'Colors'),
         array('id'  => '3', 'name' => 'Font'),
         array('id'  => '15', 'name' => 'Stickers'),
         array('id'  => '4,19', 'name' => 'Header'),
+        array('id'  => '24,25', 'name' => 'Sticky header/menu'),
         array('id'  => '20,21', 'name' => 'Advanced megamenu'),
         array('id'  => '5', 'name' => 'Megamenu'),
         array('id'  => '6', 'name' => 'Body'),
@@ -137,7 +139,8 @@ class StThemeEditor extends Module
     );
     
     public static $border_style_map = array(
-        array('id'=>0,  'name'=>'None'),
+        array('id'=>0,  'name'=>'Default'),
+        array('id'=>1,  'name'=>'No border'),
         array('id'=>11, 'name'=>'Full width, 1px height'),
         array('id'=>12, 'name'=>'Full width, 2px height'),
         array('id'=>13, 'name'=>'Full width, 3px height'),
@@ -162,20 +165,28 @@ class StThemeEditor extends Module
 	{
 		$this->name = 'stthemeeditor';
 		$this->tab = 'administration';
-		$this->version = '3.2.0';
+		$this->version = '3.2.5';
 		$this->author = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap = true;
-
-        $this->bootstrap = true;
+        
 	 	parent::__construct();
 
 		$this->displayName = $this->l('Theme editor');
 		$this->description = $this->l('Allows to change theme design');
+        
+        //$this->_checkGlobal();
 
         $this->googleFonts = include_once(dirname(__FILE__).'/googlefonts.php');
 
         $this->_config_folder = _PS_MODULE_DIR_.$this->name.'/config/';
+        if($custom_fonts_string = Configuration::get('STSN_CUSTOM_FONTS'))
+        {
+            $custom_fonts_arr = explode(',', $custom_fonts_string);
+            foreach ($custom_fonts_arr as $font)
+                if(trim($font))
+                    $this->systemFonts[] = $font;
+        }
         
         $this->defaults = array(
             'responsive'                    => array('exp'=>0,'val'=> 1),
@@ -186,7 +197,7 @@ class StThemeEditor extends Module
             'welcome_logged'                => array('exp'=>0,'val'=> array('1'=>'Welcome')),
             'welcome_link'                  => array('exp'=>0,'val'=> ''),
             'product_view'                  => array('exp'=>0,'val'=> 'grid_view'),
-            'copyright_text'                => array('exp'=>0,'val'=> array(1=>'&copy; 2015 Powered by Presta Shop&trade;. All Rights Reserved'),'esc'=>1),
+            'copyright_text'                => array('exp'=>0,'val'=> array(1=>'&COPY; 2015 Powered by Presta Shop&trade;. All Rights Reserved'),'esc'=>1),
             'search_label'                  => array('exp'=>0,'val'=> array(1=>'Search here')),
             'newsletter_label'              => array('exp'=>0,'val'=> array(1=>'Your e-mail')),
             'footer_img'                    => array('exp'=>0,'val'=> 'img/payment-options.png'), 
@@ -334,6 +345,7 @@ class StThemeEditor extends Module
             'cs_pause_on_hover'             => array('exp'=>0,'val'=> 1),
             'cs_loop'                       => array('exp'=>0,'val'=> 0),
             'cs_move'                       => array('exp'=>0,'val'=> 0),
+            'cs_title_no_bg'                => array('exp'=>0,'val'=> 0),
             'cs_per_lg_0'                   => array('exp'=>0,'val'=> 5),
             'cs_per_md_0'                   => array('exp'=>0,'val'=> 5),
             'cs_per_sm_0'                   => array('exp'=>0,'val'=> 4),
@@ -347,6 +359,7 @@ class StThemeEditor extends Module
             'pc_pause_on_hover'             => array('exp'=>0,'val'=> 1),
             'pc_loop'                       => array('exp'=>0,'val'=> 0),
             'pc_move'                       => array('exp'=>0,'val'=> 0),
+            'pc_title_no_bg'                => array('exp'=>0,'val'=> 0),
             'pc_per_lg_0'                   => array('exp'=>0,'val'=> 5),
             'pc_per_md_0'                   => array('exp'=>0,'val'=> 5),
             'pc_per_sm_0'                   => array('exp'=>0,'val'=> 4),
@@ -360,6 +373,7 @@ class StThemeEditor extends Module
             'ac_pause_on_hover'             => array('exp'=>0,'val'=> 1),
             'ac_loop'                       => array('exp'=>0,'val'=> 0),
             'ac_move'                       => array('exp'=>0,'val'=> 0),
+            'ac_title_no_bg'                => array('exp'=>0,'val'=> 0),
             'ac_per_lg_0'                   => array('exp'=>0,'val'=> 5),
             'ac_per_md_0'                   => array('exp'=>0,'val'=> 5),
             'ac_per_sm_0'                   => array('exp'=>0,'val'=> 4),
@@ -409,10 +423,6 @@ class StThemeEditor extends Module
             'second_menu_hover_color'       => array('exp'=>1,'val'=> ''),
             'third_menu_color'              => array('exp'=>1,'val'=> ''),
             'third_menu_hover_color'        => array('exp'=>1,'val'=> ''),
-            'menu_mob_color'                => array('exp'=>1,'val'=> ''),
-            'menu_mob_bg'                   => array('exp'=>1,'val'=> ''),
-            'menu_mob_hover_color'          => array('exp'=>1,'val'=> ''),
-            'menu_mob_hover_bg'             => array('exp'=>1,'val'=> ''),
             'menu_mob_items1_color'         => array('exp'=>1,'val'=> ''),
             'menu_mob_items2_color'         => array('exp'=>1,'val'=> ''),
             'menu_mob_items3_color'         => array('exp'=>1,'val'=> ''),
@@ -497,15 +507,15 @@ class StThemeEditor extends Module
             'categories_per_xxs_0'          => array('exp'=>0,'val'=> 2),
             //1.6
             'category_show_all_btn'         => array('exp'=>0,'val'=> 0),
-            'zoom_type'                     => array('exp'=>0,'val'=> 0),
+            'zoom_type'                     => array('exp'=>0,'val'=> 2),
 
             'breadcrumb_width'              => array('exp'=>1,'val'=> 0),
             'breadcrumb_bg_style'           => array('exp'=>1,'val'=> 0),
             'megamenu_width'                => array('exp'=>1,'val'=> 0),
             //
-            'flyout_buttons_bg'             => array('exp'=>1,'val'=> 0),
+            'flyout_buttons_bg'             => array('exp'=>1,'val'=> ''),
             //
-            'retina'                        => array('exp'=>0,'val'=> 0),
+            'retina'                        => array('exp'=>1,'val'=> 1),
             'yotpo_sart'                    => array('exp'=>0,'val'=> 0),   
             'retina_logo'                   => array('exp'=>0,'val'=> ''),  
             'navigation_pipe'               => array('exp'=>0,'val'=> '>','esc'=>1),
@@ -518,6 +528,7 @@ class StThemeEditor extends Module
             'adv_megamenu_position'              => array('exp'=>1,'val'=> 0),
             'adv_menu_sticky'                    => array('exp'=>0,'val'=> 2),
             'adv_menu_sticky_bg'                 => array('exp'=>0,'val'=> ''),
+            'adv_menu_sticky_opacity'            => array('exp'=>0,'val'=> 0.95),
             'adv_st_menu_height'                 => array('exp'=>1,'val'=> 0),
             'adv_font_menu'                      => array('exp'=>1,'val'=> 'Fjalla One'),
             'adv_font_menu_size'                 => array('exp'=>1,'val'=> 0),
@@ -534,10 +545,6 @@ class StThemeEditor extends Module
             'adv_second_menu_hover_color'        => array('exp'=>1,'val'=> ''),
             'adv_third_menu_color'               => array('exp'=>1,'val'=> ''),
             'adv_third_menu_hover_color'         => array('exp'=>1,'val'=> ''),
-            'adv_menu_mob_color'                 => array('exp'=>1,'val'=> ''),
-            'adv_menu_mob_hover_color'           => array('exp'=>1,'val'=> ''),
-            'adv_menu_mob_bg'                    => array('exp'=>1,'val'=> ''),
-            'adv_menu_mob_hover_bg'              => array('exp'=>1,'val'=> ''),
             'adv_menu_mob_items1_color'          => array('exp'=>1,'val'=> ''),
             'adv_menu_mob_items2_color'          => array('exp'=>1,'val'=> ''),
             'adv_menu_mob_items3_color'          => array('exp'=>1,'val'=> ''),
@@ -552,25 +559,67 @@ class StThemeEditor extends Module
             'c_menu_border_color'                => array('exp'=>1,'val'=> ''),
             'c_menu_title_color'                 => array('exp'=>1,'val'=> ''),
             'c_menu_title_bg'                    => array('exp'=>1,'val'=> ''),
-            'c_menu_font'                        => array('exp'=>1,'val'=> ''),
-            'c_menu_font_size'                   => array('exp'=>1,'val'=> 0),
-            'c_menu_font_trans'                       => array('exp'=>1,'val'=> 0),
-
-            'pro_shadow_effect'                 => array('exp'=>1,'val'=>1),
-            'pro_h_shadow'                      => array('exp'=>1,'val'=>0),
-            'pro_v_shadow'                      => array('exp'=>1,'val'=>0),
-            'pro_shadow_blur'                   => array('exp'=>1,'val'=>4),
-            'pro_shadow_color'                  => array('exp'=>1,'val'=>'#000000'),
-            'pro_shadow_opacity'                  => array('exp'=>1,'val'=>0.1),
-
-            'menu_title'                  => array('exp'=>0,'val'=>0),
+            'c_menu_font'                     => array('exp'=>1,'val'=> ''),
+            'c_menu_font_size'                => array('exp'=>1,'val'=> 0),
+            'c_menu_font_trans'               => array('exp'=>1,'val'=> 0),
+            
+            'pro_shadow_effect'               => array('exp'=>1,'val'=>1),
+            'pro_h_shadow'                    => array('exp'=>1,'val'=>0),
+            'pro_v_shadow'                    => array('exp'=>1,'val'=>0),
+            'pro_shadow_blur'                 => array('exp'=>1,'val'=>4),
+            'pro_shadow_color'                => array('exp'=>1,'val'=>'#000000'),
+            'pro_shadow_opacity'              => array('exp'=>1,'val'=>0.1),
+            
+            'menu_title'                      => array('exp'=>0,'val'=>0),
             'adv_menu_title'                  => array('exp'=>0,'val'=>0),
-            'flyout_wishlist'                  => array('exp'=>1,'val'=>0),
-            'flyout_quickview'                  => array('exp'=>1,'val'=>0),
-            'flyout_comparison'                  => array('exp'=>1,'val'=>0),
-            'display_add_to_cart'              => array('exp'=>0,'val'=>0),
+            'flyout_wishlist'                 => array('exp'=>1,'val'=>0),
+            'flyout_quickview'                => array('exp'=>1,'val'=>0),
+            'flyout_comparison'               => array('exp'=>1,'val'=>0),
+            'display_add_to_cart'             => array('exp'=>0,'val'=>0),
+            
+            'transparent_header'              => array('exp'=>0,'val'=>0),
+            'use_view_more_instead'           => array('exp'=>0,'val'=>0),
+            
+            'base_border_color'                       => array('exp'=>1,'val'=>''),
+            'sticky_mobile_header'                    => array('exp'=>1,'val'=>2),
+            'sticky_mobile_header_height'             => array('exp'=>0,'val'=>0),
+            'sticky_mobile_header_color'              => array('exp'=>1,'val'=>''),
+            'sticky_mobile_header_background'         => array('exp'=>1,'val'=>''),
+            'sticky_mobile_header_background_opacity' => array('exp'=>1,'val'=>0.95),
+            'side_bar_background'                     => array('exp'=>1,'val'=>''),
 
-            'transparent_header'               => array('exp'=>0,'val'=>0),
+            'direction_color'                         => array('exp'=>1,'val'=>''),
+            'direction_bg'                            => array('exp'=>1,'val'=>''),
+            'direction_hover_bg'                      => array('exp'=>1,'val'=>''),
+            'direction_disabled_bg'                   => array('exp'=>1,'val'=>''),
+
+            'pagination_color'          => array('exp'=>1,'val'=>''),
+            'pagination_color_hover'    => array('exp'=>1,'val'=>''),
+            'pagination_bg'             => array('exp'=>1,'val'=>''),
+            'pagination_bg_hover'       => array('exp'=>1,'val'=>''),
+            'pagination_border'    => array('exp'=>1,'val'=>''),
+
+            'form_bg_color'    => array('exp'=>1,'val'=>''),
+
+            'boxed_shadow_effect'               => array('exp'=>1,'val'=>1),
+            'boxed_h_shadow'                    => array('exp'=>1,'val'=>0),
+            'boxed_v_shadow'                    => array('exp'=>1,'val'=>0),
+            'boxed_shadow_blur'                 => array('exp'=>1,'val'=>3),
+            'boxed_shadow_color'                => array('exp'=>1,'val'=>'#000000'),
+            'boxed_shadow_opacity'              => array('exp'=>1,'val'=>0.1),
+
+            'slide_lr_column'              => array('exp'=>0,'val'=>1),
+            'pro_thumbnails'              => array('exp'=>0,'val'=>0),
+            'custom_fonts'              => array('exp'=>0,'val'=>''),
+            /*'pro_image_column_md'              => array('exp'=>0,'val'=>4),
+            'pro_primary_column_md'              => array('exp'=>0,'val'=>5),
+            'pro_secondary_column_md'              => array('exp'=>0,'val'=>3),
+            'pro_image_column_sm'              => array('exp'=>0,'val'=>4),
+            'pro_primary_column_sm'              => array('exp'=>0,'val'=>5),
+            'pro_secondary_column_sm'              => array('exp'=>0,'val'=>3),*/
+
+            'submemus_animation'              => array('exp'=>0,'val'=>0),
+            'adv_submemus_animation'              => array('exp'=>0,'val'=>0),
         );
         
         $this->_hooks = array(
@@ -596,6 +645,8 @@ class StThemeEditor extends Module
             array('displayFooterBottomLeft','displayFooterBottomLeft','Footer bottom left',1),
             array('displayMobileBar','displayMobileBar','Mobile bar',1),
             array('displayMobileMenu','displayMobileMenu','Mobile menu',1),
+            array('displaySideBar','displaySideBar','Side bar',1),
+            array('displayFullWidthTop2','displayFullWidthTop2','Full width top 2',1),
         );
 	}
 	
@@ -612,6 +663,8 @@ class StThemeEditor extends Module
         ){
             if ($id_hook = Hook::getIdByName('displayHeader'))
                 $this->updatePosition($id_hook, 0, 1);
+            $this->add_quick_access();
+            $this->clear_class_index();
             return true;
         }
         return false;
@@ -915,7 +968,7 @@ class StThemeEditor extends Module
                 Configuration::updateValue('PS_NAVIGATION_PIPE', Configuration::get('STSN_NAVIGATION_PIPE'));
             if(Configuration::get('STSN_MAIL_COLOR'))
                 Configuration::updateValue('PS_MAIL_COLOR', Configuration::get('STSN_MAIL_COLOR'));
-
+            
             $this->updateWelcome();
             $this->updateCopyright();
             $this->updateSearchLabel();
@@ -1047,6 +1100,9 @@ class StThemeEditor extends Module
         $this->fields_form[12]['form']['input']['pc_pro_per_0']['name'] = $this->BuildDropListGroup($this->findCateProPer(8));
         $this->fields_form[13]['form']['input']['ac_pro_per_0']['name'] = $this->BuildDropListGroup($this->findCateProPer(9));
         $this->fields_form[16]['form']['input']['packitems_pro_per_0']['name'] = $this->BuildDropListGroup($this->findCateProPer(5));
+        /*$this->fields_form[16]['form']['input']['pro_image_column']['name'] = $this->BuildDropListGroup($this->findCateProPer(10,1,11));
+        $this->fields_form[16]['form']['input']['pro_primary_column']['name'] = $this->BuildDropListGroup($this->findCateProPer(11,1,11));
+        $this->fields_form[16]['form']['input']['pro_secondary_column']['name'] = $this->BuildDropListGroup($this->findCateProPer(12,1,11));*/
     }
     
     public function updateWelcome() {
@@ -1183,8 +1239,27 @@ class StThemeEditor extends Module
 							'value' => 2,
 							'label' => $this->l('Boxed style')),
 					),
+                    'desc' => $this->l('You can change the shadow around the main content when in boxed style under the "Color" tab.'),
                     'validation' => 'isUnsignedInt',
 				), 
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Slide left/right column:'),
+                    'name' => 'slide_lr_column',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'slide_lr_column_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'slide_lr_column_off',
+                            'value' => 0,
+                            'label' => $this->l('NO')),
+                    ),
+                    'desc' => $this->l('Click the "Left"/"right" button to slide the left/right column out on mobile devices.'),
+                    'validation' => 'isBool',
+                ), 
                 array(
                     'type' => 'text',
                     'label' => $this->l('Page top spacing:'),
@@ -1268,21 +1343,21 @@ class StThemeEditor extends Module
     			),
                 array(
 					'type' => 'text',
-					'label' => $this->l('Guest welcome msg:'),
+					'label' => $this->l('Guest welcome message:'),
 					'name' => 'welcome',
                     'size' => 64,
                     'lang' => true,
 				),
                 array(
 					'type' => 'text',
-					'label' => $this->l('Logged welcome msg:'),
+					'label' => $this->l('Logged welcome message:'),
 					'name' => 'welcome_logged',
                     'size' => 64,
                     'lang' => true,
 				),
                 array(
 					'type' => 'text',
-					'label' => $this->l('Add a link to welcome msg:'),
+					'label' => $this->l('Add a link to welcome message:'),
 					'name' => 'welcome_link',
                     'size' => 64,
                     'lang' => true,
@@ -1341,6 +1416,14 @@ class StThemeEditor extends Module
                     'size' => 20,
                     'validation' => 'isColor',
                  ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Custom fonts:'),
+                    'name' => 'custom_fonts',
+                    'class' => 'fixed-width-xxl',
+                    'desc' => $this->l('Each font name has to be separated by a comma (","). Please refer to the Documenation to lear how to add custom fonts.'),
+                    'validation' => 'isAnything',
+                ),
 			),
 			'submit' => array(
 				'title' => $this->l('   Save all   '),
@@ -1398,15 +1481,15 @@ class StThemeEditor extends Module
                         array(
                             'id' => 'display_add_to_cart_on',
                             'value' => 1,
-                            'label' => $this->l('Display "add to cart" buttons below the product name when mouse hover over')),
+                            'label' => $this->l('Display the "add to cart" button below the product name when mouse hover over')),
                         array(
                             'id' => 'display_add_to_cart_always',
                             'value' => 2,
-                            'label' => $this->l('Display "add to cart" buttons below the product name')),
+                            'label' => $this->l('Display the "add to cart" button below the product name')),
                         array(
                             'id' => 'display_add_to_cart_fly_out',
                             'value' => 0,
-                            'label' => $this->l('Display "add to cart" buttons in the fly-out button')),
+                            'label' => $this->l('Display the "add to cart" button in the fly-out button')),
                         array(
                             'id' => 'display_add_to_cart_off',
                             'value' => 3,
@@ -1415,8 +1498,29 @@ class StThemeEditor extends Module
                     'validation' => 'isUnsignedInt',
                 ), 
                 array(
+                    'type' => 'radio',
+                    'label' => $this->l('"View more" button:'),
+                    'name' => 'use_view_more_instead',
+                    'default_value' => 0,
+                    'values' => array(
+                        array(
+                            'id' => 'use_view_more_instead_on',
+                            'value' => 1,
+                            'label' => $this->l('Use the "View more" button instead of the "Add to cart" button')),
+                        array(
+                            'id' => 'use_view_more_instead_both',
+                            'value' => 2,
+                            'label' => $this->l('Display both the "View more" button and "Add to cart" button')),
+                        array(
+                            'id' => 'use_view_more_instead_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isUnsignedInt',
+                ), 
+                array(
                     'type' => 'switch',
-                    'label' => $this->l('Hide "Add to wishlist" in the fly-out button:'),
+                    'label' => $this->l('Hide the "Add to wishlist" button in the fly-out button:'),
                     'name' => 'flyout_wishlist',
                     'default_value' => 1,
                     'is_bool' => true,
@@ -1431,10 +1535,10 @@ class StThemeEditor extends Module
                             'label' => $this->l('No')),
                     ),
                     'validation' => 'isBool',
-                ), 
+                ),    
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Hide "Quick view" in the fly-out button:'),
+                    'label' => $this->l('Hide the "Quick view" button in the fly-out button:'),
                     'name' => 'flyout_quickview',
                     'default_value' => 1,
                     'is_bool' => true,
@@ -1452,7 +1556,7 @@ class StThemeEditor extends Module
                 ), 
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Hide "Add to compare" in the fly-out button:'),
+                    'label' => $this->l('Hide the "Add to compare" button in the fly-out button:'),
                     'name' => 'flyout_comparison',
                     'default_value' => 1,
                     'is_bool' => true,
@@ -1721,6 +1825,10 @@ class StThemeEditor extends Module
 							'id' => 'display_subcate_gird',
 							'value' => 1,
 							'label' => $this->l('Grid view')),
+                        array(
+                            'id' => 'display_subcate_gird_fullname',
+                            'value' => 3,
+                            'label' => $this->l('Grid view(Display full category name)')),
 						array(
 							'id' => 'display_subcate_list',
 							'value' => 2,
@@ -1873,6 +1981,22 @@ class StThemeEditor extends Module
 					'size' => 20,
                     'validation' => 'isColor',
 			     ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('General border color:'),
+                    'name' => 'base_border_color',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Form background color:'),
+                    'name' => 'form_bg_color',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
 				 array(
 					'type' => 'color',
 					'label' => $this->l('Breadcrumb font color:'),
@@ -2020,15 +2144,7 @@ class StThemeEditor extends Module
                     'class' => 'color',
                     'size' => 20,
                     'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Product grid hover background:'),
-                    'name' => 'pro_grid_hover_bg',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),          
+                 ),        
 				 array(
 					'type' => 'color',
 					'label' => $this->l('Buttons text color:'),
@@ -2109,6 +2225,182 @@ class StThemeEditor extends Module
 			),
         );
         
+        $this->fields_form[26]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Product sliders'),
+                'icon' => 'icon-cogs'
+            ),
+            'input' => array(
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Product grid hover background:'),
+                    'name' => 'pro_grid_hover_bg',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),                  
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Prev/next color:'),
+                    'name' => 'direction_color',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Prev/next background:'),
+                    'name' => 'direction_bg',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Prev/next hover background:'),
+                    'name' => 'direction_hover_bg',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Prev/next disabled background:'),
+                    'name' => 'direction_disabled_bg',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+            ),
+            'submit' => array(
+                'title' => $this->l('   Save all   '),
+            ),
+        );
+
+        $this->fields_form[27]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Pagination'),
+                'icon' => 'icon-cogs'
+            ),
+            'input' => array(
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Color:'),
+                    'name' => 'pagination_color',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Hover color:'),
+                    'name' => 'pagination_color_hover',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Background:'),
+                    'name' => 'pagination_bg',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Hover background:'),
+                    'name' => 'pagination_bg_hover',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Border color:'),
+                    'name' => 'pagination_border',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+            ),
+            'submit' => array(
+                'title' => $this->l('   Save all   '),
+            ),
+        );
+
+
+        $this->fields_form[28]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Boxed style'),
+                'icon' => 'icon-cogs'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Show a shadow effect:'),
+                    'name' => 'boxed_shadow_effect',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'boxed_shadow_effect_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'boxed_shadow_effect_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ), 
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('H-shadow:'),
+                    'name' => 'boxed_h_shadow',
+                    'validation' => 'isInt',
+                    'prefix' => 'px',
+                    'class' => 'fixed-width-lg',
+                    'desc' => $this->l('The position of the horizontal shadow. Negative values are allowed.'),
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('V-shadow:'),
+                    'name' => 'boxed_v_shadow',
+                    'validation' => 'isInt',
+                    'prefix' => 'px',
+                    'class' => 'fixed-width-lg',
+                    'desc' => $this->l('The position of the vertical shadow. Negative values are allowed.'),
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('The blur distance of shadow:'),
+                    'name' => 'boxed_shadow_blur',
+                    'validation' => 'isUnsignedInt',
+                    'prefix' => 'px',
+                    'class' => 'fixed-width-lg',
+                ),
+                array(
+                    'type' => 'color',
+                    'label' => $this->l('Shadow color:'),
+                    'name' => 'boxed_shadow_color',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Shadow opacity:'),
+                    'name' => 'boxed_shadow_opacity',
+                    'validation' => 'isFloat',
+                    'class' => 'fixed-width-lg',
+                    'desc' => $this->l('From 0.0 (fully transparent) to 1.0 (fully opaque).'),
+                ),
+            ),
+            'submit' => array(
+                'title' => $this->l('   Save all   '),
+            ),
+        );
+
         $this->fields_form[3]['form'] = array(
 			'input' => array(
                 array(
@@ -2508,23 +2800,6 @@ class StThemeEditor extends Module
             ),
 			'input' => array(
                 array(
-                    'type' => 'switch',
-                    'label' => $this->l('Transparent header:'),
-                    'name' => 'transparent_header',
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => 'transparent_header_on',
-                            'value' => 1,
-                            'label' => $this->l('Yes')),
-                        array(
-                            'id' => 'transparent_header_off',
-                            'value' => 0,
-                            'label' => $this->l('No')),
-                    ),
-                    'validation' => 'isBool',
-                ),  
-                array(
                     'type' => 'radio',
                     'label' => $this->l('Logo position:'),
                     'name' => 'logo_position',
@@ -2542,7 +2817,7 @@ class StThemeEditor extends Module
                 ), 
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Logo width:'),
+                    'label' => $this->l('Logo area width:'),
                     'name' => 'logo_width',
                     'options' => array(
                         'query' => self::$logo_width_map,
@@ -2697,15 +2972,16 @@ class StThemeEditor extends Module
 				'title' => $this->l('   Save all   '),
 			),
         );
-        $this->fields_form[20]['form'] = array(
+
+        $this->fields_form[25]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Advanced megamenu'),
+                'title' => $this->l('Sticky header/menu'),
                 'icon' => 'icon-cogs'
             ),
             'input' => array(
                 array(
                     'type' => 'radio',
-                    'label' => $this->l('Sticky Menu:'),
+                    'label' => $this->l('Sticky:'),
                     'name' => 'adv_menu_sticky',
                     'values' => array(
                         array(
@@ -2715,14 +2991,143 @@ class StThemeEditor extends Module
                         array(
                             'id' => 'adv_menu_sticky_menu',
                             'value' => 1,
-                            'label' => $this->l('Sticky menu')),
+                            'label' => $this->l('Sticky advanced megamenu')),
                         array(
                             'id' => 'adv_menu_sticky_menu_animation',
                             'value' => 2,
-                            'label' => $this->l('Sticky menu(with animation)')),
+                            'label' => $this->l('Sticky advanced megamenu(with animation)')),
+                        array(
+                            'id' => 'adv_menu_sticky_header',
+                            'value' => 3,
+                            'label' => $this->l('Sticky header')),
+                        array(
+                            'id' => 'adv_menu_sticky_header_animation',
+                            'value' => 4,
+                            'label' => $this->l('Sticky header(with animation)')),
                     ),
                     'validation' => 'isUnsignedInt',
                 ),  
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Transparent header:'),
+                    'name' => 'transparent_header',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'transparent_header_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'transparent_header_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),  
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Sticky header/menu background:'),
+                    'name' => 'adv_menu_sticky_bg',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Sticky header/menu background opacity:'),
+                    'name' => 'adv_menu_sticky_opacity',
+                    'validation' => 'isFloat',
+                    'class' => 'fixed-width-lg',
+                    'desc' => $this->l('From 0.0 (fully transparent) to 1.0 (fully opaque).'),
+                ),
+            ),
+            'submit' => array(
+                'title' => $this->l('   Save all   '),
+            ),
+        );
+        $this->fields_form[24]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Mobile header'),
+                'icon' => 'icon-cogs'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'radio',
+                    'label' => $this->l('Mobile header:'),
+                    'name' => 'sticky_mobile_header',
+                    'values' => array(
+                        array(
+                            'id' => 'sticky_mobile_header_no_center',
+                            'value' => 0,
+                            'label' => $this->l('Logo center')),
+                        array(
+                            'id' => 'sticky_mobile_header_no_left',
+                            'value' => 1,
+                            'label' => $this->l('Logo left')),
+                        array(
+                            'id' => 'sticky_mobile_header_yes_center',
+                            'value' => 2,
+                            'label' => $this->l('Sticky, logo center')),
+                        array(
+                            'id' => 'sticky_mobile_header_yes_left',
+                            'value' => 3,
+                            'label' => $this->l('Sticky, logo left')),
+                    ),
+                    'validation' => 'isUnsignedInt',
+                    'desc' => $this->l('If you choose the "Logo left" or "Sticky, logo left", you have to transplant the "Advanced megamenu" module or the "Megamenu" to the displayMobileBar hook to make the menu icon show up on mobile devices.'),
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Mobile header height:'),
+                    'name' => 'sticky_mobile_header_height',
+                    'validation' => 'isUnsignedInt',
+                    'prefix' => 'px',
+                    'class' => 'fixed-width-lg',
+                ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Text color:'),
+                    'name' => 'sticky_mobile_header_color',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Background color:'),
+                    'name' => 'sticky_mobile_header_background',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Background color opacity:'),
+                    'name' => 'sticky_mobile_header_background_opacity',
+                    'validation' => 'isFloat',
+                    'class' => 'fixed-width-lg',
+                    'desc' => $this->l('From 0.0 (fully transparent) to 1.0 (fully opaque).'),
+                ),
+                 array(
+                    'type' => 'color',
+                    'label' => $this->l('Side bar background color:'),
+                    'name' => 'side_bar_background',
+                    'class' => 'color',
+                    'size' => 20,
+                    'validation' => 'isColor',
+                 ),
+            ),
+            'submit' => array(
+                'title' => $this->l('   Save all   '),
+            ),
+        );
+
+        $this->fields_form[20]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Advanced megamenu'),
+                'icon' => 'icon-cogs'
+            ),
+            'input' => array(
                 array(
                     'type' => 'radio',
                     'label' => $this->l('Megamenu position:'),
@@ -2760,6 +3165,22 @@ class StThemeEditor extends Module
                     ),
                     'validation' => 'isBool',
                 ), 
+                array(
+                    'type' => 'radio',
+                    'label' => $this->l('How do submenus appear:'),
+                    'name' => 'adv_submemus_animation',
+                    'values' => array(
+                        array(
+                            'id' => 'adv_submemus_animation_fadein',
+                            'value' => 0,
+                            'label' => $this->l('Slide in')),
+                        array(
+                            'id' => 'adv_submemus_animation_slidedown',
+                            'value' => 1,
+                            'label' => $this->l('Slide down')),
+                    ),
+                    'validation' => 'isUnsignedInt',
+                ),
                 array(
                     'type' => 'text',
                     'label' => $this->l('Menu height:'),
@@ -2846,14 +3267,6 @@ class StThemeEditor extends Module
                     'size' => 20,
                     'validation' => 'isColor',
                  ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Sticky menu background:'),
-                    'name' => 'adv_menu_sticky_bg',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->l('The height of menu bottom border:'),
@@ -2930,38 +3343,6 @@ class StThemeEditor extends Module
                     'type' => 'color',
                     'label' => $this->l('3rd level hover color:'),
                     'name' => 'adv_third_menu_hover_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Mobile menu button color:'),
-                    'name' => 'adv_menu_mob_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Mobile menu button hover color:'),
-                    'name' => 'adv_menu_mob_hover_color',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Background color for the mobile menu button:'),
-                    'name' => 'adv_menu_mob_bg',
-                    'class' => 'color',
-                    'size' => 20,
-                    'validation' => 'isColor',
-                 ),
-                 array(
-                    'type' => 'color',
-                    'label' => $this->l('Hover background color for the mobile menu button:'),
-                    'name' => 'adv_menu_mob_hover_bg',
                     'class' => 'color',
                     'size' => 20,
                     'validation' => 'isColor',
@@ -3211,6 +3592,22 @@ class StThemeEditor extends Module
                     'validation' => 'isBool',
                 ), 
                 array(
+                    'type' => 'radio',
+                    'label' => $this->l('How do submenus appear:'),
+                    'name' => 'submemus_animation',
+                    'values' => array(
+                        array(
+                            'id' => 'submemus_animation_fadein',
+                            'value' => 0,
+                            'label' => $this->l('Slide in')),
+                        array(
+                            'id' => 'submemus_animation_slidedown',
+                            'value' => 1,
+                            'label' => $this->l('Slide down')),
+                    ),
+                    'validation' => 'isUnsignedInt',
+                ),
+                array(
                     'type' => 'select',
                     'label' => $this->l('Menu font:'),
                     'name' => 'font_menu_list',
@@ -3348,38 +3745,6 @@ class StThemeEditor extends Module
 					'type' => 'color',
 					'label' => $this->l('3rd level hover color:'),
 					'name' => 'third_menu_hover_color',
-					'class' => 'color',
-					'size' => 20,
-                    'validation' => 'isColor',
-			     ),
-				 array(
-					'type' => 'color',
-					'label' => $this->l('Mobile menu button color:'),
-					'name' => 'menu_mob_color',
-					'class' => 'color',
-					'size' => 20,
-                    'validation' => 'isColor',
-			     ),
-				 array(
-					'type' => 'color',
-					'label' => $this->l('Mobile menu button hover color:'),
-					'name' => 'menu_mob_hover_color',
-					'class' => 'color',
-					'size' => 20,
-                    'validation' => 'isColor',
-			     ),
-				 array(
-					'type' => 'color',
-					'label' => $this->l('Background color for the mobile menu button:'),
-					'name' => 'menu_mob_bg',
-					'class' => 'color',
-					'size' => 20,
-                    'validation' => 'isColor',
-			     ),
-				 array(
-					'type' => 'color',
-					'label' => $this->l('Hover background color for the mobile menu button:'),
-					'name' => 'menu_mob_hover_bg',
 					'class' => 'color',
 					'size' => 20,
                     'validation' => 'isColor',
@@ -3561,7 +3926,7 @@ class StThemeEditor extends Module
                  ),
 				array(
 					'type' => 'color',
-					'label' => $this->l('Inner main content area  background color:'),
+					'label' => $this->l('Inner main content area background color:'),
 					'name' => 'main_con_bg_color',
 					'class' => 'color',
 					'size' => 20,
@@ -4261,6 +4626,24 @@ class StThemeEditor extends Module
 					),
                     'validation' => 'isBool',
 				),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'cs_title_no_bg',
+                    'default_value' => 0,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'cs_title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'cs_title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),
             ),
 			'submit' => array(
 				'title' => $this->l('   Save all   '),
@@ -4381,6 +4764,25 @@ class StThemeEditor extends Module
 					),
                     'validation' => 'isBool',
 				),
+                
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'pc_title_no_bg',
+                    'default_value' => 0,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'pc_title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'pc_title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),
             ),
 			'submit' => array(
 				'title' => $this->l('   Save all   '),
@@ -4500,6 +4902,25 @@ class StThemeEditor extends Module
 					),
                     'validation' => 'isBool',
 				),
+                
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Remove heading background:'),
+                    'name' => 'ac_title_no_bg',
+                    'default_value' => 0,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'ac_title_no_bg_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'ac_title_no_bg_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'validation' => 'isBool',
+                ),
             ),
 			'submit' => array(
 				'title' => $this->l('   Save all   '),
@@ -4823,22 +5244,60 @@ class StThemeEditor extends Module
                     'validation' => 'isBool',
                 ), 
                 array(
-					'type' => 'switch',
-					'label' => $this->l('Show product secondary column:'),
-					'name' => 'product_secondary',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'product_secondary_on',
-							'value' => 1,
-							'label' => $this->l('Enable')),
-						array(
-							'id' => 'product_secondary_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')),
-					),
+                    'type' => 'switch',
+                    'label' => $this->l('Show product secondary column:'),
+                    'name' => 'product_secondary',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'product_secondary_on',
+                            'value' => 1,
+                            'label' => $this->l('Enable')),
+                        array(
+                            'id' => 'product_secondary_off',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')),
+                    ),
                     'validation' => 'isBool',
-				), 
+                ), 
+                /*'pro_image_column' => array(
+                    'type' => 'html',
+                    'id' => 'pro_image_column',
+                    'label'=> $this->l('Image column width'),
+                    'name' => '',
+                    'desc' => $this->l('The default image type of the main product image is "large_default". When the image column width is larger that 4, "big_default" image type will be applied.'),
+                ),
+                'pro_primary_column' => array(
+                    'type' => 'html',
+                    'id' => 'pro_primary_column',
+                    'label'=> $this->l('Primary column width'),
+                    'name' => '',
+                    'desc' => $this->l('Sum of the three columns has to be equal 12, for example: 4 + 5 + 3, or 6 + 6 + 0.'),
+                ),
+                'pro_secondary_column' => array(
+                    'type' => 'html',
+                    'id' => 'pro_secondary_column',
+                    'label'=> $this->l('Secondy column width'),
+                    'name' => '',
+                    'desc' => $this->l('You can set them to 0 to hide the secondary column.'),
+                ),*/
+                array(
+                    'type' => 'radio',
+                    'label' => $this->l('How to display thumbnail images:'),
+                    'name' => 'pro_thumbnails',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'pro_thumbnails_slider',
+                            'value' => 0,
+                            'label' => $this->l('Slider')),
+                        array(
+                            'id' => 'pro_thumbnails_list',
+                            'value' => 1,
+                            'label' => $this->l('List')),
+                    ),
+                    'validation' => 'isUnsignedInt',
+                ), 
                 array(
 					'type' => 'radio',
 					'label' => $this->l('Show brand logo on product page:'),
@@ -4901,18 +5360,26 @@ class StThemeEditor extends Module
                 ),
                 array(
 					'type' => 'radio',
-					'label' => $this->l('Zoom_type:'),
+					'label' => $this->l('jqZoom or Fancybox:'),
 					'name' => 'zoom_type',
                     'default_value' => 0,
 					'values' => array(
 						array(
 							'id' => 'zoom_type_standrad',
 							'value' => 0,
-							'label' => $this->l('Standard')),
+							'label' => $this->l('Standard zoom')),
+                        array(
+                            'id' => 'zoom_type_innerzoom',
+                            'value' => 1,
+                            'label' => $this->l('Inner zoom')),
+                        array(
+                            'id' => 'zoom_type_fancybox',
+                            'value' => 2,
+                            'label' => $this->l('Fancybox')),
 						array(
-							'id' => 'zoom_type_innerzoom',
-							'value' => 1,
-							'label' => $this->l('Innerzoom')),
+							'id' => 'zoom_type_no',
+							'value' => 3,
+							'label' => $this->l('No')),
 					),
                     'validation' => 'isUnsignedInt',
 				),
@@ -5177,25 +5644,29 @@ class StThemeEditor extends Module
                 $font_menu = explode(":", $font_menu_string);
                 $font_menu = $font_menu[0];
                 $font_menu_key = str_replace(' ', '_', $font_menu);
-                if(array_key_exists($font_menu_key, $this->googleFonts))
-                {
-                    foreach ($this->googleFonts[$font_menu_key]['variants'] as $g) {
-                        $this->fields_form[$wf]['form']['input'][$font]['options']['query'][] = array(
-                                'id'=> $font_menu.':'.($g=='regular' ? '400' : $g),
-                                'name'=> $g,
-                            );
-                    }
+            }
+            else
+            {
+                $font_menu_key = $font_menu = $this->_font_inherit;
+            }  
+            if(array_key_exists($font_menu_key, $this->googleFonts))
+            {
+                foreach ($this->googleFonts[$font_menu_key]['variants'] as $g) {
+                    $this->fields_form[$wf]['form']['input'][$font]['options']['query'][] = array(
+                            'id'=> $font_menu.':'.($g=='regular' ? '400' : $g),
+                            'name'=> $g,
+                        );
                 }
-                else
-                {
-                    $this->fields_form[$wf]['form']['input'][$font]['options']['query'] = array(
-                        array('id'=> $font_menu,'name'=>'Normal'),
-                        array('id'=> $font_menu.':700','name'=>'Bold'),
-                        array('id'=> $font_menu.':italic','name'=>'Italic'),
-                        array('id'=> $font_menu.':700italic','name'=>'Bold & Italic'),
-                    );
-                }
-            }    
+            }
+            else
+            {
+                $this->fields_form[$wf]['form']['input'][$font]['options']['query'] = array(
+                    array('id'=> $font_menu,'name'=>'Normal'),
+                    array('id'=> $font_menu.':700','name'=>'Bold'),
+                    array('id'=> $font_menu.':italic','name'=>'Italic'),
+                    array('id'=> $font_menu.':700italic','name'=>'Bold & Italic'),
+                );
+            } 
         }
         
 
@@ -5250,7 +5721,7 @@ class StThemeEditor extends Module
     public function writeCss()
     {
         $id_shop = (int)Shop::getContextShopID();
-        $css = '';
+        $css = $res_css = '';
         $is_responsive = Configuration::get('STSN_RESPONSIVE');
         $transparent_header = Configuration::get('STSN_TRANSPARENT_HEADER');
 
@@ -5310,15 +5781,15 @@ class StThemeEditor extends Module
         }
 
         if($fontText)
-           $css .='body{font-family:"'.$fontText.'", Tahoma, sans-serif, Arial;'.$fontTextWeight.$fontTextStyle.'}';
+           $css .='body{'.($fontText != $this->_font_inherit ? 'font-family:"'.$fontText.'", Tahoma, sans-serif, Arial;' : '').$fontTextWeight.$fontTextStyle.'}';
     	if($fontPrice && $fontPrice != $fontText)
-        	$css .='.price,#our_price_display,.old_price,.sale_percentage{font-family: "'.$fontPrice.'", Tahoma, sans-serif, Arial;'.$fontPriceWeight.$fontPriceStyle.'}';
+        	$css .='.price,#our_price_display,.old_price,.sale_percentage{'.($fontPrice != $this->_font_inherit ? 'font-family:"'.$fontPrice.'", Tahoma, sans-serif, Arial;' : '').$fontPriceWeight.$fontPriceStyle.'}';
         if($fontCartBtn && $fontCartBtn != $fontText)
-            $css .='.product_list.list .ajax_add_to_cart_button, .product_list.list .view_button,#buy_block #add_to_cart .btn_primary,#create-account_form .submit .btn_primary, #login_form .submit .btn_primary, .camera_caption_box .btn_primary, .iosSlider_text .btn_primary{font-family: "'.$fontCartBtn.'", Tahoma, sans-serif, Arial;'.$fontCartBtnWeight.$fontCartBtnStyle.'}';
+            $css .='.product_list.list .ajax_add_to_cart_button, .product_list.list .view_button,#buy_block #add_to_cart .btn_primary,#create-account_form .submit .btn_primary, #login_form .submit .btn_primary, .camera_caption_box .btn_primary, .iosSlider_text .btn_primary{'.($fontCartBtn != $this->_font_inherit ? 'font-family:"'.$fontCartBtn.'", Tahoma, sans-serif, Arial;' : '').''.$fontCartBtnWeight.$fontCartBtnStyle.'}';
         $css .= '.btn-default.btn_primary, .btn-medium.btn_primary, .btn-large.btn_primary{text-transform: '.self::$textTransform[(int)Configuration::get('STSN_FONT_HEADING_TRANS')]['name'].';}';
 
 
-        $css_font_heading = $fontHeadingWeight.$fontHeadingStyle.'text-transform: '.self::$textTransform[(int)Configuration::get('STSN_FONT_HEADING_TRANS')]['name'].';'.($fontHeading != $fontText ? 'font-family: "'.$fontHeading.'";' : '');
+        $css_font_heading = $fontHeadingWeight.$fontHeadingStyle.'text-transform: '.self::$textTransform[(int)Configuration::get('STSN_FONT_HEADING_TRANS')]['name'].';'.($fontHeading != $fontText && $fontHeading != $this->_font_inherit ? 'font-family: "'.$fontHeading.'";' : '');
 
         $css_font_heading_size = '';
         if(Configuration::get('STSN_FONT_HEADING_SIZE'))
@@ -5350,6 +5821,7 @@ class StThemeEditor extends Module
             if($menu_height>36){
                 $css .='#st_advanced_menu_wrap .advanced_ma_level_0{height: '.$menu_height.'px;padding-top: '.floor($ma_level_padding).'px;padding-bottom: '.ceil($ma_level_padding).'px;}';
                 $css .= '.advanced_ma_level_0 .icon-down-dir-2{top:'.floor(($menu_height-16)/2/$menu_height*100).'%;}';
+                $css .= '#search_block_main_menu #search_block_top{top:'.floor(($menu_height-34)/2).'px;}';
             }
             elseif($menu_height<36){
                 $css .='#st_advanced_menu_wrap .advanced_ma_level_0{height: '.$menu_height.'px;line-height: '.$menu_height.'px;}';
@@ -5402,7 +5874,7 @@ class StThemeEditor extends Module
         if(Configuration::get('STSN_TEXT_COLOR'))
             $css .='body{color: '.Configuration::get('STSN_TEXT_COLOR').';}';
         if(Configuration::get('STSN_LINK_COLOR'))
-            $css .='a,.show_all_products{color: '.Configuration::get('STSN_LINK_COLOR').';}';
+            $css .='a,div.pagination .showall .show_all_products{color: '.Configuration::get('STSN_LINK_COLOR').';}';
         if(Configuration::get('STSN_LINK_HOVER_COLOR'))
         {
             $css .='a:active,a:hover,
@@ -5414,7 +5886,7 @@ class StThemeEditor extends Module
             #footer_info a:hover,
             .blog_info a:hover,
             .block .title_block a:hover,
-            .show_all_products,
+            div.pagination .showall .show_all_products:hover,
             .content_sortPagiBar .display li.selected a, .content_sortPagiBar .display_m li.selected a,
             .content_sortPagiBar .display li a:hover, .content_sortPagiBar .display_m li a:hover,
             #home-page-tabs > li.active a, #home-page-tabs li a:hover,
@@ -5463,6 +5935,13 @@ class StThemeEditor extends Module
             }
         }
         
+        if (Configuration::get('STSN_CS_TITLE_NO_BG'))
+            $css .= '#crossselling-products_block_center .title_block, #crossselling-products_block_center .nav_top_right .flex-direction-nav, #crossselling-products_block_center .title_block span{background:none;}';
+        if (Configuration::get('STSN_PC_TITLE_NO_BG'))
+            $css .= '#productscategory-products_block_center .title_block, #productscategory-products_block_center .nav_top_right .flex-direction-nav, #productscategory-products_block_center .title_block span{background:none;}';
+        if (Configuration::get('STSN_AC_TITLE_NO_BG'))
+            $css .= '#accessories_block .title_block, #accessories_block .nav_top_right .flex-direction-nav, #accessories_block .title_block span{background:none;}';
+        
         if(Configuration::get('STSN_ICON_COLOR'))
             $css .='a.icon_wrap, .icon_wrap,.shopping_cart .ajax_cart_right{color: '.Configuration::get('STSN_ICON_COLOR').';}';
         if(Configuration::get('STSN_ICON_HOVER_COLOR'))
@@ -5503,7 +5982,7 @@ class StThemeEditor extends Module
         if(Configuration::get('STSN_P_BTN_COLOR'))   
         {
             $primary_button_css .='color: '.Configuration::get('STSN_P_BTN_COLOR').';';
-            $css .= '.hover_fly a,.hover_fly a:hover,.hover_fly a:first-child,.hover_fly a:first-child:hover{color:'.Configuration::get('STSN_P_BTN_COLOR').'!important;}';
+            $css .= '.hover_fly a,.hover_fly a:hover,.hover_fly a:first-child,.hover_fly a:first-child:hover{color:'.Configuration::get('STSN_P_BTN_COLOR').'!important;}.itemlist_action a,.itemlist_action a:hover{color:'.Configuration::get('STSN_P_BTN_COLOR').';}';
         }
         if(Configuration::get('STSN_P_BTN_HOVER_COLOR'))   
             $primary_button_hover_css .='color: '.Configuration::get('STSN_P_BTN_HOVER_COLOR').';';
@@ -5599,7 +6078,7 @@ class StThemeEditor extends Module
     
         //header
         if(Configuration::get('STSN_HEADER_TEXT_COLOR'))
-            $css .='#top_bar{color:'.Configuration::get('STSN_HEADER_TEXT_COLOR').';}';
+            $css .='#top_bar .header_item{color:'.Configuration::get('STSN_HEADER_TEXT_COLOR').';}';
         if(Configuration::get('STSN_HEADER_LINK_COLOR'))
             $css .='#top_bar .header_item,#top_bar a.header_item, #top_bar .dropdown_tri_inner, #top_bar .shopping_cart .icon_wrap, #top_bar .shopping_cart .ajax_cart_right{color:'.Configuration::get('STSN_HEADER_LINK_COLOR').';}#top_bar .dropdown_tri_inner b{border-color: '.Configuration::get('STSN_HEADER_LINK_COLOR').' transparent transparent;}';
         if(Configuration::get('STSN_HEADER_LINK_HOVER_COLOR'))
@@ -5629,8 +6108,11 @@ class StThemeEditor extends Module
             $css .='#top_bar #header_user_info a, #top_bar #header_user_info span, #stsocial_list_topbar li a, #contact-link a, .shop-phone, #top_bar .dropdown_tri_inner, #top_bar .shopping_cart_style_1 .shopping_cart{padding-top:'.floor(($topbar_height-18)/2).'px;padding-bottom:'.floor(($topbar_height-18)/2).'px;}';
             $css .='#page_header .blockcart_wrap .cart_block{top:'.$topbar_height.'px;}';
         }
-        if($footer_border = Configuration::get('STSN_TOPBAR_BORDER'))
+        $footer_border = Configuration::get('STSN_TOPBAR_BORDER');
+        if($footer_border>1)
             $css .='#top_bar '.($footer_border>20 ? '.container' : '').'{border-bottom-width:'.($footer_border%10).'px;border-bottom-style: solid;}';
+        elseif($footer_border==1)
+            $css .='#top_bar, #top_bar .container{border-bottom: none;}';
         if(Configuration::get('STSN_TOPBAR_BORDER_COLOR'))
             $css .='#top_bar, #top_bar .container{border-bottom-color:'.Configuration::get('STSN_TOPBAR_BORDER_COLOR').';}';
 
@@ -5639,8 +6121,8 @@ class StThemeEditor extends Module
         if(Configuration::get('STSN_HEADER_LINK_HOVER'))
             $css .='#header a.header_item:hover,#header .open .dropdown_tri_inner, #header .shopping_cart_style_1 .shopping_cart:hover .icon_wrap, #header .shopping_cart_style_1 .shopping_cart:hover .ajax_cart_right{color:'.Configuration::get('STSN_HEADER_LINK_HOVER').';}#header .open .dropdown_tri_inner b{border-color: '.Configuration::get('STSN_HEADER_LINK_HOVER').' transparent transparent;}';
         //menu
-        if(Configuration::get('STSN_MENU_COLOR'))
-            $css .='.ma_level_0{color:'.Configuration::get('STSN_MENU_COLOR').';}'; 
+        if($menu_color = Configuration::get('STSN_MENU_COLOR'))
+            $css .='.ma_level_0{color:'.$menu_color.';}#search_block_main_menu #search_block_top.quick_search_simple .submit_searchbox{color:'.$menu_color.';}'; 
         if(Configuration::get('STSN_MENU_HOVER_COLOR'))
             $css .='.sttlevel0.current .ma_level_0, .sttlevel0.active .ma_level_0{color:'.Configuration::get('STSN_MENU_HOVER_COLOR').';}'; 
         if(Configuration::get('STSN_MENU_HOVER_BG'))
@@ -5670,14 +6152,6 @@ class StThemeEditor extends Module
             $css .='.ma_level_2{color:'.Configuration::get('STSN_THIRD_MENU_COLOR').';}'; 
         if(Configuration::get('STSN_THIRD_MENU_HOVER_COLOR'))
             $css .='.ma_level_2:hover{color:'.Configuration::get('STSN_THIRD_MENU_HOVER_COLOR').';}'; 
-        if(Configuration::get('STSN_MENU_MOB_COLOR'))
-            $css .='#stmobilemenu_tri{color:'.Configuration::get('STSN_MENU_MOB_COLOR').';}'; 
-        if(Configuration::get('STSN_MENU_MOB_HOVER_COLOR'))
-            $css .='#stmobilemenu_tri:hover,#stmobilemenu_tri.active{color:'.Configuration::get('STSN_MENU_MOB_HOVER_COLOR').';}'; 
-        if(Configuration::get('STSN_MENU_MOB_BG'))
-            $css .='#stmobilemenu_tri{background-color:'.Configuration::get('STSN_MENU_MOB_BG').';}'; 
-        if(Configuration::get('STSN_MENU_MOB_HOVER_BG'))
-            $css .='#stmobilemenu_tri:hover,#stmobilemenu_tri.active{background-color:'.Configuration::get('STSN_MENU_MOB_HOVER_BG').';}';
         if(Configuration::get('STSN_MENU_MOB_ITEMS1_COLOR'))
             $css .='#stmobilemenu .ma_level_0,#stmobilemenu a.ma_level_0{color:'.Configuration::get('STSN_MENU_MOB_ITEMS1_COLOR').';}';
         if(Configuration::get('STSN_MENU_MOB_ITEMS2_COLOR'))
@@ -5693,8 +6167,8 @@ class StThemeEditor extends Module
         
 
         //advancedmenu
-        if(Configuration::get('STSN_ADV_MENU_COLOR'))
-            $css .='#st_advanced_menu_wrap .advanced_ma_level_0{color:'.Configuration::get('STSN_ADV_MENU_COLOR').';}'; 
+        if($adv_menu_color = Configuration::get('STSN_ADV_MENU_COLOR'))
+            $css .='#st_advanced_menu_wrap .advanced_ma_level_0{color:'.$adv_menu_color.';}#search_block_main_menu #search_block_top.quick_search_simple .submit_searchbox{color:'.$adv_menu_color.';}'; 
         if($menu_hover_color = Configuration::get('STSN_ADV_MENU_HOVER_COLOR'))
             $css .='#st_advanced_menu_wrap .advanced_ml_level_0.current .advanced_ma_level_0,#st_advanced_menu_wrap .advanced_ma_level_0:hover{color:'.$menu_hover_color.';border-bottom-color:'.$menu_hover_color.';}'; 
         if(Configuration::get('STSN_ADV_MENU_HOVER_BG'))
@@ -5710,12 +6184,28 @@ class StThemeEditor extends Module
                 $css .='#st_advanced_menu_wrap .st_advanced_menu{background-color:'.$menu_bg_color.';}'; 
         }
         $megamenu_bg = array();
-        if(Configuration::get('STSN_ADV_MENU_STICKY_BG'))
-            $megamenu_bg = self::hex2rgb(Configuration::get('STSN_ADV_MENU_STICKY_BG'));
+        $adv_menu_sticky_opacity = Configuration::get('STSN_ADV_MENU_STICKY_OPACITY');
+        if($adv_menu_sticky_bg = Configuration::get('STSN_ADV_MENU_STICKY_BG'))
+        {
+            $megamenu_bg = self::hex2rgb($adv_menu_sticky_bg);
+            $css .='#page_header #header.sticky{background: '.$adv_menu_sticky_bg .';background:rgba('.$megamenu_bg[0].','.$megamenu_bg[1].','.$megamenu_bg[2].','.$adv_menu_sticky_opacity.');}';
+        }
         elseif($menu_bg_color)
             $megamenu_bg = self::hex2rgb($menu_bg_color);
         if(is_array($megamenu_bg) && count($megamenu_bg))
-            $css .='#st_advanced_menu_container.sticky{background: '.$menu_bg_color .';background:rgba('.$megamenu_bg[0].','.$megamenu_bg[1].','.$megamenu_bg[2].',0.95);}';
+            $css .='#st_advanced_menu_container.sticky{background: '.$menu_bg_color .';background:rgba('.$megamenu_bg[0].','.$megamenu_bg[1].','.$megamenu_bg[2].','.$adv_menu_sticky_opacity.');}';
+
+        if(!Configuration::get('STSN_TRANSPARENT_HEADER'))
+        {
+            $adv_menu_sticky = (int)Configuration::get('STSN_ADV_MENU_STICKY');
+            $logo_height = (int)Configuration::get('STSN_LOGO_HEIGHT');
+            $shop_logo_height = (int)Configuration::get('SHOP_LOGO_HEIGHT');
+
+            if($adv_menu_sticky==1 || $adv_menu_sticky==2)
+                $css .= '#page_header.has_sticky{padding-bottom:'.($menu_height ? $menu_height : 36).'px;}';
+            elseif($adv_menu_sticky==3 || $adv_menu_sticky==4)
+                $css .= '#page_header.has_sticky{padding-bottom:'.((Configuration::get('STSN_LOGO_POSITION') && $logo_height) ? $logo_height : $shop_logo_height+40).'px;}';
+        }
 
         $menu_bottom_border = (int)Configuration::get('STSN_ADV_MENU_BOTTOM_BORDER');
         $css .='#st_advanced_menu_wrap .stadvancedmenu_sub{border-top-width:'.$menu_bottom_border.'px;}#st_advanced_menu_wrap .advanced_ma_level_0{margin-bottom:-'.$menu_bottom_border.'px;border-bottom-width:'.$menu_bottom_border.'px;}'; 
@@ -5738,14 +6228,6 @@ class StThemeEditor extends Module
             $css .='.advanced_ma_level_2{color:'.Configuration::get('STSN_ADV_THIRD_MENU_COLOR').';}'; 
         if(Configuration::get('STSN_ADV_THIRD_MENU_HOVER_COLOR'))
             $css .='.advanced_ma_level_2:hover{color:'.Configuration::get('STSN_ADV_THIRD_MENU_HOVER_COLOR').';}'; 
-        if(Configuration::get('STSN_ADV_MENU_MOB_COLOR'))
-            $css .='#stmobileadvancedmenu_tri{color:'.Configuration::get('STSN_ADV_MENU_MOB_COLOR').';}'; 
-        if(Configuration::get('STSN_ADV_MENU_MOB_HOVER_COLOR'))
-            $css .='#stmobileadvancedmenu_tri:hover,#stmobileadvancedmenu_tri.active{color:'.Configuration::get('STSN_ADV_MENU_MOB_HOVER_COLOR').';}'; 
-        if(Configuration::get('STSN_ADV_MENU_MOB_BG'))
-            $css .='#stmobileadvancedmenu_tri{background-color:'.Configuration::get('STSN_ADV_MENU_MOB_BG').';}'; 
-        if(Configuration::get('STSN_ADV_MENU_MOB_HOVER_BG'))
-            $css .='#stmobileadvancedmenu_tri:hover,#stmobileadvancedmenu_tri.active{background-color:'.Configuration::get('STSN_ADV_MENU_MOB_HOVER_BG').';}';
         if(Configuration::get('STSN_ADV_MENU_MOB_ITEMS1_COLOR'))
             $css .='#stmobileadvancedmenu .mo_advanced_ma_level_0,#stmobileadvancedmenu a.mo_advanced_ma_level_0{color:'.Configuration::get('STSN_ADV_MENU_MOB_ITEMS1_COLOR').';}';
         if(Configuration::get('STSN_ADV_MENU_MOB_ITEMS2_COLOR'))
@@ -5783,8 +6265,11 @@ class StThemeEditor extends Module
             $css .='#st_advanced_menu_column .title_block{padding:10px 0 10px 8px;margin-bottom:0;background-color:'.Configuration::get('STSN_C_MENU_TITLE_BG').';}'; 
 
         //footer
-        if($footer_border = Configuration::get('STSN_FOOTER_BORDER'))
+        $footer_border = Configuration::get('STSN_FOOTER_BORDER');
+        if($footer_border>1)
             $css .='#footer-primary '.($footer_border>20 ? '.container' : '').'{border-top-width:'.($footer_border%10).'px;border-top-style: solid;}';
+        elseif($footer_border==1)
+            $css .='#footer-primary, #footer-primary .container{border-top: none;}';
         if(Configuration::get('STSN_FOOTER_BORDER_COLOR'))
             $css .='#footer-primary, #footer-primary .container{border-top-color:'.Configuration::get('STSN_FOOTER_BORDER_COLOR').';}';
 
@@ -5803,7 +6288,7 @@ class StThemeEditor extends Module
         
         if (Configuration::get('STSN_BODY_BG_COLOR'))
         {
-            $css .= 'body{background-color:'.Configuration::get('STSN_BODY_BG_COLOR').';}';
+            $css .= 'body, body.content_only{background-color:'.Configuration::get('STSN_BODY_BG_COLOR').';}';
             if (!Configuration::get('STSN_BODY_CON_BG_COLOR'))
                 $css .= '.section .title_block span, .section .title_block a,.nav_top_right .flex-direction-nav, #home-page-tabs li a, #home-page-tabs li span{background-color:'.Configuration::get('STSN_BODY_BG_COLOR').';}';
         }
@@ -5937,8 +6422,11 @@ class StThemeEditor extends Module
         if (Configuration::get('STSN_F_TOP_BG_FIXED')) {
             $css .= '#footer-top{background-attachment: fixed;}';
         }
-        if($footer_border = Configuration::get('STSN_FOOTER_TOP_BORDER'))
+        $footer_border = Configuration::get('STSN_FOOTER_TOP_BORDER');
+        if($footer_border>1)
             $css .='#footer-top '.($footer_border>20 ? '.container' : '').'{border-top-width:'.($footer_border%10).'px;border-top-style: solid;}';
+        elseif($footer_border==1)
+            $css .='#footer-top, #footer-top .container{border-top: none;}';
         if(Configuration::get('STSN_FOOTER_TOP_BORDER_COLOR'))
             $css .='#footer-top, #footer-top .container{border-top-color:'.Configuration::get('STSN_FOOTER_TOP_BORDER_COLOR').';}';
 
@@ -6028,8 +6516,11 @@ class StThemeEditor extends Module
 			$css .= '#footer-secondary{background-color:'.Configuration::get('STSN_FOOTER_SECONDARY_BG').';}';
         if (Configuration::get('STSN_FOOTER_SECONDARY_CON_BG'))
 			$css .= '#footer-secondary .wide_container{background-color:'.Configuration::get('STSN_FOOTER_SECONDARY_CON_BG').';}';
-        if($footer_border = Configuration::get('STSN_FOOTER_SECONDARY_BORDER'))
+        $footer_border = Configuration::get('STSN_FOOTER_SECONDARY_BORDER');
+        if($footer_border>1)
             $css .='#footer-secondary '.($footer_border>20 ? '.container' : '').'{border-top-width:'.($footer_border%10).'px;border-top-style: solid;}';
+        elseif($footer_border==1)
+            $css .='#footer-secondary, #footer-secondary .container{border-top: none;}';
         if(Configuration::get('STSN_FOOTER_SECONDARY_BORDER_COLOR'))
             $css .='#footer-secondary, #footer-secondary .container{border-top-color:'.Configuration::get('STSN_FOOTER_SECONDARY_BORDER_COLOR').';}';
 
@@ -6074,8 +6565,11 @@ class StThemeEditor extends Module
 			$css .= '.footer-container #footer_info{background-color:'.Configuration::get('STSN_FOOTER_INFO_BG').';}';
         if (Configuration::get('STSN_FOOTER_INFO_CON_BG'))
 			$css .= '.footer-container #footer_info .wide_container{background-color:'.Configuration::get('STSN_FOOTER_INFO_CON_BG').';}';
-        if($footer_border = Configuration::get('STSN_FOOTER_INFO_BORDER'))
+        $footer_border = Configuration::get('STSN_FOOTER_INFO_BORDER');
+        if($footer_border>1)
             $css .='.footer-container #footer_info '.($footer_border>20 ? '.container' : '').'{border-top-width:'.($footer_border%10).'px;border-top-style: solid;}';
+        elseif($footer_border==1)
+            $css .='.footer-container #footer_info, .footer-container #footer_info .container{border-top: none;}';
         if(Configuration::get('STSN_FOOTER_INFO_BORDER_COLOR'))
             $css .='.footer-container #footer_info, .footer-container #footer_info .container{border-top-color:'.Configuration::get('STSN_FOOTER_INFO_BORDER_COLOR').';}';
 
@@ -6213,15 +6707,15 @@ class StThemeEditor extends Module
 
             
         if(Configuration::get('STSN_PRO_TAB_COLOR'))  
-            $css .= '#more_info_tabs a{ color: '.Configuration::get('STSN_PRO_TAB_COLOR').'; }';
+            $css .= '#more_info_tabs a, .product_accordion_title{ color: '.Configuration::get('STSN_PRO_TAB_COLOR').'; }';
         if(Configuration::get('STSN_PRO_TAB_ACTIVE_COLOR'))  
             $css .= '#more_info_tabs a.selected,#more_info_tabs a:hover{ color: '.Configuration::get('STSN_PRO_TAB_ACTIVE_COLOR').'; }';
         if(Configuration::get('STSN_PRO_TAB_BG'))  
-            $css .= '#more_info_tabs a{ background-color: '.Configuration::get('STSN_PRO_TAB_BG').'; }';
+            $css .= '#more_info_tabs a, .product_accordion_title{ background-color: '.Configuration::get('STSN_PRO_TAB_BG').'; }';
         if(Configuration::get('STSN_PRO_TAB_ACTIVE_BG'))  
             $css .= '#more_info_tabs a.selected{ background-color: '.Configuration::get('STSN_PRO_TAB_ACTIVE_BG').'; }';
         if(Configuration::get('STSN_PRO_TAB_CONTENT_BG'))  
-            $css .= '#more_info_sheets{ background-color: '.Configuration::get('STSN_PRO_TAB_CONTENT_BG').'; }';
+            $css .= '#more_info_sheets, #right_more_info_block .product_accordion .pa_content{ background-color: '.Configuration::get('STSN_PRO_TAB_CONTENT_BG').'; }';
         
         //Top and bottom spacing
         if(Configuration::get('STSN_TOP_SPACING'))  
@@ -6241,7 +6735,10 @@ class StThemeEditor extends Module
             $css .= '#body_wrapper{ padding-bottom: '.Configuration::get('STSN_BOTTOM_SPACING').'px; }';
         
         if($header_padding = Configuration::get('STSN_HEADER_PADDING'))
+        {
             $css .= '#header .wide_container{ padding-top: '.$header_padding.'px; padding-bottom: '.$header_padding.'px; }';
+            $res_css .= '@media only screen and (max-width: 991px) {#header .wide_container{ padding-top: 0; padding-bottom: 0; }}';
+        }
 
         //Shadow
         if(Configuration::get('STSN_PRO_SHADOW_EFFECT'))
@@ -6264,6 +6761,105 @@ class StThemeEditor extends Module
         if(Configuration::get('STSN_PRO_GRID_HOVER_BG'))  
             $css .= '.products_slider .ajax_block_product:hover .pro_second_box,.product_list.grid .ajax_block_product:hover .pro_second_box{ background-color: '.Configuration::get('STSN_PRO_GRID_HOVER_BG').'; }';
 
+        //Boxed style shadow
+        if(Configuration::get('STSN_BOXED_SHADOW_EFFECT'))
+        {
+            $boxed_shadow_color = Configuration::get('STSN_BOXED_SHADOW_COLOR');
+            if(!Validate::isColor($boxed_shadow_color))
+                $boxed_shadow_color = '#000000';
+
+            $boxed_shadow_color_arr = self::hex2rgb($boxed_shadow_color);
+            if(is_array($boxed_shadow_color_arr))
+            {
+                $boxed_shadow_opacity = (float)Configuration::get('STSN_BOXED_SHADOW_OPACITY');
+                if($boxed_shadow_opacity<0 || $boxed_shadow_opacity>1)
+                    $boxed_shadow_opacity = 0.1;
+
+                $boxed_shadow_css = (int)Configuration::get('STSN_BOXED_H_SHADOW').'px '.(int)Configuration::get('STSN_BOXED_V_SHADOW').'px '.(int)Configuration::get('STSN_BOXED_SHADOW_BLUR').'px rgba('.$boxed_shadow_color_arr[0].','.$boxed_shadow_color_arr[1].','.$boxed_shadow_color_arr[2].','.$boxed_shadow_opacity.')';
+                $css .= '#page_wrapper{-webkit-box-shadow: '.$boxed_shadow_css .'; -moz-box-shadow: '.$boxed_shadow_css .'; box-shadow: '.$boxed_shadow_css .'; }';
+            }
+        }
+        else
+            $css .= '#page_wrapper{box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;}';
+
+
+        //
+        if($base_border_color = Configuration::get('STSN_BASE_BORDER_COLOR'))
+        {
+            $css .= '.pro_column_list li, .pro_column_box,
+                    .categories_tree_block li,
+                    #create-account_form section, #login_form section,
+                    .box,
+                    .top-pagination-content,
+                    .content_sortPagiBar .sortPagiBar,
+                    .content_sortPagiBar .sortPagiBar.sortPagiBarBottom,
+                    .bottom-pagination-content,
+                    ul.product_list.grid > li,ul.product_list.list > li,
+                    .pb-center-column #buy_block .box-info-product,
+                    .box-cart-bottom .qt_cart_box,
+                    .product_extra_info_wrap,
+                    #blog_list_large .block_blog, #blog_list_medium .block_blog,
+                    #product_comments_block_tab div.comment,
+                    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > tfoot > tr > td,
+                    ul.footer_links,
+                    #product p#loyalty,
+                    #subcategories .inline_list li a.img{ border-color: '.$base_border_color.'; }';
+            $res_css .= '@media (max-width: 767px) {#footer .title_block,#footer .open .footer_block_content{ border-color: '.$base_border_color.'; }}';
+        }
+        if($form_bg_color = Configuration::get('STSN_FORM_BG_COLOR'))
+            $css .= '.box{background-color:'.$form_bg_color.';}';
+
+        if($sticky_mobile_header_height = Configuration::get('STSN_STICKY_MOBILE_HEADER_HEIGHT'))
+        {
+            $css .= '#mobile_bar_container{ height: '.$sticky_mobile_header_height.'px;}#mobile_header_logo img{max-height: '.$sticky_mobile_header_height.'px;}';
+            $res_css .= '@media only screen and (max-width: 991px) {#page_header.sticky_mh{ padding-bottom: '.$sticky_mobile_header_height.'px;}}';
+        }
+
+        if($sticky_mobile_header_color = Configuration::get('STSN_STICKY_MOBILE_HEADER_COLOR'))
+            $css .= '#page_header .mobile_bar_tri{ color: '.$sticky_mobile_header_color.';}';
+        if($sticky_mobile_header_background = Configuration::get('STSN_STICKY_MOBILE_HEADER_BACKGROUND'))
+        {
+            $css .= '#page_header #mobile_bar,#page_header.sticky_mh #mobile_bar{ background-color: '.$sticky_mobile_header_background.';}';
+
+            $sticky_mobile_header_background_opacity = (float)Configuration::get('STSN_STICKY_MOBILE_HEADER_BACKGROUND_OPACITY');
+            if($sticky_mobile_header_background_opacity>=0 && $sticky_mobile_header_background_opacity<1)
+            {
+                $sticky_mobile_header_background_hex = self::hex2rgb($sticky_mobile_header_background);
+                $css .= '#page_header.sticky_mh #mobile_bar{background-color: '.$sticky_mobile_header_background.';background:rgba('.$sticky_mobile_header_background_hex[0].','.$sticky_mobile_header_background_hex[1].','.$sticky_mobile_header_background_hex[2].','.$sticky_mobile_header_background_opacity.');}';      
+            }
+        }
+        if($side_bar_background = Configuration::get('STSN_SIDE_BAR_BACKGROUND'))
+            $css .= '.st-side{ background-color: '.$side_bar_background.';}';
+
+        if ($direction_color = Configuration::get('STSN_DIRECTION_COLOR'))
+            $css .= '.nav_top_right .flex-direction-nav a, .nav_left_right .flex-direction-nav a{color:'.$direction_color.';}';
+        if ($direction_bg = Configuration::get('STSN_DIRECTION_BG'))
+            $css .= '.nav_top_right .flex-direction-nav a, .nav_left_right .flex-direction-nav a{background-color:'.$direction_bg.';}';
+        if ($direction_hover_bg = Configuration::get('STSN_DIRECTION_HOVER_BG'))
+            $css .= '.nav_top_right .flex-direction-nav a:hover, .nav_left_right .flex-direction-nav a:hover{background-color:'.$direction_hover_bg.';}';
+        if ($direction_disabled_bg = Configuration::get('STSN_DIRECTION_DISABLED_BG'))
+            $css .= '.nav_top_right .flex-direction-nav a.flex-disabled, .nav_left_right .flex-direction-nav a.flex-disabled{background-color:'.$direction_disabled_bg.';}';
+
+        if(Configuration::get('STSN_PAGINATION_COLOR'))  
+            $css .= '.top-pagination-content ul.pagination li > a, .top-pagination-content ul.pagination li > span, .bottom-pagination-content ul.pagination li > a, .bottom-pagination-content ul.pagination li > span, .bottom-blog-pagination ul.pagination li > a, .bottom-blog-pagination ul.pagination li > span, .bottom-blog-mycomments-pagination ul.pagination li > a, .bottom-blog-mycomments-pagination ul.pagination li > span { color: '.Configuration::get('STSN_PAGINATION_COLOR').'; }';
+        if(Configuration::get('STSN_PAGINATION_COLOR_HOVER'))  
+            $css .= '.top-pagination-content ul.pagination li > a:hover, .bottom-pagination-content ul.pagination li > a:hover, .bottom-blog-pagination ul.pagination li > a:hover, .bottom-blog-mycomments-pagination ul.pagination li > a:hover, .top-pagination-content ul.pagination .current > a, .top-pagination-content ul.pagination .current > span, .bottom-pagination-content ul.pagination .current > a, .bottom-pagination-content ul.pagination .current > span, .bottom-blog-pagination ul.pagination .current > a, .bottom-blog-pagination ul.pagination .current > span, .bottom-blog-mycomments-pagination ul.pagination .current > a, .bottom-blog-mycomments-pagination ul.pagination .current > span{ color: '.Configuration::get('STSN_PAGINATION_COLOR_HOVER').'; }';
+
+        if(Configuration::get('STSN_PAGINATION_BG'))  
+            $css .= '.top-pagination-content ul.pagination li > a, .top-pagination-content ul.pagination li > span, .bottom-pagination-content ul.pagination li > a, .bottom-pagination-content ul.pagination li > span, .bottom-blog-pagination ul.pagination li > a, .bottom-blog-pagination ul.pagination li > span, .bottom-blog-mycomments-pagination ul.pagination li > a, .bottom-blog-mycomments-pagination ul.pagination li > span { background-color: '.Configuration::get('STSN_PAGINATION_BG').'; }';
+        if(Configuration::get('STSN_PAGINATION_BG_HOVER'))  
+            $css .= '.top-pagination-content ul.pagination li > a:hover, .bottom-pagination-content ul.pagination li > a:hover, .bottom-blog-pagination ul.pagination li > a:hover, .bottom-blog-mycomments-pagination ul.pagination li > a:hover, .top-pagination-content ul.pagination .current > a, .top-pagination-content ul.pagination .current > span, .bottom-pagination-content ul.pagination .current > a, .bottom-pagination-content ul.pagination .current > span, .bottom-blog-pagination ul.pagination .current > a, .bottom-blog-pagination ul.pagination .current > span, .bottom-blog-mycomments-pagination ul.pagination .current > a, .bottom-blog-mycomments-pagination ul.pagination .current > span{ background-color: '.Configuration::get('STSN_PAGINATION_BG_HOVER').'; }';
+        if(Configuration::get('STSN_PAGINATION_BORDER')) 
+            $css .= '.top-pagination-content ul.pagination li > a, .top-pagination-content ul.pagination li > span, .bottom-pagination-content ul.pagination li > a, .bottom-pagination-content ul.pagination li > span, .bottom-blog-pagination ul.pagination li > a, .bottom-blog-pagination ul.pagination li > span, .bottom-blog-mycomments-pagination ul.pagination li > a, .bottom-blog-mycomments-pagination ul.pagination li > span, .top-pagination-content ul.pagination .current > a, .top-pagination-content ul.pagination .current > span, .bottom-pagination-content ul.pagination .current > a, .bottom-pagination-content ul.pagination .current > span, .bottom-blog-pagination ul.pagination .current > a, .bottom-blog-pagination ul.pagination .current > span, .bottom-blog-mycomments-pagination ul.pagination .current > a, .bottom-blog-mycomments-pagination ul.pagination .current > span{ border-color: '.Configuration::get('STSN_PAGINATION_BORDER').'; }';
+        
+        if($shop_logo_width = Configuration::get('SHOP_LOGO_WIDTH'))
+        {
+            $css .= '#mobile_header_logo img{max-width: '.($shop_logo_width>600 ? '600px' : $shop_logo_width.'px').';}.mobile_bar_left_layout #mobile_header_logo img{max-width: '.($shop_logo_width>530 ? '530px' : $shop_logo_width.'px').';}';
+            $res_css .= '@media (max-width: 767px) {#mobile_header_logo img{max-width: '.($shop_logo_width>330 ? '330px' : $shop_logo_width.'px').';}.mobile_bar_left_layout #mobile_header_logo img{max-width: '.($shop_logo_width>238 ? '238px' : $shop_logo_width.'px').';}}';
+            $res_css .= '@media (max-width: 480px) {#mobile_header_logo img{max-width: '.($shop_logo_width>180 ? '180px' : $shop_logo_width.'px').';}.mobile_bar_left_layout #mobile_header_logo img{max-width: '.($shop_logo_width>106 ? '106px' : $shop_logo_width.'px').';}}';
+        }
+        
+        $css .= $res_css;
         if (Configuration::get('STSN_CUSTOM_CSS') != "")
 			$css .= html_entity_decode(Configuration::get('STSN_CUSTOM_CSS'));
         
@@ -6335,7 +6931,8 @@ class StThemeEditor extends Module
         if(is_array($theme_font) && count($theme_font))
             foreach($theme_font as $v)
             {
-                if(!$v)
+                $arr = explode(':', $v);
+                if(!isset($arr[0]) || !$arr[0] || $arr[0] == $this->_font_inherit)
                     continue;
                 $this->context->controller->addCSS($this->context->link->protocol_content."fonts.googleapis.com/css?family=".str_replace(' ', '+', $v).($font_support ? rtrim($font_support,',') : ''), 'all');
             }
@@ -6349,6 +6946,7 @@ class StThemeEditor extends Module
         $enabled_version_swithing = Configuration::get('STSN_VERSION_SWITCHING') && $mobile_device;
         $version_switching = isset($this->context->cookie->version_switching) ? (int)$this->context->cookie->version_switching : 0;
         
+        $zoom_type = (int)Configuration::get('STSN_ZOOM_TYPE');
         $is_responsive = Configuration::get('STSN_RESPONSIVE');
 	    $theme_settings = array(
             'theme_version' => $this->version,
@@ -6379,7 +6977,7 @@ class StThemeEditor extends Module
             'tracking_code' => html_entity_decode(Configuration::get('STSN_TRACKING_CODE')),
             'display_cate_desc_full' => Configuration::get('STSN_DISPLAY_CATE_DESC_FULL'), 
             'display_pro_tags' => Configuration::get('STSN_DISPLAY_PRO_TAGS'), 
-            'zoom_type' => Configuration::get('STSN_ZOOM_TYPE'), 
+            'zoom_type' => $zoom_type, 
             'sticky_menu' => Configuration::get('STSN_STICKY_MENU'), 
             'sticky_adv' => Configuration::get('STSN_ADV_MENU_STICKY'), 
             'is_rtl' => $this->context->language->is_rtl, 
@@ -6401,10 +6999,22 @@ class StThemeEditor extends Module
             'st_logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
             'st_logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
             'transparent_header' => Configuration::get('STSN_TRANSPARENT_HEADER'),
+            'sticky_mobile_header' => (int)Configuration::get('STSN_STICKY_MOBILE_HEADER'),
+            'sticky_mobile_header_height' => (int)Configuration::get('STSN_STICKY_MOBILE_HEADER_HEIGHT'),
         );
+
+        
+        Media::addJsDef(array(
+            'st_submemus_animation' =>(int)Configuration::get('STSN_SUBMEMUS_ANIMATION'),
+            'st_adv_submemus_animation' =>(int)Configuration::get('STSN_ADV_SUBMEMUS_ANIMATION'),
+        ));
+
         $this->context->controller->addJS($this->_path.'views/js/global.js');
         $this->context->controller->addJS($this->_path.'views/js/owl.carousel.js');
         $this->context->controller->addJS($this->_path.'views/js/jquery.parallax-1.1.3.js');
+        if($zoom_type<2)
+            $this->context->controller->addJqueryPlugin('jqzoom');
+
         if(file_exists($this->local_path.'views/js/customer'.$id_shop.'.js'))
 		  $theme_settings['custom_js'] = $this->_path.'views/js/customer'.$id_shop.'.js';
         
@@ -6467,7 +7077,10 @@ class StThemeEditor extends Module
 
             if($config_display==3 || $config_display==4)
                 $this->context->smarty->assign('commentNbr', ProductComment::getCommentNumber($id_product));
-            $this->context->smarty->assign('ratingAverage', round($averageGrade['grade']));
+             $this->context->smarty->assign(array(
+                'ratings' => ProductComment::getRatings($id_product),
+                'ratingAverage' => round($averageGrade['grade']),
+            ));
 
             return $this->display(__FILE__, 'product_rating_average.tpl');
         }
@@ -6775,6 +7388,12 @@ class StThemeEditor extends Module
                 'js' => 'if (confirm(\''.$this->l('Importing demo 10 color, are your sure?').'\')){return true;}else{event.preventDefault();}',
                 'href' => AdminController::$currentIndex.'&configure='.$this->name.'&predefinedcolor'.$this->name.'=demo_10&token='.$token,
             ),
+            'demo_12' => array(
+                'desc' => $this->l('Demo 12'),
+                'class' => 'icon-plus-sign',
+                'js' => 'if (confirm(\''.$this->l('Importing demo 12 color, are your sure?').'\')){return true;}else{event.preventDefault();}',
+                'href' => AdminController::$currentIndex.'&configure='.$this->name.'&predefinedcolor'.$this->name.'=demo_12&token='.$token,
+            ),
             'export' => array(
                 'desc' => $this->l('Export'),
                 'class' => 'icon-share',
@@ -6927,7 +7546,7 @@ class StThemeEditor extends Module
     {
         $this->context->cookie->st_category_columns_nbr = (int)$columns_nbr;
     }
-    public function BuildDropListGroup($group)
+    public function BuildDropListGroup($group,$start=1,$end=6)
     {
         if(!is_array($group) || !count($group))
             return false;
@@ -6944,7 +7563,7 @@ class StThemeEditor extends Module
              class="'.(isset($k['class']) ? $k['class'] : 'fixed-width-md').'"'.
              (isset($k['onchange']) ? ' onchange="'.$k['onchange'].'"':'').' >';
             
-            for ($i=1; $i < 7; $i++){
+            for ($i=$start; $i <= $end; $i++){
                 $html .= '<option value="'.$i.'" '.(Configuration::get('STSN_'.strtoupper($k['id'])) == $i ? ' selected="selected"':'').'>'.$i.'</option>';
             }
                                 
@@ -7198,6 +7817,42 @@ class StThemeEditor extends Module
                     'tooltip' => $this->l('Phones (>480px)'),
                 ),
             ),
+            10 => array(
+                array(
+                    'id' => 'pro_image_column_md',
+                    'label' => $this->l('Medium devices'),
+                    'tooltip' => $this->l('Desktops (>992px)'),
+                ),
+                array(
+                    'id' => 'pro_image_column_sm',
+                    'label' => $this->l('Small devices'),
+                    'tooltip' => $this->l('Tablets (>768px) and (<=992px)'),
+                ),
+            ),
+            11 => array(
+                array(
+                    'id' => 'pro_primary_column_md',
+                    'label' => $this->l('Medium devices'),
+                    'tooltip' => $this->l('Desktops (>992px)'),
+                ),
+                array(
+                    'id' => 'pro_primary_column_sm',
+                    'label' => $this->l('Small devices'),
+                    'tooltip' => $this->l('Tablets (>768px) and (<=992px)'),
+                ),
+            ),
+            12 => array(
+                array(
+                    'id' => 'pro_secondary_column_md',
+                    'label' => $this->l('Medium devices'),
+                    'tooltip' => $this->l('Desktops (>992px)'),
+                ),
+                array(
+                    'id' => 'pro_secondary_column_sm',
+                    'label' => $this->l('Small devices'),
+                    'tooltip' => $this->l('Tablets (>768px) and (<=992px)'),
+                ),
+            ),
         );
         return ($k!==null && isset($proper[$k])) ? $proper[$k] : $proper;
     }
@@ -7429,5 +8084,35 @@ class StThemeEditor extends Module
             return false;
         
         return @file_put_contents($file, @file_get_contents($file_tpl));
+    }
+    public function add_quick_access()
+    {
+        if(!Db::getInstance()->getRow('SELECT id_quick_access FROM '._DB_PREFIX_.'quick_access WHERE link LIKE "%configure=stthemeeditor%"') && class_exists('QuickAccess'))
+        {
+            $quick_access = new QuickAccess();
+            $quick_access->link = 'index.php?controller=AdminModules&configure=stthemeeditor';
+            $quick_access->new_window = 0;
+            foreach (Language::getLanguages(false) as $lang)
+            {
+                $quick_access->name[$lang['id_lang']] = $this->l('Theme editor');
+            }
+            $quick_access->add();
+        }
+        return true;
+    }
+    public function clear_class_index()
+    {
+        $file = _PS_CACHE_DIR_.'class_index.php';
+        file_exists($file) && @unlink($file);
+        return true;    
+    }
+    private function _checkGlobal()
+    {
+        // Check thickbox_default_2x images
+        $defaultLanguage = new Language((int)(Configuration::get('PS_LANG_DEFAULT')));
+        $img_name = $defaultLanguage->iso_code.'-default-thickbox_default_2x';
+        
+        if (!file_exists(_PS_IMG_DIR_.'/p/'.$img_name.'.jpg') && !file_exists(_PS_IMG_DIR_.'/p/'.$img_name.'.png') && !file_exists(_PS_IMG_DIR_.'/p/'.$img_name.'.gif'))
+            $this->warning = $this->l('You need to regenerate product thumbnails for the new image type "thickbox_default_2x" to make popup product images look sharp on iPad.');
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>stblogrelatedarticles</name>
-	<displayName><![CDATA[Blog Module - Related articels]]></displayName>
+	<displayName><![CDATA[Blog Module - Related articles]]></displayName>
 	<version><![CDATA[1.0]]></version>
 	<description><![CDATA[Add related articles on blog artice pages.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>

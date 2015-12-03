@@ -58,7 +58,7 @@
 	        {/if}
 	        {if isset($google_plus_url) && $google_plus_url!=''}
 	        	<li class="google-plus">
-	        		<a target="_blank" href="{$google_plus_url|escape:html:'UTF-8'}" rel="nofollow" title="{l s='Google plus' mod='blocksocial'}">
+	        		<a target="_blank" href="{$google_plus_url|escape:html:'UTF-8'}" rel="publisher" title="{l s='Google plus' mod='blocksocial'}">
 	        			<i class="icon-pinterest icon-large"></i>
 	        		</a>
 	        	</li>
@@ -72,14 +72,14 @@
 	        {/if}
 	        {if isset($vimeo_url) && $vimeo_url != ''}
 	        	<li class="vimeo">
-	        		<a target="_blank" href="{$vimeo_url|escape:html:'UTF-8'}">
+	        		<a target="_blank" href="{$vimeo_url|escape:html:'UTF-8'}" rel="nofollow" title="{l s='Vimeo' mod='blocksocial'}">
 	        			<i class="icon-vimeo icon-large"></i>
 	        		</a>
 	        	</li>
 	        {/if}
 	        {if isset($instagram_url) && $instagram_url != ''}
 	        	<li class="instagram">
-	        		<a target="_blank" href="{$instagram_url|escape:html:'UTF-8'}">
+	        		<a target="_blank" href="{$instagram_url|escape:html:'UTF-8'}" rel="nofollow" title="{l s='Instagram' mod='blocksocial'}">
 	        			<i class="icon-instagram icon-large"></i>
 	        		</a>
 	        	</li>

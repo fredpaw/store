@@ -37,6 +37,7 @@ class StParallax extends Module
     public static $location = array(
 
         36 => array('id' =>36 , 'name' => 'Full width top', 'full_width' => 1),
+        38 => array('id' =>38 , 'name' => 'Full width top 2', 'full_width' => 1),
         37 => array('id' =>37 , 'name' => 'Full width bottom(Home very bottom)', 'full_width' => 1),
         35 => array('id' =>35 , 'name' => 'Top column'),
         28 => array('id' =>28 , 'name' => 'Bottom column'),
@@ -65,7 +66,7 @@ class StParallax extends Module
 	{
 		$this->name          = 'stparallax';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.1.6';
+		$this->version       = '1.1.7';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
@@ -94,6 +95,7 @@ class StParallax extends Module
             $this->registerHook('displayTopColumn') && 
             $this->registerHook('displayHomeVeryBottom') && 
             $this->registerHook('displayFullWidthTop') && 
+            $this->registerHook('displayFullWidthTop2') && 
             $this->registerHook('displayBottomColumn');
                     
 		$this->clearParallaxCache();
@@ -839,7 +841,7 @@ class StParallax extends Module
 							'value' => 0,
 							'label' => $this->l('No')),
 					),
-                    'desc' => $this->l('Screen width less than 768px.'),
+                    'desc' => $this->l('screen width < 768px.'),
 				), 
                 array(
 					'type' => 'text',
@@ -1628,6 +1630,18 @@ class StParallax extends Module
             if(!$this->_prepareHook(36,1))
                 return false;
         return $this->display(__FILE__, 'stparallax.tpl', $this->stGetCacheId(36));        
+    }
+
+
+    public function hookDisplayFullWidthTop2($params)
+    {
+        if(Dispatcher::getInstance()->getController()!='index')
+            return false;
+        
+        if (!$this->isCached('stparallax.tpl', $this->stGetCacheId(38)))
+            if(!$this->_prepareHook(38,1))
+                return false;
+        return $this->display(__FILE__, 'stparallax.tpl', $this->stGetCacheId(38));        
     }
 
     public function hookDisplayHomeVeryBottom($params)

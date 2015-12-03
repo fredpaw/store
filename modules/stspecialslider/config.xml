@@ -2,7 +2,7 @@
 <module>
 	<name>stspecialslider</name>
 	<displayName><![CDATA[Special Products Slider]]></displayName>
-	<version><![CDATA[1.7.7]]></version>
+	<version><![CDATA[1.8.0]]></version>
 	<description><![CDATA[Display special products slider on hompage.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

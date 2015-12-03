@@ -405,7 +405,7 @@ class StHoverImage extends Module
 					SELECT COUNT(0) from `'._DB_PREFIX_.'image` i
                     INNER JOIN `'._DB_PREFIX_.'image_shop` s
                     ON i.id_image = s.id_image
-                    WHERE id_product = '.(int)$id_product.'
+                    WHERE i.id_product = '.(int)$id_product.'
                     AND s.id_shop = '.(int)Shop::getContextShopID().'
                     AND s.hover > 0
 				');
@@ -415,7 +415,7 @@ class StHoverImage extends Module
             SELECT s.* from `'._DB_PREFIX_.'image` i
             INNER JOIN `'._DB_PREFIX_.'image_shop` s
             ON i.id_image = s.id_image
-            WHERE id_product = '.(int)$id_product.'
+            WHERE i.id_product = '.(int)$id_product.'
             AND s.id_shop = '.(int)Shop::getContextShopID().'
             ORDER BY s.cover DESC, position ASC
             ';

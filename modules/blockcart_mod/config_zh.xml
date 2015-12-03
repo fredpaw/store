@@ -2,7 +2,7 @@
 <module>
 	<name>blockcart_mod</name>
 	<displayName><![CDATA[Cart block mod]]></displayName>
-	<version><![CDATA[1.5.7]]></version>
+	<version><![CDATA[1.7.2]]></version>
 	<description><![CDATA[Adds a block containing the customer&#039;s shopping cart.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

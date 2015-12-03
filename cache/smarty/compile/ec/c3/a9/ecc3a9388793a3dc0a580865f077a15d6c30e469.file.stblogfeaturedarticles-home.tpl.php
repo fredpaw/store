@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:51
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:08
          compiled from "D:\xampp\htdocs\store\modules\stblogfeaturedarticles\views\templates\hook\stblogfeaturedarticles-home.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:19409564ebf0b57a204-55475792%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:22028565e9518ae59a6-03840159%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'ecc3a9388793a3dc0a580865f077a15d6c30e469' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\stblogfeaturedarticles\\views\\templates\\hook\\stblogfeaturedarticles-home.tpl',
-      1 => 1447993231,
+      1 => 1449038240,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '19409564ebf0b57a204-55475792',
+  'nocache_hash' => '22028565e9518ae59a6-03840159',
   'function' => 
   array (
   ),
@@ -46,9 +46,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf0b8addc9_41622423',
+  'unifunc' => 'content_565e9518e2c089_90859421',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf0b8addc9_41622423')) {function content_564ebf0b8addc9_41622423($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
+<?php if ($_valid && !is_callable('content_565e9518e2c089_90859421')) {function content_565e9518e2c089_90859421($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
 ?>
 <!-- St Blog featured articles -->
 <?php if ($_smarty_tpl->tpl_vars['aw_display']->value||(is_array($_smarty_tpl->tpl_vars['blogs']->value)&&count($_smarty_tpl->tpl_vars['blogs']->value))) {?>
@@ -205,8 +205,8 @@ $_smarty_tpl->tpl_vars['blog']->_loop = true;
          
         //]]>
         </script>
-    <?php } else { ?>
-        <ul class="row blog_row_list">
+    <?php } elseif ($_smarty_tpl->tpl_vars['display_as_grid']->value==1||$_smarty_tpl->tpl_vars['display_as_grid']->value==3) {?>
+        <ul class="row<?php if ($_smarty_tpl->tpl_vars['display_as_grid']->value==1) {?> blog_row_list<?php } else { ?> blog_list_grid blog_list<?php }?>">
         <?php  $_smarty_tpl->tpl_vars['blog'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['blog']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['blogs']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
  $_smarty_tpl->tpl_vars['blog']->total= $_smarty_tpl->_count($_from);
@@ -246,6 +246,57 @@ $_smarty_tpl->tpl_vars['blog']->_loop = true;
 "><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_MODIFIER]['truncate'][0][0]->smarty_modifier_truncate(mb_convert_encoding(htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['name'], ENT_QUOTES, 'UTF-8', true), "HTML-ENTITIES", 'UTF-8'),70,'...');?>
 </a></p>
                 <?php if ($_smarty_tpl->tpl_vars['blog']->value['content_short']) {?><p class="blok_blog_short_content"><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_MODIFIER]['truncate'][0][0]->smarty_modifier_truncate(strip_tags($_smarty_tpl->tpl_vars['blog']->value['content_short']),120,'...');?>
+<a href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['link'], ENT_QUOTES, 'UTF-8', true);?>
+" title="<?php echo smartyTranslate(array('s'=>'Read More','mod'=>'stblogfeaturedarticles'),$_smarty_tpl);?>
+" class="go"><?php echo smartyTranslate(array('s'=>'Read More','mod'=>'stblogfeaturedarticles'),$_smarty_tpl);?>
+</a></p><?php }?>
+                <div class="blog_info">
+                    <span class="date-add"><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['dateFormat'][0][0]->dateFormat(array('date'=>$_smarty_tpl->tpl_vars['blog']->value['date_add'],'full'=>0),$_smarty_tpl);?>
+</span>
+                    <?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>'displayAnywhere','function'=>"getCommentNumber",'id_blog'=>$_smarty_tpl->tpl_vars['blog']->value['id_st_blog'],'link_rewrite'=>$_smarty_tpl->tpl_vars['blog']->value['link_rewrite'],'mod'=>'stblogcomments','caller'=>'stblogcomments'),$_smarty_tpl);?>
+
+                    <?php if ($_smarty_tpl->tpl_vars['display_viewcount']->value) {?><span><i class="icon-eye-2 icon-mar-lr2"></i><?php echo $_smarty_tpl->tpl_vars['blog']->value['counter'];?>
+</span><?php }?>
+                </div>
+            </li>
+        <?php } ?>
+        </ul>
+    <?php } else { ?>
+        <ul class="blog_list_large">
+        <?php  $_smarty_tpl->tpl_vars['blog'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['blog']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['blogs']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+ $_smarty_tpl->tpl_vars['blog']->total= $_smarty_tpl->_count($_from);
+ $_smarty_tpl->tpl_vars['blog']->iteration=0;
+ $_smarty_tpl->tpl_vars['blog']->index=-1;
+foreach ($_from as $_smarty_tpl->tpl_vars['blog']->key => $_smarty_tpl->tpl_vars['blog']->value) {
+$_smarty_tpl->tpl_vars['blog']->_loop = true;
+ $_smarty_tpl->tpl_vars['blog']->iteration++;
+ $_smarty_tpl->tpl_vars['blog']->index++;
+ $_smarty_tpl->tpl_vars['blog']->first = $_smarty_tpl->tpl_vars['blog']->index === 0;
+ $_smarty_tpl->tpl_vars['blog']->last = $_smarty_tpl->tpl_vars['blog']->iteration === $_smarty_tpl->tpl_vars['blog']->total;
+?>
+            <li class="block_blog <?php if ($_smarty_tpl->tpl_vars['blog']->first) {?>first_item<?php } elseif ($_smarty_tpl->tpl_vars['blog']->last) {?>last_item<?php }?>">
+                <div class="blog_image">
+                    <a href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['link'], ENT_QUOTES, 'UTF-8', true);?>
+" title="<?php echo mb_convert_encoding(htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['name'], ENT_QUOTES, 'UTF-8', true), "HTML-ENTITIES", 'UTF-8');?>
+">
+                    <img src="<?php echo $_smarty_tpl->tpl_vars['blog']->value['cover']['links']['large'];?>
+" alt="<?php echo mb_convert_encoding(htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['name'], ENT_QUOTES, 'UTF-8', true), "HTML-ENTITIES", 'UTF-8');?>
+" width="<?php echo $_smarty_tpl->tpl_vars['imageSize']->value[1]['large'][0];?>
+" height="<?php echo $_smarty_tpl->tpl_vars['imageSize']->value[1]['large'][1];?>
+" class="hover_effect" />
+                    <?php if ($_smarty_tpl->tpl_vars['blog']->value['type']==2) {?>
+                        <span class="icon_wrap"><i class="icon-camera-2 icon-1x"></i></span>
+                    <?php } elseif ($_smarty_tpl->tpl_vars['blog']->value['type']==3) {?>
+                        <span class="icon_wrap"><i class="icon-video icon-1x"></i></span>
+                    <?php }?>                 
+                    </a>
+                </div>
+                <p class="s_title_block"><a href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['link'], ENT_QUOTES, 'UTF-8', true);?>
+" title="<?php echo mb_convert_encoding(htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['name'], ENT_QUOTES, 'UTF-8', true), "HTML-ENTITIES", 'UTF-8');?>
+"><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_MODIFIER]['truncate'][0][0]->smarty_modifier_truncate(mb_convert_encoding(htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['name'], ENT_QUOTES, 'UTF-8', true), "HTML-ENTITIES", 'UTF-8'),70,'...');?>
+</a></p>
+                <?php if ($_smarty_tpl->tpl_vars['blog']->value['content_short']) {?><p class="blok_blog_short_content"><?php echo $_smarty_tpl->tpl_vars['blog']->value['content_short'];?>
 <a href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['blog']->value['link'], ENT_QUOTES, 'UTF-8', true);?>
 " title="<?php echo smartyTranslate(array('s'=>'Read More','mod'=>'stblogfeaturedarticles'),$_smarty_tpl);?>
 " class="go"><?php echo smartyTranslate(array('s'=>'Read More','mod'=>'stblogfeaturedarticles'),$_smarty_tpl);?>

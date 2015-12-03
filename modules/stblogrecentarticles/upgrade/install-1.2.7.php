@@ -51,7 +51,6 @@ function upgrade_module_1_2_7($object)
     $result &= Configuration::updateValue($field_prefix.'BG_COLOR', '');
     $result &= Configuration::updateValue($field_prefix.'SPEED', 0);
     $result &= Configuration::updateValue($field_prefix.'TITLE_COLOR', '');
-    $result &= Configuration::updateValue($field_prefix.'TITLE_HOVER_COLOR', '');
     $result &= Configuration::updateValue($field_prefix.'TEXT_COLOR', '');
     $result &= Configuration::updateValue($field_prefix.'LINK_HOVER_COLOR', '');
     $result &= Configuration::updateValue($field_prefix.'DIRECTION_COLOR', '');

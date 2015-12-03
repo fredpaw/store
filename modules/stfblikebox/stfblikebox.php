@@ -160,14 +160,14 @@ class StFbLikeBox extends Module
 	{
 		$this->name          = 'stfblikebox';
 		$this->tab           = 'front_office_features';
-		$this->version       = '1.0.2';
+		$this->version       = '1.0.7';
 		$this->author        = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
         $this->bootstrap     = true;
 		
 		parent::__construct();
 		
-        $this->displayName = $this->l('Facebook Like Box');
+        $this->displayName = $this->l('Facebook page plugin');
         $this->description = $this->l('Adds a Facebook social plugin Like Box');
 	}
 
@@ -175,15 +175,14 @@ class StFbLikeBox extends Module
 	{
 		if (!parent::install() 
 			|| !$this->registerHook('displayFooterTop')
-            || !Configuration::updateValue('ST_FB_LB_URL', 'themeforest')
+            || !Configuration::updateValue('ST_FB_LB_URL', 'https://www.facebook.com/envato')
             || !Configuration::updateValue('ST_FB_LB_HEIGHT', 200)
             || !Configuration::updateValue('ST_FB_LB_FACE', 1)
-            || !Configuration::updateValue('ST_FB_LB_STREAM', 0)
-            || !Configuration::updateValue('ST_FB_LB_HEADER', 0)
-            || !Configuration::updateValue('ST_FB_LB_CONNECTIONS', 4)
+            || !Configuration::updateValue('ST_FB_LB_STREAM', 1)
             || !Configuration::updateValue('ST_FB_LB_LOCALE', 'en_US')
             || !Configuration::updateValue('ST_FB_LB_WIDE_ON_FOOTER', 3)
-            || !Configuration::updateValue('ST_FB_LB_COLORSCHEME', 'light')
+            || !Configuration::updateValue('ST_FB_LB_HIDE_COVER', 0)
+            || !Configuration::updateValue('ST_FB_LB_SMALL_HEADER', 1)
             )
 			return false;
 		return true;
@@ -252,7 +251,7 @@ class StFbLikeBox extends Module
 			'input' => array(
                 array(
 					'type' => 'text',
-					'label' => $this->l('Facebook user name:'),
+					'label' => $this->l('Facebook Page URL:'),
 					'name' => 'lb_url',
                     'size' => 64,
                     'required' => true,
@@ -270,7 +269,7 @@ class StFbLikeBox extends Module
 				),
                 array(
 					'type' => 'switch',
-					'label' => $this->l('Show face:'),
+					'label' => $this->l('Show Friend\'s Faces:'),
 					'name' => 'lb_face',
 					'is_bool' => true,
 					'values' => array(
@@ -283,12 +282,12 @@ class StFbLikeBox extends Module
 							'value' => 0,
 							'label' => $this->l('No')),
 					),
-                    'desc' => $this->l('how profile photos in the plugin.'),
+                    'desc' => $this->l('Show profile photos when friends like this.'),
                     'validation' => 'isBool',
 				), 
                 array(
 					'type' => 'switch',
-					'label' => $this->l('Show stream:'),
+					'label' => $this->l('Show Page Posts:'),
 					'name' => 'lb_stream',
 					'is_bool' => true,
 					'values' => array(
@@ -301,52 +300,46 @@ class StFbLikeBox extends Module
 							'value' => 0,
 							'label' => $this->l('No')),
 					),
-                    'desc' => $this->l('Show the profile stream for the public profile.'),
+                    'desc' => $this->l('Show posts from the Page\'s timeline.'),
                     'validation' => 'isBool',
 				), 
+
                 array(
-					'type' => 'switch',
-					'label' => $this->l('Show header:'),
-					'name' => 'lb_header',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'lb_header_on',
-							'value' => 1,
-							'label' => $this->l('Yes')),
-						array(
-							'id' => 'lb_header_off',
-							'value' => 0,
-							'label' => $this->l('No')),
-					),
-                    'desc' => $this->l('Show the "Find us on Facebook" bar at top. Only shown when either stream or connections are present.'),
-                    'validation' => 'isBool',
-				), 
-                array(
-                    'type' => 'radio',
-                    'label' => $this->l('Color scheme:'),
-                    'name' => 'lb_colorscheme',
+                    'type' => 'switch',
+                    'label' => $this->l('Hide Cover Photo:'),
+                    'name' => 'lb_hide_cover',
                     'is_bool' => true,
                     'values' => array(
                         array(
-                            'id' => 'lb_colorscheme_dark',
-                            'value' => 'dark',
-                            'label' => $this->l('Dark')),
+                            'id' => 'lb_hide_cover_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
                         array(
-                            'id' => 'lb_colorscheme_light',
-                            'value' => 'light',
-                            'label' => $this->l('Light')),
+                            'id' => 'lb_hide_cover_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
                     ),
-                    'validation' => 'isGenericName',
+                    'desc' => $this->l('Hide cover photo in the header'),
+                    'validation' => 'isBool',
                 ), 
                 array(
-					'type' => 'text',
-					'label' => $this->l('Connections number:'),
-					'name' => 'lb_connections',
-                    'required' => true,
-                    'validation' => 'isUnsignedInt',
-                    'class' => 'fixed-width-sm'
-				), 
+                    'type' => 'switch',
+                    'label' => $this->l('Use the small header instead:'),
+                    'name' => 'lb_small_header',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'llb_small_header_on',
+                            'value' => 1,
+                            'label' => $this->l('Yes')),
+                        array(
+                            'id' => 'llb_small_header_off',
+                            'value' => 0,
+                            'label' => $this->l('No')),
+                    ),
+                    'desc' => $this->l('Use the small header instead'),
+                    'validation' => 'isBool',
+                ), 
 				array(
 					'type' => 'select',
 					'label' => $this->l('Locale:'),
@@ -414,15 +407,17 @@ class StFbLikeBox extends Module
 			'st_lb_height' => (int)Configuration::get('ST_FB_LB_HEIGHT'),
 			'st_lb_face' => Configuration::get('ST_FB_LB_FACE'),
             'st_lb_stream' => Configuration::get('ST_FB_LB_STREAM'),
+            'st_lb_hide_cover' => Configuration::get('ST_FB_LB_HIDE_COVER'),
+            'st_lb_small_header' => Configuration::get('ST_FB_LB_SMALL_HEADER'),
+            /*
 			'st_lb_colorscheme' => Configuration::get('ST_FB_LB_COLORSCHEME'),
 			'st_lb_header' => Configuration::get('ST_FB_LB_HEADER'),
-            /*
 			'st_lb_color_scheme' => Configuration::get('ST_FB_LB_CS'),
 			'st_lb_width' => (int)Configuration::get('ST_FB_LB_WIDTH'),
 			'st_lb_b_color' => Configuration::get('ST_FB_LB_B_C'),
 			'st_lb_bg_color' => Configuration::get('ST_FB_LB_BG_C'),
-            */
             'st_lb_connections' => Configuration::get('ST_FB_LB_CONNECTIONS'),
+            */
             'st_lb_locale' => Configuration::get('ST_FB_LB_LOCALE'),
             'st_fb_lb_wide_on_footer' => Configuration::get('ST_FB_LB_WIDE_ON_FOOTER'),
 		));
@@ -463,9 +458,8 @@ class StFbLikeBox extends Module
             'lb_height' => (int)Configuration::get('ST_FB_LB_HEIGHT'),
             'lb_face' => (int)Configuration::get('ST_FB_LB_FACE'),
             'lb_stream' => (int)Configuration::get('ST_FB_LB_STREAM'),
-            'lb_colorscheme' => (int)Configuration::get('ST_FB_LB_COLORSCHEME'),
-            'lb_header' => (int)Configuration::get('ST_FB_LB_HEADER'),
-            'lb_connections' => (int)Configuration::get('ST_FB_LB_CONNECTIONS'),
+            'lb_hide_cover' => Configuration::get('ST_FB_LB_HIDE_COVER'),
+            'lb_small_header' => Configuration::get('ST_FB_LB_SMALL_HEADER'),
             'lb_locale' => Configuration::get('ST_FB_LB_LOCALE'),
             'lb_wide_on_footer' => Configuration::get('ST_FB_LB_WIDE_ON_FOOTER'),
         );

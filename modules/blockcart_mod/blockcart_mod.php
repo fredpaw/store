@@ -42,7 +42,7 @@ class BlockCart_mod extends Module
 	{
 		$this->name = 'blockcart_mod';
 		$this->tab = 'front_office_features';
-		$this->version = '1.5.7';
+		$this->version = '1.7.2';
 		$this->author = 'SUNNYTOO.COM';
 		$this->need_instance = 0;
 
@@ -198,6 +198,7 @@ class BlockCart_mod extends Module
 			|| $this->registerHook('displayHeader') == false
 			|| $this->registerHook('actionCartListOverride') == false
 			|| $this->registerHook('displayMobileBar') == false
+			|| $this->registerHook('displaySideBar') == false
 			|| Configuration::updateValue('ST_BLOCK_CART_STYLE', 0) == false
 			|| Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false
 			|| Configuration::updateValue('ST_BLOCK_CART_POSITION', 0) == false)
@@ -280,13 +281,21 @@ class BlockCart_mod extends Module
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return;
+		
+        return $this->display(__FILE__, 'blockcart-mobile-tri.tpl');
+	}
+
+    public function hookDisplaySideBar($params)
+    {
+        if (Configuration::get('PS_CATALOG_MODE'))
+			return;
 		$this->smarty->assign(array(
 			'order_page' => (strpos($_SERVER['PHP_SELF'], 'order') !== false),
 		));
 		$this->assignContentVars($params);
 
         return $this->display(__FILE__, 'blockcart-mobile.tpl');
-	}
+    }
 
 	public function renderForm()
 	{

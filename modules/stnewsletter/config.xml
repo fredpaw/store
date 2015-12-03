@@ -2,7 +2,7 @@
 <module>
 	<name>stnewsletter</name>
 	<displayName><![CDATA[Newsletter popup]]></displayName>
-	<version><![CDATA[1.0]]></version>
+	<version><![CDATA[1.0.1]]></version>
 	<description><![CDATA[Adds a block for newsletter subscription.]]></description>
 	<author><![CDATA[SUNNYTOO.COM]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

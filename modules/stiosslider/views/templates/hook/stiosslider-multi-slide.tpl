@@ -1,6 +1,6 @@
 <!-- MODULE stiossldier -->
 {if isset($slide['slide']) && count($slide['slide'])}
-{if $slide['location']==14}<div class="iosslider_wide_container wide_container">{/if}
+{if $slide['location']==14 || $slide['location']==23}<div class="iosslider_wide_container wide_container">{/if}
 <div id="iosSlider_containerOuter_{$slide.id_st_iosslider_group}" class="containerOuter_multi_slide  {if $slide['hide_on_mobile']} hidden-xs {/if} iosSlider_tb{$slide['padding_tb']} block">
 <div class="container_multi_slide {if $slide['location']==14} container {/if} {if $slide['location']==14 || (isset($sttheme.boxstyle) && $sttheme.boxstyle==2)} iosslider_boxed {else} iosslider_stretched {/if}">
 <div class="containerInner_multi_slide">
@@ -32,7 +32,7 @@
 </div>
 </div>
 </div>
-{if $slide['location']==14}</div>{/if}
+{if $slide['location']==14 || $slide['location']==23}</div>{/if}
 <script type="text/javascript">
 //<![CDATA[
 {literal}

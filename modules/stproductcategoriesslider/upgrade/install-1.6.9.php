@@ -55,7 +55,7 @@ function upgrade_module_1_6_9($object)
         ADD `title_alignment` tinyint(1) unsigned NOT NULL DEFAULT 0, 
         ADD `title_font_size` int(10) unsigned NOT NULL DEFAULT 0, 
         ADD `direction_nav` tinyint(1) unsigned NOT NULL DEFAULT 0'))
-        $result &= false;;
+        $result &= false;
     
     return $result;
 }

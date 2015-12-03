@@ -127,4 +127,8 @@
             }
         }
     }
+    body.is_rtl .pb-center-column, 
+    body.is_rtl .pb-left-column{
+        float: none !important;
+    }
 }

@@ -716,9 +716,14 @@ class StAddThisButton extends Module
         $page_name = Context::getContext()->smarty->getTemplateVars('page_name');
         if ($page_name == 'product' && $id_product = Tools::getValue('id_product'))
         {
-            $product = new Product($id_product);
+            $product = new Product($id_product, false, $id_lang);
             $cover   = $product->getCover($id_product);
             $this->smarty->assign(array('product'=>$product, 'cover'=>$cover, 'id_lang' => $id_lang));
+        }
+        if ($page_name == 'category' && $id_category = Tools::getValue('id_category'))
+        {
+            $category= new Category($id_category, $id_lang);
+            $this->smarty->assign(array('category'=>$category,'id_lang' => $id_lang));
         }
         if($page_name == 'module-stblog-article' && $id_st_blog = Tools::getValue('id_blog'))
         {

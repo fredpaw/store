@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- St Blog featured articles -->
-<section id="st_blog_featured_article-footer_{$hook_hash}" class="block col-xs-12 col-sm-3 col-md-3">
+<section id="st_blog_featured_article-footer_{$hook_hash}" class="st_blog_featured_article-footer block col-xs-12 col-sm-3 col-md-3">
     <a href="javascript:;" class="opener visible-xs">&nbsp;</a>
     <h4 class="title_block">{l s='Featured articles' mod='stblogfeaturedarticles'}</h4>
     <div class="footer_block_content">

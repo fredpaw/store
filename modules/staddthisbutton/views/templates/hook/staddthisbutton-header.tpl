@@ -27,9 +27,24 @@
 <meta property="og:url" content="http://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}" />
 {if $page_name=='product'}
 <meta property="og:type" content="product" />
+<meta property="og:title" content="{$product->name|escape:html:'UTF-8'}" />
+<meta property="og:description" content="{$product->description_short|strip_tags:'UTF-8'}" />
+<meta property="og:image" content="{$link->getImageLink($product->link_rewrite[$id_lang], $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}" />
+{elseif $page_name=='category'}
+<meta property="og:type" content="product" />
 <meta property="og:title" content="{$meta_title|escape:'html':'UTF-8'}" />
 <meta property="og:description" content="{$meta_description|escape:html:'UTF-8'}" />
-<meta property="og:image" content="{$link->getImageLink($product->link_rewrite[$id_lang], $cover.id_image, 'thickbox_default')}" />
+<meta property="og:image" content="{$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html':'UTF-8'}" />
+{elseif $page_name=='manufacturer' && isset($smarty.get.id_manufacturer) && $smarty.get.id_manufacturer}
+<meta property="og:type" content="product" />
+<meta property="og:title" content="{$meta_title|escape:'html':'UTF-8'}" />
+<meta property="og:description" content="{$meta_description|escape:html:'UTF-8'}" />
+<meta property="og:image" content="{$img_manu_dir}{$smarty.get.id_manufacturer|escape:'htmlall':'UTF-8'}-big_default.jpg" />
+{elseif $page_name=='supplier' && isset($smarty.get.id_supplier) && $smarty.get.id_supplier}
+<meta property="og:type" content="product" />
+<meta property="og:title" content="{$meta_title|escape:'html':'UTF-8'}" />
+<meta property="og:description" content="{$meta_description|escape:html:'UTF-8'}" />
+<meta property="og:image" content="{$img_sup_dir}{$smarty.get.id_supplier|escape:'html':'UTF-8'}-big_default.jpg" />
 {elseif $page_name=='module-stblog-article'}
 <meta property="og:type" content="article" />
 <meta property="og:title" content="{$meta_title|escape:'html':'UTF-8'}" />

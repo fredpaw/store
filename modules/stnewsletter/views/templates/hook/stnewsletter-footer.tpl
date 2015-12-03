@@ -36,7 +36,7 @@
             	{if $ec.show_newsletter}
             	<div class="alert alert-danger hidden"></div>
                 <div class="alert alert-success hidden"></div>
-            	<form action="{$base_uri}modules/stnewsletter/stnewsletter-ajax.php" method="post" class="st_news_letter_form">
+            	<form action="{$content_dir}/modules/stnewsletter/stnewsletter-ajax.php" method="post" class="st_news_letter_form">
 					<div class="form-group st_news_letter_form_inner" >
 						<input class="inputNew form-control st_news_letter_input" type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{/if}" placeholder="{l s='Your e-mail' mod='stnewsletter'}" />
 		                <button type="submit" name="submitStNewsletter" class="btn btn-medium st_news_letter_submit">

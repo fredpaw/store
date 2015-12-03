@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-11-20 17:34:47
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:05
          compiled from "D:\xampp\htdocs\store\modules\blockcart_mod\views\templates\hook\blockcart.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:20922564ebf0795d777-74675261%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:2345565e95154999e9-47792512%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'f49ef66b14bf610c38415e970ac2dc123b532941' => 
     array (
       0 => 'D:\\xampp\\htdocs\\store\\modules\\blockcart_mod\\views\\templates\\hook\\blockcart.tpl',
-      1 => 1447993229,
+      1 => 1449038238,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '20922564ebf0795d777-74675261',
+  'nocache_hash' => '2345565e95154999e9-47792512',
   'function' => 
   array (
   ),
@@ -43,6 +43,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'discount' => 0,
     'page_name' => 0,
     'shipping_cost_float' => 0,
+    'free_ship' => 0,
     'shipping_cost' => 0,
     'show_wrapping' => 0,
     'cart_flag' => 0,
@@ -56,12 +57,26 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_564ebf08004e32_53151660',
+  'unifunc' => 'content_565e9515ad0af6_10898360',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_564ebf08004e32_53151660')) {function content_564ebf08004e32_53151660($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
+<?php if ($_valid && !is_callable('content_565e9515ad0af6_10898360')) {function content_565e9515ad0af6_10898360($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_replace')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\modifier.replace.php';
 if (!is_callable('smarty_function_counter')) include 'D:\\xampp\\htdocs\\store\\tools\\smarty\\plugins\\function.counter.php';
 ?>
 <!-- MODULE Block cart -->
+<?php $_smarty_tpl->_capture_stack[0][] = array("small_default_width", null, null); ob_start(); ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['getWidthSize'][0][0]->getWidth(array('type'=>'small_default'),$_smarty_tpl);?>
+<?php list($_capture_buffer, $_capture_assign, $_capture_append) = array_pop($_smarty_tpl->_capture_stack[0]);
+if (!empty($_capture_buffer)) {
+ if (isset($_capture_assign)) $_smarty_tpl->assign($_capture_assign, ob_get_contents());
+ if (isset( $_capture_append)) $_smarty_tpl->append( $_capture_append, ob_get_contents());
+ Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
+} else $_smarty_tpl->capture_error();?>
+<?php $_smarty_tpl->_capture_stack[0][] = array("small_default_height", null, null); ob_start(); ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['getHeightSize'][0][0]->getHeight(array('type'=>'small_default'),$_smarty_tpl);?>
+<?php list($_capture_buffer, $_capture_assign, $_capture_append) = array_pop($_smarty_tpl->_capture_stack[0]);
+if (!empty($_capture_buffer)) {
+ if (isset($_capture_assign)) $_smarty_tpl->assign($_capture_assign, ob_get_contents());
+ if (isset( $_capture_append)) $_smarty_tpl->append( $_capture_append, ob_get_contents());
+ Smarty::$_smarty_vars['capture'][$_capture_buffer]=ob_get_clean();
+} else $_smarty_tpl->capture_error();?>
 <?php if (isset($_smarty_tpl->tpl_vars['blockcart_top']->value)&&$_smarty_tpl->tpl_vars['blockcart_top']->value) {?>
 <div id="blockcart_top_wrap" class="blockcart_wrap blockcart_mod <?php if ($_smarty_tpl->tpl_vars['PS_CATALOG_MODE']->value) {?> header_user_catalog<?php }?> <?php if ($_smarty_tpl->tpl_vars['block_cart_style']->value||(isset($_smarty_tpl->tpl_vars['is_displaynav']->value)&&$_smarty_tpl->tpl_vars['is_displaynav']->value)) {?> shopping_cart_style_1 <?php }?> <?php if (isset($_smarty_tpl->tpl_vars['is_displaynav']->value)&&$_smarty_tpl->tpl_vars['is_displaynav']->value) {?><?php if (isset($_smarty_tpl->tpl_vars['block_cart_position']->value)&&$_smarty_tpl->tpl_vars['block_cart_position']->value) {?> pull-left<?php } else { ?> pull-right<?php }?><?php }?>">
 <?php }?>
@@ -72,7 +87,7 @@ if (!is_callable('smarty_function_counter')) include 'D:\\xampp\\htdocs\\store\\
 				<i class="icon-basket icon-0x icon_btn"></i>
 				<span class="icon_text"><?php echo smartyTranslate(array('s'=>'Cart','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 </span>
-				<span class="ajax_cart_quantity amount_circle <?php if ($_smarty_tpl->tpl_vars['cart_qties']->value>9) {?> dozens <?php }?>"><?php echo $_smarty_tpl->tpl_vars['cart_qties']->value;?>
+				<span class="ajax_cart_quantity amount_circle <?php if ($_smarty_tpl->tpl_vars['cart_qties']->value>9) {?> dozens <?php }?> constantly_show"><?php echo $_smarty_tpl->tpl_vars['cart_qties']->value;?>
 </span>
 			</div>
 			<span class="ajax_cart_quantity ajax_cart_middle"><?php echo $_smarty_tpl->tpl_vars['cart_qties']->value;?>
@@ -133,6 +148,8 @@ _<?php if ($_smarty_tpl->tpl_vars['product']->value['id_product_attribute']) {?>
 " title="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['product']->value['name'], ENT_QUOTES, 'UTF-8', true);?>
 "><img src="<?php echo $_smarty_tpl->tpl_vars['link']->value->getImageLink($_smarty_tpl->tpl_vars['product']->value['link_rewrite'],$_smarty_tpl->tpl_vars['product']->value['id_image'],'small_default');?>
 " alt="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['product']->value['name'], ENT_QUOTES, 'UTF-8', true);?>
+" class="replace-2x" width="<?php echo Smarty::$_smarty_vars['capture']['small_default_width'];?>
+" height="<?php echo Smarty::$_smarty_vars['capture']['small_default_height'];?>
 " /></a>
 
 										<span class="quantity-formated"><span class="quantity"><?php echo $_smarty_tpl->tpl_vars['product']->value['cart_quantity'];?>
@@ -155,6 +172,10 @@ _<?php if ($_smarty_tpl->tpl_vars['product']->value['id_product_attribute']) {?>
 												<?php if ($_smarty_tpl->tpl_vars['priceDisplay']->value==@constant('PS_TAX_EXC')) {?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['displayWtPrice'][0][0]->displayWtPrice(array('p'=>((string)$_smarty_tpl->tpl_vars['product']->value['total'])),$_smarty_tpl);?>
 <?php } else { ?><?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['displayWtPrice'][0][0]->displayWtPrice(array('p'=>((string)$_smarty_tpl->tpl_vars['product']->value['total_wt'])),$_smarty_tpl);?>
 <?php }?>
+												<div class="hookDisplayProductPriceBlock-price">
+                                                    <?php echo $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['hook'][0][0]->smartyHook(array('h'=>"displayProductPriceBlock",'product'=>$_smarty_tpl->tpl_vars['product']->value,'type'=>"price",'from'=>"blockcart"),$_smarty_tpl);?>
+
+                                                </div>
 											<?php } else { ?>
 												<?php echo smartyTranslate(array('s'=>'Free!','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
@@ -203,7 +224,7 @@ _<?php echo intval($_smarty_tpl->tpl_vars['product']->value['id_address_delivery
 <?php $_tmp4=ob_get_clean();?><?php ob_start();?><?php echo intval($_smarty_tpl->tpl_vars['product']->value['id_product_attribute']);?>
 <?php $_tmp5=ob_get_clean();?><?php ob_start();?><?php echo intval($_smarty_tpl->tpl_vars['id_customization']->value);?>
 <?php $_tmp6=ob_get_clean();?><?php echo htmlspecialchars($_smarty_tpl->tpl_vars['link']->value->getPageLink("cart",true,null,"delete=1&id_product=".$_tmp4."&ipa=".$_tmp5."&id_customization=".$_tmp6."&token=".((string)$_smarty_tpl->tpl_vars['static_token']->value)), ENT_QUOTES, 'UTF-8', true);?>
-" rel="nofollow">&nbsp;</a>
+" rel="nofollow"><i class="icon-cancel icon-small"></i></a>
 													</div>
 													<?php if (isset($_smarty_tpl->tpl_vars['customization']->value['datas'][$_smarty_tpl->tpl_vars['CUSTOMIZE_TEXTFIELD']->value][0])) {?>
 														<?php echo htmlspecialchars($_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_MODIFIER]['truncate'][0][0]->smarty_modifier_truncate(smarty_modifier_replace($_smarty_tpl->tpl_vars['customization']->value['datas'][$_smarty_tpl->tpl_vars['CUSTOMIZE_TEXTFIELD']->value][0]['value'],"<br />"," "),28,'...'), ENT_QUOTES, 'UTF-8', true);?>
@@ -261,9 +282,10 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 								<?php } ?>
 							</table>
 						<?php }?>
+						<?php $_smarty_tpl->tpl_vars['free_ship'] = new Smarty_variable(count($_smarty_tpl->tpl_vars['cart']->value->getDeliveryAddressesWithoutCarriers(true)), null, 0);?>
 						<div class="cart-prices">
 							<div class="cart-prices-line first-line">
-								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost<?php if (!($_smarty_tpl->tpl_vars['page_name']->value=='order-opc')&&$_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?> unvisible<?php }?>">
+								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost<?php if (!($_smarty_tpl->tpl_vars['page_name']->value=='order-opc')&&$_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!$_smarty_tpl->tpl_vars['cart_qties']->value||$_smarty_tpl->tpl_vars['cart']->value->isVirtualCart()||!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery||$_smarty_tpl->tpl_vars['free_ship']->value)) {?> unvisible<?php }?>">
 									<?php if ($_smarty_tpl->tpl_vars['shipping_cost_float']->value==0) {?>
 										<?php if (!($_smarty_tpl->tpl_vars['page_name']->value=='order-opc')&&(!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?><?php echo smartyTranslate(array('s'=>'To be determined','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 <?php } else { ?><?php echo smartyTranslate(array('s'=>'Free shipping!','mod'=>'blockcart_mod'),$_smarty_tpl);?>
@@ -273,7 +295,7 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 
 									<?php }?>
 								</span>
-								<span<?php if (!($_smarty_tpl->tpl_vars['page_name']->value=='order-opc')&&$_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?> class="unvisible"<?php }?>>
+								<span<?php if (!($_smarty_tpl->tpl_vars['page_name']->value=='order-opc')&&$_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!$_smarty_tpl->tpl_vars['cart_qties']->value||$_smarty_tpl->tpl_vars['cart']->value->isVirtualCart()||!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery||$_smarty_tpl->tpl_vars['free_ship']->value)) {?> class="unvisible"<?php }?>>
 									<?php echo smartyTranslate(array('s'=>'Shipping','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
 								</span>
@@ -308,7 +330,7 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 								<span><?php echo smartyTranslate(array('s'=>'Total','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 </span>
 							</div>
-							<?php if ($_smarty_tpl->tpl_vars['use_taxes']->value&&$_smarty_tpl->tpl_vars['display_tax_label']->value==1&&$_smarty_tpl->tpl_vars['show_tax']->value) {?>
+							<?php if ($_smarty_tpl->tpl_vars['use_taxes']->value&&$_smarty_tpl->tpl_vars['display_tax_label']->value&&$_smarty_tpl->tpl_vars['show_tax']->value) {?>
 								<p>
 								<?php if ($_smarty_tpl->tpl_vars['priceDisplay']->value==0) {?>
 									<?php echo smartyTranslate(array('s'=>'Prices are tax included','mod'=>'blockcart_mod'),$_smarty_tpl);?>
@@ -369,7 +391,7 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 					</span>
 					<!-- Singular Case [both cases are needed because page may be updated in Javascript] -->
 					<span class="ajax_cart_product_txt <?php if ($_smarty_tpl->tpl_vars['cart_qties']->value>1) {?> unvisible<?php }?>">
-						<?php echo smartyTranslate(array('s'=>'There is 1 item in your cart.','mod'=>'blockcart_mod'),$_smarty_tpl);?>
+						<?php echo smartyTranslate(array('s'=>'There are [1]%d[/1] items in your cart.','mod'=>'blockcart_mod','sprintf'=>array($_smarty_tpl->tpl_vars['cart_qties']->value),'tags'=>array('<span class="ajax_cart_quantity">')),$_smarty_tpl);?>
 
 					</span>
 				</div>
@@ -377,7 +399,7 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 					<span class="layer_cart_label">
 						<?php echo smartyTranslate(array('s'=>'Total products','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
-						<?php if ($_smarty_tpl->tpl_vars['display_tax_label']->value) {?>
+						<?php if ($_smarty_tpl->tpl_vars['use_taxes']->value&&$_smarty_tpl->tpl_vars['display_tax_label']->value&&$_smarty_tpl->tpl_vars['show_tax']->value) {?>
 							<?php if ($_smarty_tpl->tpl_vars['priceDisplay']->value==1) {?>
 								<?php echo smartyTranslate(array('s'=>'(tax excl.)','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
@@ -399,7 +421,7 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 						<span class="layer_cart_label">
 							<?php echo smartyTranslate(array('s'=>'Wrapping','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
-							<?php if ($_smarty_tpl->tpl_vars['display_tax_label']->value) {?>
+							<?php if ($_smarty_tpl->tpl_vars['use_taxes']->value&&$_smarty_tpl->tpl_vars['display_tax_label']->value&&$_smarty_tpl->tpl_vars['show_tax']->value) {?>
 								<?php if ($_smarty_tpl->tpl_vars['priceDisplay']->value==1) {?>
 									<?php echo smartyTranslate(array('s'=>'(tax excl.)','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
@@ -421,13 +443,13 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 					</div>
 				<?php }?>
 				<div id="layer_cart_ajax_cart_shipping_cost" class="layer_cart_row hidden">
-					<span class="layer_cart_label">
+					<span class="layer_cart_label<?php if ($_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!$_smarty_tpl->tpl_vars['cart_qties']->value||$_smarty_tpl->tpl_vars['cart']->value->isVirtualCart()||!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?> unvisible<?php }?>">
 						<?php echo smartyTranslate(array('s'=>'Total shipping','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 &nbsp;<?php if ($_smarty_tpl->tpl_vars['display_tax_label']->value) {?><?php if ($_smarty_tpl->tpl_vars['priceDisplay']->value==1) {?><?php echo smartyTranslate(array('s'=>'(tax excl.)','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 <?php } else { ?><?php echo smartyTranslate(array('s'=>'(tax incl.)','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 <?php }?><?php }?>
 					</span>
-					<span class="ajax_cart_shipping_cost<?php if ($_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?> unvisible<?php }?>">
+					<span class="ajax_cart_shipping_cost<?php if ($_smarty_tpl->tpl_vars['shipping_cost_float']->value==0&&(!$_smarty_tpl->tpl_vars['cart_qties']->value||$_smarty_tpl->tpl_vars['cart']->value->isVirtualCart()||!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?> unvisible<?php }?>">
 						<?php if ($_smarty_tpl->tpl_vars['shipping_cost_float']->value==0) {?>
 							<?php if ((!isset($_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)||!$_smarty_tpl->tpl_vars['cart']->value->id_address_delivery)) {?><?php echo smartyTranslate(array('s'=>'To be determined','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 <?php } else { ?><?php echo smartyTranslate(array('s'=>'Free shipping!','mod'=>'blockcart_mod'),$_smarty_tpl);?>
@@ -450,7 +472,7 @@ $_smarty_tpl->tpl_vars['discount']->_loop = true;
 					<span class="layer_cart_label">
 						<?php echo smartyTranslate(array('s'=>'Total','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 
-						<?php if ($_smarty_tpl->tpl_vars['display_tax_label']->value) {?>
+						<?php if ($_smarty_tpl->tpl_vars['use_taxes']->value&&$_smarty_tpl->tpl_vars['display_tax_label']->value&&$_smarty_tpl->tpl_vars['show_tax']->value) {?>
 							<?php if ($_smarty_tpl->tpl_vars['priceDisplay']->value==1) {?>
 								<?php echo smartyTranslate(array('s'=>'(tax excl.)','mod'=>'blockcart_mod'),$_smarty_tpl);?>
 

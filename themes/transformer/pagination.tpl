@@ -24,7 +24,7 @@
 *}
 
 {if isset($no_follow) AND $no_follow}
-	{assign var='no_follow_text' value='rel="nofollow"'}
+	{assign var='no_follow_text' value=' rel="nofollow"'}
 {else}
 	{assign var='no_follow_text' value=''}
 {/if}
@@ -57,42 +57,42 @@
 			<ul class="pagination clearfix li_fl">
 				{if $p != 1}
 					{assign var='p_previous' value=$p-1}
-					<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_previous"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}" title="{l s='Previous'}" rel="prev">&laquo;&nbsp;<span>{l s='Previous'}</span></a></li>
+					<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_previous"><a{$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}" title="{l s='Previous'}" rel="prev">&laquo;&nbsp;<span>{l s='Previous'}</span></a></li>
 				{else}
 					<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="disabled pagination_previous"><span>&laquo;&nbsp;<span>{l s='Previous'}</span></span></li>
 				{/if}
 				{if $start==3}
-					<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
-					<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 2)}"><span>2</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, 2)}"><span>2</span></a></li>
 				{/if}
 				{if $start==2}
-					<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
 				{/if}
 				{if $start>3}
-					<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, 1)}"><span>1</span></a></li>
 					<li class="truncate"><span><span>...</span></span></li>
 				{/if}
 				{section name=pagination start=$start loop=$stop+1 step=1}
 					{if $p == $smarty.section.pagination.index}
 						<li class="active current"><span><span>{$p|escape:'html':'UTF-8'}</span></span></li>
 					{else}
-						<li><a {$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)}"><span>{$smarty.section.pagination.index|escape:'html':'UTF-8'}</span></a></li>
+						<li><a{$no_follow_text} href="{$link->goPage($requestPage, $smarty.section.pagination.index)}"><span>{$smarty.section.pagination.index|escape:'html':'UTF-8'}</span></a></li>
 					{/if}
 				{/section}
 				{if $pages_nb>$stop+2}
 					<li class="truncate"><span><span>...</span></span></li>
-					<li><a href="{$link->goPage($requestPage, $pages_nb)}"><span>{$pages_nb|intval}</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, $pages_nb)}"><span>{$pages_nb|intval}</span></a></li>
 				{/if}
 				{if $pages_nb==$stop+1}
-					<li><a href="{$link->goPage($requestPage, $pages_nb)}"><span>{$pages_nb|intval}</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, $pages_nb)}"><span>{$pages_nb|intval}</span></a></li>
 				{/if}
 				{if $pages_nb==$stop+2}
-					<li><a href="{$link->goPage($requestPage, $pages_nb-1)}"><span>{$pages_nb-1|intval}</span></a></li>
-					<li><a href="{$link->goPage($requestPage, $pages_nb)}"><span>{$pages_nb|intval}</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, $pages_nb-1)}"><span>{$pages_nb-1|intval}</span></a></li>
+					<li><a{$no_follow_text} href="{$link->goPage($requestPage, $pages_nb)}"><span>{$pages_nb|intval}</span></a></li>
 				{/if}
 				{if $pages_nb > 1 AND $p != $pages_nb}
 					{assign var='p_next' value=$p+1}
-					<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_next"><a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}" title="{l s='Next'}" rel="next"><span>{l s='Next'}</span>&nbsp;&raquo;</a></li>
+					<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_next"><a{$no_follow_text} href="{$link->goPage($requestPage, $p_next)}" title="{l s='Next'}" rel="next"><span>{l s='Next'}</span>&nbsp;&raquo;</a></li>
 				{else}
 					<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="disabled pagination_next"><span><span>{l s='Next'}</span>&nbsp;&raquo;</span></li>
 				{/if}

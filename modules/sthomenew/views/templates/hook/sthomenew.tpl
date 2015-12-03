@@ -26,7 +26,7 @@
 <!-- MODULE Home New Products -->
 {if $aw_display || ((isset($products) && $products))}
 {capture name="column_slider"}{if isset($column_slider) && $column_slider}_column{/if}{/capture}
-<div id="new-products_block_center_container_{$hook_hash}" class="new-products_block_center_container block {if $hide_mob} hidden-xs {/if}">
+<div id="new-products_block_center_container_{$hook_hash}" class="new-products_block_center_container block {if $hide_mob} hidden-xs {/if}{if $countdown_on} s_countdown_block{/if}">
 {if isset($homeverybottom) && $homeverybottom}<div class="wide_container"><div class="container">{/if}
 <section id="new-products_block_center{$hook_hash}{$smarty.capture.column_slider}" class="new-products_block_center{$smarty.capture.column_slider} products_block section {if isset($display_as_grid) && $display_as_grid} display_as_grid {/if}">
 	<h4 class="title_block"><a href="{$link->getPageLink('new-products')|escape:'html'}" title="{l s='New products' mod='sthomenew'}">{l s='New products' mod='sthomenew'}</a></h4>

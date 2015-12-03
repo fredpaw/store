@@ -89,6 +89,8 @@ class StProductCategoriesSliderClass extends ObjectModel
 	/** @var integer*/
 	public $title_alignment;
 	/** @var integer*/
+	public $title_no_bg;
+	/** @var integer*/
 	public $title_font_size;
 	/** @var integer*/
 	public $direction_nav; 
@@ -126,6 +128,7 @@ class StProductCategoriesSliderClass extends ObjectModel
 			'direction_hover_bg'    => array('type' => self::TYPE_STRING, 'size' => 7),
 			'direction_disabled_bg' => array('type' => self::TYPE_STRING, 'size' => 7),
 			'title_alignment'       => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
+			'title_no_bg'       	=> array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
 			'title_font_size'       => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
 			'direction_nav'         => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
 		)
