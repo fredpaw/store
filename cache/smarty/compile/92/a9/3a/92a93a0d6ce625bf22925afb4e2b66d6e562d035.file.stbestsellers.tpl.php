@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-12-18 16:33:55
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-23 10:26:59
          compiled from "D:\xampp\htdocs\store\modules\stbestsellers\views\templates\hook\stbestsellers.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:2381656739ac3d233b8-87459261%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:92745679dc4303ccf1-61349659%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '2381656739ac3d233b8-87459261',
+  'nocache_hash' => '92745679dc4303ccf1-61349659',
   'function' => 
   array (
   ),
@@ -44,9 +44,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_56739ac40a0a74_28962888',
+  'unifunc' => 'content_5679dc43230651_50773938',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_56739ac40a0a74_28962888')) {function content_56739ac40a0a74_28962888($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_5679dc43230651_50773938')) {function content_5679dc43230651_50773938($_smarty_tpl) {?>
 
 <!-- MODULE Top-sellers Slider -->
 <?php if ($_smarty_tpl->tpl_vars['aw_display']->value||(isset($_smarty_tpl->tpl_vars['products']->value)&&$_smarty_tpl->tpl_vars['products']->value)) {?>

@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:10
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-21 16:58:37
          compiled from "D:\xampp\htdocs\store\modules\stowlcarousel\views\templates\hook\stowlcarousel-block.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:526565e951a19d2e6-01514992%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:150465677950d3b4a98-65751953%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '526565e951a19d2e6-01514992',
+  'nocache_hash' => '150465677950d3b4a98-65751953',
   'function' => 
   array (
   ),
@@ -21,9 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_565e951a26e022_50868621',
+  'unifunc' => 'content_5677950d511044_63266384',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_565e951a26e022_50868621')) {function content_565e951a26e022_50868621($_smarty_tpl) {?><?php if ($_smarty_tpl->tpl_vars['banner_data']->value['url']) {?>
+<?php if ($_valid && !is_callable('content_5677950d511044_63266384')) {function content_5677950d511044_63266384($_smarty_tpl) {?><?php if ($_smarty_tpl->tpl_vars['banner_data']->value['url']) {?>
     <a id="st_owl_carousel_block_<?php echo $_smarty_tpl->tpl_vars['banner_data']->value['id_st_owl_carousel'];?>
 " href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['banner_data']->value['url'], ENT_QUOTES, 'UTF-8', true);?>
 " class="st_owl_carousel_block_<?php echo $_smarty_tpl->tpl_vars['banner_data']->value['id_st_owl_carousel'];?>

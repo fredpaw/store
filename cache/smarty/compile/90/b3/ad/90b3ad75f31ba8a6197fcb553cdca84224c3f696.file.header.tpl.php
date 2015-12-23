@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:05
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-21 16:14:40
          compiled from "D:\xampp\htdocs\store\modules\stowlcarousel\views\templates\hook\header.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:32599565e951505ded4-37963564%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1308656778ac0de0693-59041802%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '32599565e951505ded4-37963564',
+  'nocache_hash' => '1308656778ac0de0693-59041802',
   'function' => 
   array (
   ),
@@ -21,9 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_565e9515068bc7_69833231',
+  'unifunc' => 'content_56778ac0e1cf73_52370443',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_565e9515068bc7_69833231')) {function content_565e9515068bc7_69833231($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_56778ac0e1cf73_52370443')) {function content_56778ac0e1cf73_52370443($_smarty_tpl) {?>
 <?php if (isset($_smarty_tpl->tpl_vars['custom_css']->value)&&$_smarty_tpl->tpl_vars['custom_css']->value) {?>
 <style type="text/css"><?php echo $_smarty_tpl->tpl_vars['custom_css']->value;?>
 </style>

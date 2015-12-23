@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:07
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-21 16:58:35
          compiled from "D:\xampp\htdocs\store\modules\stthemeeditor\views\templates\hook\product_add_to_wishlist.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:13409565e9517163979-38127291%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:194405677950b552d82-79033756%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '13409565e9517163979-38127291',
+  'nocache_hash' => '194405677950b552d82-79033756',
   'function' => 
   array (
   ),
@@ -21,9 +21,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_565e9517184553_89710991',
+  'unifunc' => 'content_5677950b5b7fa0_21786560',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_565e9517184553_89710991')) {function content_565e9517184553_89710991($_smarty_tpl) {?><a class="addToWishlist wishlistProd_<?php echo intval($_smarty_tpl->tpl_vars['id_product']->value);?>
+<?php if ($_valid && !is_callable('content_5677950b5b7fa0_21786560')) {function content_5677950b5b7fa0_21786560($_smarty_tpl) {?><a class="addToWishlist wishlistProd_<?php echo intval($_smarty_tpl->tpl_vars['id_product']->value);?>
 " href="#" rel="nofollow" data-pid="<?php echo intval($_smarty_tpl->tpl_vars['id_product']->value);?>
 " onclick="WishlistCart('wishlist_block_list', 'add', '<?php echo intval($_smarty_tpl->tpl_vars['id_product']->value);?>
 ', false, 1,this); return false;"><div><i class="icon-heart icon-0x icon_btn icon-mar-lr2"></i><span><?php echo smartyTranslate(array('s'=>'Add to Wishlist','mod'=>'stthemeeditor'),$_smarty_tpl);?>

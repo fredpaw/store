@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.19, created on 2015-12-02 17:52:10
+<?php /* Smarty version Smarty-3.1.19, created on 2015-12-21 16:58:37
          compiled from "D:\xampp\htdocs\store\modules\stowlcarousel\views\templates\hook\stowlcarousel-0.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:20489565e951a141ab6-14576743%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:63055677950d332221-54808387%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,7 +11,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '20489565e951a141ab6-14576743',
+  'nocache_hash' => '63055677950d332221-54808387',
   'function' => 
   array (
   ),
@@ -22,9 +22,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.19',
-  'unifunc' => 'content_565e951a185202_64602535',
+  'unifunc' => 'content_5677950d39a682_42464571',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_565e951a185202_64602535')) {function content_565e951a185202_64602535($_smarty_tpl) {?><!-- MODULE stowlcarousel -->
+<?php if ($_valid && !is_callable('content_5677950d39a682_42464571')) {function content_5677950d39a682_42464571($_smarty_tpl) {?><!-- MODULE stowlcarousel -->
 <?php if (isset($_smarty_tpl->tpl_vars['slides']->value)) {?>
     <?php if (isset($_smarty_tpl->tpl_vars['slides']->value['slide'])&&count($_smarty_tpl->tpl_vars['slides']->value['slide'])) {?>
         <div id="st_owl_carousel-<?php echo $_smarty_tpl->tpl_vars['slides']->value['id_st_owl_carousel_group'];?>
